@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#064e73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ZEL — Zone for English Learners</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ocean:      #0a6e9f;
+  --ocean-dark: #064e73;
+  --ocean-deep: #03324a;
+  --accent:     #00b4d8;
+  --sky:        #e8f4fb;
+  --sky-mid:    #bde0f5;
+  --white:      #ffffff;
+  --ink:        #0d1f2d;
+  --muted:      #5a7d94;
+  --border:     rgba(10,110,159,0.2);
+  --success:    #16a34a;
+  --danger:     #dc2626;
+  --warning:    #d97706;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:'DM Sans',sans-serif; background:var(--sky); color:var(--ink); overflow-x:hidden; }
+
+/* ── SCREENS ── */
+.screen { display:none; min-height:100vh; }
+.screen.active { display:flex; }
+
+/* ══════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════ */
+#screen-login {
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(145deg, var(--ocean-deep) 0%, var(--ocean-dark) 60%, var(--ocean) 100%);
+  padding:2rem 1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+
+#screen-login::before {
+  content:'';
+  position:absolute;
+  width:500px; height:500px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.06);
+  top:-150px; right:-150px;
+}
+
+#screen-login::after {
+  content:'';
+  position:absolute;
+  width:300px; height:300px;
+  border-radius:50%;
+  background:rgba(0,180,216,0.07);
+  bottom:-100px; left:-80px;
+}
+
+.login-card {
+  background:rgba(255,255,255,0.97);
+  border-radius:20px;
+  padding:2.5rem 2rem;
+  width:100%; max-width:400px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.35);
+  position:relative; z-index:2;
+  animation: slideUp 0.5s ease both;
+}
+
+.login-logo {
+  text-align:center;
+  margin-bottom:1.75rem;
+}
+
+.login-logo .dot {
+  width:12px; height:12px;
+  border-radius:50%;
+  background:var(--accent);
+  display:inline-block;
+  margin-right:0.4rem;
+  vertical-align:middle;
+}
+
+.login-logo h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;
+  font-weight:600;
+  color:var(--ocean-dark);
+  display:inline;
+}
+
+.login-logo p {
+  font-size:0.75rem;
+  color:var(--muted);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-top:0.3rem;
+}
+
+/* Tab switcher */
+.login-tabs {
+  display:flex;
+  background:var(--sky);
+  border-radius:10px;
+  padding:4px;
+  margin-bottom:1.75rem;
+  gap:4px;
+}
+
+.tab-btn {
+  flex:1;
+  padding:0.6rem;
+  border:none;
+  border-radius:7px;
+  background:transparent;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.82rem;
+  font-weight:500;
+  color:var(--muted);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.tab-btn.active {
+  background:var(--white);
+  color:var(--ocean-dark);
+  box-shadow:0 2px 8px rgba(10,110,159,0.15);
+}
+
+/* Form */
+.form-group { margin-bottom:1rem; }
+
+.form-group label {
+  display:block;
+  font-size:0.75rem;
+  font-weight:500;
+  color:var(--muted);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  margin-bottom:0.4rem;
+}
+
+.form-group input, .form-group select {
+  width:100%;
+  background:var(--sky);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:0.75rem 1rem;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.9rem;
+  color:var(--ink);
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus {
+  border-color:var(--ocean);
+  box-shadow:0 0 0 3px rgba(10,110,159,0.1);
+  background:white;
+}
+
+.btn-main {
+  width:100%;
+  background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
+  color:white;
+  border:none;
+  border-radius:50px;
+  padding:0.85rem;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  margin-top:0.5rem;
+  transition:opacity 0.2s, transform 0.2s;
+  box-shadow:0 4px 20px rgba(10,110,159,0.3);
+}
+
+.btn-main:hover { opacity:0.9; transform:translateY(-1px); }
+.btn-main:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+.alert {
+  padding:0.75rem 1rem;
+  border-radius:8px;
+  font-size:0.82rem;
+  margin-bottom:1rem;
+  display:none;
+}
+
+.alert.error { background:#fef2f2; border:1px solid #fca5a5; color:#b91c1c; display:block; }
+.alert.success { background:#f0fdf4; border:1px solid #86efac; color:#15803d; display:block; }
+
+/* ══════════════════════════════
+   STUDENT DASHBOARD
+══════════════════════════════ */
+#screen-dashboard {
+  flex-direction:column;
+  background:var(--sky);
+  min-height:100vh;
+}
+
+/* Top bar */
+.topbar {
+  background:linear-gradient(135deg, var(--ocean-deep), var(--ocean-dark));
+  color:white;
+  padding:1.25rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0; z-index:50;
+  box-shadow:0 4px 20px rgba(3,50,74,0.3);
+}
+
+.topbar-brand {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+}
+
+.topbar-brand .dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--accent);
+}
+
+.topbar-right {
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.avatar {
+  width:36px; height:36px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  border:2px solid rgba(255,255,255,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.9rem;
+  font-weight:600;
+  color:white;
+  cursor:pointer;
+}
+
+.btn-logout {
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  color:white;
+  padding:0.4rem 0.9rem;
+  border-radius:50px;
+  font-size:0.75rem;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+
+.btn-logout:hover { background:rgba(255,255,255,0.2); }
+
+/* Dashboard content */
+.dash-content { padding:1.5rem; max-width:600px; margin:0 auto; width:100%; }
+
+/* Welcome banner */
+.welcome-banner {
+  background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
+  border-radius:16px;
+  padding:1.5rem;
+  color:white;
+  margin-bottom:1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.welcome-banner::after {
+  content:'ZEL';
+  position:absolute;
+  right:-10px; top:-10px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:5rem;
+  font-weight:300;
+  color:rgba(255,255,255,0.06);
+  line-height:1;
+}
+
+.welcome-banner h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;
+  font-weight:400;
+  margin-bottom:0.4rem;
+}
+
+.welcome-banner p { font-size:0.82rem; opacity:0.8; line-height:1.6; }
+
+/* Student ID card */
+.id-card {
+  background:white;
+  border-radius:16px;
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+  box-shadow:0 4px 20px rgba(10,110,159,0.08);
+  border:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+
+.id-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:4px;
+  background:linear-gradient(90deg, var(--ocean-dark), var(--accent));
+}
+
+.id-card-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.25rem;
+}
+
+.id-card-header h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;
+  color:var(--ocean-dark);
+}
+
+.id-badge {
+  background:var(--sky);
+  border:1px solid var(--border);
+  border-radius:50px;
+  padding:0.3rem 0.9rem;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--ocean);
+  letter-spacing:0.08em;
+}
+
+.id-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+.id-field label {
+  display:block;
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--muted);
+  margin-bottom:0.2rem;
+}
+
+.id-field span {
+  font-size:0.9rem;
+  font-weight:500;
+  color:var(--ink);
+}
+
+.id-field.full { grid-column:1/-1; }
+
+/* Cards grid */
+.cards-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+
+.info-card {
+  background:white;
+  border-radius:14px;
+  padding:1.25rem;
+  box-shadow:0 2px 12px rgba(10,110,159,0.06);
+  border:1px solid var(--border);
+}
+
+.info-card .icon { font-size:1.5rem; margin-bottom:0.6rem; display:block; }
+.info-card h4 { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.3rem; }
+.info-card p { font-size:0.9rem; font-weight:500; color:var(--ocean-dark); line-height:1.4; }
+
+/* Notices */
+.section-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;
+  color:var(--ocean-dark);
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+
+.notice-card {
+  background:white;
+  border-radius:12px;
+  padding:1.1rem 1.25rem;
+  margin-bottom:0.75rem;
+  border:1px solid var(--border);
+  border-left:3px solid var(--ocean);
+  box-shadow:0 2px 8px rgba(10,110,159,0.05);
+}
+
+.notice-card .notice-date { font-size:0.72rem; color:var(--muted); margin-bottom:0.3rem; }
+.notice-card .notice-title { font-size:0.92rem; font-weight:500; color:var(--ink); }
+.notice-card .notice-body { font-size:0.82rem; color:var(--muted); margin-top:0.3rem; line-height:1.6; }
+
+.empty-state {
+  text-align:center;
+  padding:2rem;
+  color:var(--muted);
+  font-size:0.85rem;
+}
+
+.empty-state .empty-icon { font-size:2rem; display:block; margin-bottom:0.5rem; }
+
+/* ══════════════════════════════
+   ADMIN PANEL
+══════════════════════════════ */
+#screen-admin {
+  flex-direction:column;
+  background:#0d1117;
+  min-height:100vh;
+}
+
+.admin-topbar {
+  background:#161b22;
+  border-bottom:1px solid #30363d;
+  padding:1rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0; z-index:50;
+}
+
+.admin-topbar .brand {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+
+.admin-badge {
+  background:#00b4d8;
+  color:#0d1117;
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  padding:0.2rem 0.5rem;
+  border-radius:4px;
+  text-transform:uppercase;
+}
+
+.admin-content { padding:1.5rem; max-width:900px; margin:0 auto; width:100%; }
+
+/* Admin stats */
+.admin-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+
+.stat-box {
+  background:#161b22;
+  border:1px solid #30363d;
+  border-radius:12px;
+  padding:1.25rem;
+  text-align:center;
+}
+
+.stat-box .num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;
+  color:#00b4d8;
+  font-weight:300;
+  line-height:1;
+  margin-bottom:0.3rem;
+}
+
+.stat-box .lbl { font-size:0.72rem; color:#8b949e; text-transform:uppercase; letter-spacing:0.08em; }
+
+/* Admin tabs */
+.admin-tabs {
+  display:flex;
+  gap:0.5rem;
+  margin-bottom:1.5rem;
+  border-bottom:1px solid #30363d;
+  padding-bottom:0;
+}
+
+.admin-tab {
+  background:transparent;
+  border:none;
+  border-bottom:2px solid transparent;
+  color:#8b949e;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.85rem;
+  padding:0.6rem 1rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-bottom:-1px;
+}
+
+.admin-tab.active { color:#00b4d8; border-bottom-color:#00b4d8; }
+
+/* Students table */
+.admin-section { display:none; }
+.admin-section.active { display:block; }
+
+.table-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+}
+
+.table-header h3 { color:white; font-family:'Cormorant Garamond',serif; font-size:1.2rem; }
+
+.btn-admin {
+  background:#00b4d8;
+  color:#0d1117;
+  border:none;
+  border-radius:8px;
+  padding:0.5rem 1rem;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:opacity 0.2s;
+}
+
+.btn-admin:hover { opacity:0.85; }
+
+.btn-danger {
+  background:#dc2626;
+  color:white;
+  border:none;
+  border-radius:6px;
+  padding:0.3rem 0.7rem;
+  font-size:0.75rem;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:opacity 0.2s;
+}
+
+.btn-danger:hover { opacity:0.8; }
+
+.student-card {
+  background:#161b22;
+  border:1px solid #30363d;
+  border-radius:12px;
+  padding:1.1rem 1.25rem;
+  margin-bottom:0.75rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+
+.student-card:hover { border-color:#00b4d8; }
+
+.student-info { flex:1; min-width:200px; }
+
+.student-id-badge {
+  background:#0d1117;
+  border:1px solid #00b4d8;
+  color:#00b4d8;
+  font-size:0.72rem;
+  font-weight:700;
+  padding:0.2rem 0.6rem;
+  border-radius:4px;
+  letter-spacing:0.1em;
+  margin-bottom:0.4rem;
+  display:inline-block;
+}
+
+.student-name { font-size:0.95rem; font-weight:500; color:white; margin-bottom:0.2rem; }
+.student-meta { font-size:0.78rem; color:#8b949e; }
+
+.student-actions { display:flex; gap:0.5rem; align-items:center; }
+
+/* Notice form */
+.notice-form {
+  background:#161b22;
+  border:1px solid #30363d;
+  border-radius:12px;
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+}
+
+.notice-form h3 { color:white; font-family:'Cormorant Garamond',serif; font-size:1.1rem; margin-bottom:1rem; }
+
+.dark-input {
+  width:100%;
+  background:#0d1117;
+  border:1px solid #30363d;
+  border-radius:8px;
+  padding:0.7rem 1rem;
+  color:white;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;
+  outline:none;
+  margin-bottom:0.75rem;
+  transition:border-color 0.2s;
+}
+
+.dark-input:focus { border-color:#00b4d8; }
+
+textarea.dark-input { min-height:90px; resize:vertical; }
+
+/* Loader */
+.loader {
+  display:inline-block;
+  width:18px; height:18px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  vertical-align:middle;
+  margin-right:0.4rem;
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+
+/* Modal */
+.modal-overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:1.5rem;
+}
+
+.modal-overlay.open { display:flex; }
+
+.modal {
+  background:white;
+  border-radius:16px;
+  padding:2rem;
+  width:100%;
+  max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  animation:slideUp 0.3s ease both;
+}
+
+.modal h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;
+  color:var(--ocean-dark);
+  margin-bottom:1.25rem;
+}
+
+/* Bottom nav */
+.bottom-nav {
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:white;
+  border-top:1px solid var(--border);
+  display:flex;
+  z-index:50;
+  box-shadow:0 -4px 20px rgba(10,110,159,0.08);
+}
+
+.nav-item {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:0.65rem 0.5rem;
+  background:none;
+  border:none;
+  cursor:pointer;
+  transition:color 0.2s;
+  color:var(--muted);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.65rem;
+  gap:0.2rem;
+}
+
+.nav-item .nav-icon { font-size:1.2rem; }
+.nav-item.active { color:var(--ocean); }
+.nav-item.active .nav-icon { transform:scale(1.1); }
+
+/* Responsive */
+@media(max-width:480px) {
+  .cards-grid { grid-template-columns:1fr; }
+  .admin-stats { grid-template-columns:1fr 1fr; }
+  .id-fields { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN 1: LOGIN ══ -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="dot"></span>
+      <h1>ZEL</h1>
+      <p>Zone for English Learners</p>
+    </div>
+
+    <div id="login-alert" class="alert"></div>
+
+    <!-- Tabs -->
+    <div class="login-tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="tab-login">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="your@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-main" onclick="doLogin()" id="btn-login">Sign In</button>
+      <p style="text-align:center; font-size:0.75rem; color:var(--muted); margin-top:1rem;">
+        Admin? Use your admin credentials to access the panel.
+      </p>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="tab-register" style="display:none;">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="reg-name" placeholder="e.g. Sara Ahmed">
+      </div>
+      <div class="form-group">
+        <label>Phone / WhatsApp</label>
+        <input type="tel" id="reg-phone" placeholder="e.g. 0761864245">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="reg-email" placeholder="your@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Course</label>
+        <select id="reg-course">
+          <option value="">Select course...</option>
+          <option>After Finishing O/L</option>
+          <option>After Finishing A/L</option>
+          <option>IELTS Preparation</option>
+          <option>English for Kids (Ages 6–14)</option>
+          <option>Business English</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Password (min. 6 characters)</label>
+        <input type="password" id="reg-password" placeholder="Create a password">
+      </div>
+      <button class="btn-main" onclick="doRegister()" id="btn-register">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: STUDENT DASHBOARD ══ -->
+<div class="screen" id="screen-dashboard">
+  <div style="width:100%; padding-bottom:70px;">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-brand">
+        <span class="dot"></span> ZEL
+      </div>
+      <div class="topbar-right">
+        <div class="avatar" id="dash-avatar">S</div>
+        <button class="btn-logout" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="dash-content">
+
+      <!-- Welcome -->
+      <div class="welcome-banner">
+        <h2 id="dash-welcome">Welcome back! 👋</h2>
+        <p>Keep up the great work. Your English journey is progressing well!</p>
+      </div>
+
+      <!-- Student ID Card -->
+      <div class="id-card">
+        <div class="id-card-header">
+          <h3>🪪 Student ID Card</h3>
+          <span class="id-badge" id="dash-student-id">ZEL-0000</span>
+        </div>
+        <div class="id-fields">
+          <div class="id-field">
+            <label>Full Name</label>
+            <span id="id-name">—</span>
+          </div>
+          <div class="id-field">
+            <label>Phone</label>
+            <span id="id-phone">—</span>
+          </div>
+          <div class="id-field full">
+            <label>Course</label>
+            <span id="id-course">—</span>
+          </div>
+          <div class="id-field">
+            <label>Email</label>
+            <span id="id-email">—</span>
+          </div>
+          <div class="id-field">
+            <label>Status</label>
+            <span style="color:var(--success); font-weight:600;">✅ Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info cards -->
+      <div class="cards-grid">
+        <div class="info-card">
+          <span class="icon">📚</span>
+          <h4>My Course</h4>
+          <p id="card-course">—</p>
+        </div>
+        <div class="info-card">
+          <span class="icon">📅</span>
+          <h4>Enrolled</h4>
+          <p id="card-enrolled">—</p>
+        </div>
+      </div>
+
+      <!-- Notices -->
+      <div class="section-title">📢 Announcements</div>
+      <div id="notices-list">
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          No announcements yet
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="dashNav('home',this)">
+      <span class="nav-icon">🏠</span>Home
+    </button>
+    <button class="nav-item" onclick="dashNav('id',this)">
+      <span class="nav-icon">🪪</span>My ID
+    </button>
+    <button class="nav-item" onclick="dashNav('notices',this)">
+      <span class="nav-icon">📢</span>Notices
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: ADMIN PANEL ══ -->
+<div class="screen" id="screen-admin">
+  <div style="width:100%; padding-bottom:20px;">
+
+    <div class="admin-topbar">
+      <div class="brand">
+        ZEL <span class="admin-badge">Admin</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:0.4rem 0.9rem; border-radius:50px; font-size:0.75rem; cursor:pointer;">Logout</button>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Stats -->
+      <div class="admin-stats">
+        <div class="stat-box">
+          <div class="num" id="stat-total">0</div>
+          <div class="lbl">Students</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="stat-notices">0</div>
+          <div class="lbl">Notices</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="stat-courses">5</div>
+          <div class="lbl">Courses</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="adminTab('students',this)">👨‍🎓 Students</button>
+        <button class="admin-tab" onclick="adminTab('notices',this)">📢 Notices</button>
+        <button class="admin-tab" onclick="adminTab('addstudent',this)">➕ Add Student</button>
+      </div>
+
+      <!-- Students list -->
+      <div class="admin-section active" id="section-students">
+        <div class="table-header">
+          <h3>All Students</h3>
+          <button class="btn-admin" onclick="loadStudents()">🔄 Refresh</button>
+        </div>
+        <div id="students-list">
+          <div class="empty-state" style="color:#8b949e;">Loading students...</div>
+        </div>
+      </div>
+
+      <!-- Notices -->
+      <div class="admin-section" id="section-notices">
+        <div class="notice-form">
+          <h3>📢 Post Announcement</h3>
+          <input type="text" class="dark-input" id="notice-title" placeholder="Notice title...">
+          <textarea class="dark-input" id="notice-body" placeholder="Write your announcement here..."></textarea>
+          <button class="btn-admin" onclick="postNotice()">Post Announcement</button>
+        </div>
+        <div id="admin-notices-list">
+          <div class="empty-state" style="color:#8b949e;">No notices yet</div>
+        </div>
+      </div>
+
+      <!-- Add Student -->
+      <div class="admin-section" id="section-addstudent">
+        <div class="notice-form">
+          <h3>➕ Add New Student</h3>
+          <div id="add-alert" class="alert"></div>
+          <input type="text"  class="dark-input" id="add-name"     placeholder="Full Name *">
+          <input type="tel"   class="dark-input" id="add-phone"    placeholder="Phone / WhatsApp *">
+          <input type="email" class="dark-input" id="add-email"    placeholder="Email Address *">
+          <input type="password" class="dark-input" id="add-password" placeholder="Set Password (min. 6 chars) *">
+          <select class="dark-input" id="add-course" style="color:white;">
+            <option value="" style="color:black;">Select Course *</option>
+            <option>After Finishing O/L</option>
+            <option>After Finishing A/L</option>
+            <option>IELTS Preparation</option>
+            <option>English for Kids (Ages 6–14)</option>
+            <option>Business English</option>
+          </select>
+          <button class="btn-admin" onclick="adminAddStudent()" id="btn-add-student" style="width:100%; padding:0.75rem;">Create Student Account</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ FIREBASE ══ -->
+<script type="module">
+import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword,
+         signInWithEmailAndPassword, signOut,
+         onAuthStateChanged }                     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc,
+         collection, getDocs, addDoc,
+         deleteDoc, query, orderBy,
+         serverTimestamp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── Firebase config ──
+const firebaseConfig = {
+  apiKey:            "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
+  authDomain:        "zel-app-cfb38.firebaseapp.com",
+  projectId:         "zel-app-cfb38",
+  storageBucket:     "zel-app-cfb38.firebasestorage.app",
+  messagingSenderId: "178893517113",
+  appId:             "1:178893517113:web:65cfce0b5cdd2a655d78e8"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ── Admin email ──
+const ADMIN_EMAIL = "zhakeel.mhd@gmail.com";
+
+// ── Generate Student ID ──
+async function generateStudentId() {
+  const year = new Date().getFullYear();
+  const studentsSnap = await getDocs(collection(db, 'students'));
+  const count = studentsSnap.size + 1;
+  return `ZEL-${year}-${String(count).padStart(3,'0')}`;
+}
+
+// ── Show screen ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+// ── Show alert ──
+function showAlert(elId, msg, type='error') {
+  const el = document.getElementById(elId);
+  el.className = 'alert ' + type;
+  el.textContent = msg;
+  setTimeout(() => { el.className = 'alert'; }, 4000);
+}
+
+// ── Auth state ──
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    if (user.email === ADMIN_EMAIL) {
+      showScreen('admin');
+      loadStudents();
+      loadAdminNotices();
+    } else {
+      showScreen('dashboard');
+      loadStudentData(user);
+      loadNotices();
+    }
+  } else {
+    showScreen('login');
+  }
+});
+
+// ══ LOGIN ══
+window.doLogin = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const btn   = document.getElementById('btn-login');
+  if (!email || !pass) { showAlert('login-alert','Please fill in all fields.'); return; }
+  btn.innerHTML = '<span class="loader"></span> Signing in...';
+  btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    let msg = 'Login failed. Check your credentials.';
+    if (e.code === 'auth/user-not-found')  msg = 'No account found with this email.';
+    if (e.code === 'auth/wrong-password')  msg = 'Incorrect password.';
+    if (e.code === 'auth/invalid-email')   msg = 'Invalid email address.';
+    showAlert('login-alert', msg);
+    btn.innerHTML = 'Sign In';
+    btn.disabled = false;
+  }
+};
+
+// ══ REGISTER ══
+window.doRegister = async () => {
+  const name   = document.getElementById('reg-name').value.trim();
+  const phone  = document.getElementById('reg-phone').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const course = document.getElementById('reg-course').value;
+  const pass   = document.getElementById('reg-password').value;
+  const btn    = document.getElementById('btn-register');
+
+  if (!name||!phone||!email||!course||!pass) { showAlert('login-alert','Please fill in all fields.'); return; }
+  if (pass.length < 6) { showAlert('login-alert','Password must be at least 6 characters.'); return; }
+
+  btn.innerHTML = '<span class="loader"></span> Creating account...';
+  btn.disabled = true;
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    const studentId = await generateStudentId();
+    await setDoc(doc(db, 'students', cred.user.uid), {
+      name, phone, email, course,
+      studentId,
+      enrolledAt: serverTimestamp(),
+      role: 'student'
+    });
+    showAlert('login-alert', `Account created! Your ID: ${studentId}`, 'success');
+  } catch(e) {
+    let msg = 'Registration failed.';
+    if (e.code === 'auth/email-already-in-use') msg = 'This email is already registered.';
+    if (e.code === 'auth/weak-password')        msg = 'Password is too weak.';
+    showAlert('login-alert', msg);
+    btn.innerHTML = 'Create Account';
+    btn.disabled = false;
+  }
+};
+
+// ══ LOGOUT ══
+window.doLogout = async () => { await signOut(auth); };
+
+// ══ LOAD STUDENT DATA ══
+async function loadStudentData(user) {
+  const snap = await getDoc(doc(db, 'students', user.uid));
+  if (!snap.exists()) return;
+  const d = snap.data();
+  const firstName = d.name?.split(' ')[0] || 'Student';
+
+  document.getElementById('dash-welcome').textContent   = `Welcome, ${firstName}! 👋`;
+  document.getElementById('dash-avatar').textContent    = firstName[0].toUpperCase();
+  document.getElementById('dash-student-id').textContent = d.studentId || 'ZEL-0000';
+  document.getElementById('id-name').textContent        = d.name    || '—';
+  document.getElementById('id-phone').textContent       = d.phone   || '—';
+  document.getElementById('id-course').textContent      = d.course  || '—';
+  document.getElementById('id-email').textContent       = d.email   || '—';
+  document.getElementById('card-course').textContent    = d.course  || '—';
+
+  if (d.enrolledAt?.toDate) {
+    document.getElementById('card-enrolled').textContent =
+      d.enrolledAt.toDate().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  }
+}
+
+// ══ LOAD NOTICES (Student) ══
+async function loadNotices() {
+  const list = document.getElementById('notices-list');
+  try {
+    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    if (snap.empty) { list.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const n = d.data();
+      const date = n.createdAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) || '';
+      list.innerHTML += `
+        <div class="notice-card">
+          <div class="notice-date">${date}</div>
+          <div class="notice-title">${n.title}</div>
+          <div class="notice-body">${n.body}</div>
+        </div>`;
+    });
+  } catch(e) { list.innerHTML = '<div class="empty-state">Could not load notices.</div>'; }
+}
+
+// ══ ADMIN: LOAD STUDENTS ══
+window.loadStudents = async () => {
+  const list = document.getElementById('students-list');
+  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
+  try {
+    const snap = await getDocs(collection(db,'students'));
+    document.getElementById('stat-total').textContent = snap.size;
+    if (snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students yet.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const s = d.data();
+      list.innerHTML += `
+        <div class="student-card">
+          <div class="student-info">
+            <div class="student-id-badge">${s.studentId || 'N/A'}</div>
+            <div class="student-name">${s.name}</div>
+            <div class="student-meta">${s.email} · ${s.phone}</div>
+            <div class="student-meta" style="margin-top:0.2rem;">📚 ${s.course}</div>
+          </div>
+          <div class="student-actions">
+            <button class="btn-danger" onclick="deleteStudent('${d.id}')">🗑 Remove</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { list.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`; }
+};
+
+// ══ ADMIN: DELETE STUDENT ══
+window.deleteStudent = async (uid) => {
+  if (!confirm('Remove this student?')) return;
+  await deleteDoc(doc(db,'students',uid));
+  loadStudents();
+};
+
+// ══ ADMIN: POST NOTICE ══
+window.postNotice = async () => {
+  const title = document.getElementById('notice-title').value.trim();
+  const body  = document.getElementById('notice-body').value.trim();
+  if (!title || !body) { alert('Please fill in title and message.'); return; }
+  await addDoc(collection(db,'notices'), { title, body, createdAt: serverTimestamp() });
+  document.getElementById('notice-title').value = '';
+  document.getElementById('notice-body').value  = '';
+  loadAdminNotices();
+  alert('✅ Announcement posted!');
+};
+
+// ══ ADMIN: LOAD NOTICES ══
+async function loadAdminNotices() {
+  const list = document.getElementById('admin-notices-list');
+  try {
+    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    document.getElementById('stat-notices').textContent = snap.size;
+    if (snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No notices posted yet.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const n = d.data();
+      list.innerHTML += `
+        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <div style="color:white; font-weight:500; font-size:0.9rem;">${n.title}</div>
+            <button class="btn-danger" onclick="deleteNotice('${d.id}')">🗑</button>
+          </div>
+          <div style="color:#8b949e; font-size:0.82rem;">${n.body}</div>
+        </div>`;
+    });
+  } catch(e) {}
+}
+
+// ══ ADMIN: DELETE NOTICE ══
+window.deleteNotice = async (id) => {
+  await deleteDoc(doc(db,'notices',id));
+  loadAdminNotices();
+};
+
+// ══ ADMIN: ADD STUDENT ══
+window.adminAddStudent = async () => {
+  const name   = document.getElementById('add-name').value.trim();
+  const phone  = document.getElementById('add-phone').value.trim();
+  const email  = document.getElementById('add-email').value.trim();
+  const pass   = document.getElementById('add-password').value;
+  const course = document.getElementById('add-course').value;
+  const btn    = document.getElementById('btn-add-student');
+
+  if (!name||!phone||!email||!pass||!course) { showAlert('add-alert','Please fill in all fields.'); return; }
+  if (pass.length < 6) { showAlert('add-alert','Password must be at least 6 characters.'); return; }
+
+  btn.innerHTML = '<span class="loader"></span> Creating...';
+  btn.disabled  = true;
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    const studentId = await generateStudentId();
+    await setDoc(doc(db,'students', cred.user.uid), {
+      name, phone, email, course, studentId,
+      enrolledAt: serverTimestamp(),
+      role: 'student'
+    });
+    // Sign admin back in
+    showAlert('add-alert', `✅ Student created! ID: ${studentId}`, 'success');
+    document.getElementById('add-name').value     = '';
+    document.getElementById('add-phone').value    = '';
+    document.getElementById('add-email').value    = '';
+    document.getElementById('add-password').value = '';
+    document.getElementById('add-course').value   = '';
+    loadStudents();
+  } catch(e) {
+    let msg = 'Failed to create student.';
+    if (e.code === 'auth/email-already-in-use') msg = 'This email already has an account.';
+    showAlert('add-alert', msg);
+  }
+
+  btn.innerHTML = 'Create Student Account';
+  btn.disabled  = false;
+};
+
+</script>
+
+<!-- ══ UI HELPERS (non-module) ══ -->
+<script>
+window.switchTab = (tab) => {
+  document.getElementById('tab-login').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('tab-register').style.display = tab==='register' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (tab==='login' && i===0)||(tab==='register' && i===1));
+  });
+  document.getElementById('login-alert').className = 'alert';
+};
+
+window.dashNav = (section, btn) => {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const idCard  = document.querySelector('.id-card');
+  const notices = document.getElementById('notices-list');
+  const welcome = document.querySelector('.welcome-banner');
+  const cards   = document.querySelector('.cards-grid');
+  const title   = document.querySelector('.section-title');
+
+  if (section === 'home') {
+    welcome.style.display = ''; cards.style.display = ''; idCard.style.display = 'none';
+    title.style.display = 'none'; notices.style.display = 'none';
+  } else if (section === 'id') {
+    welcome.style.display = 'none'; cards.style.display = 'none'; idCard.style.display = '';
+    title.style.display = 'none'; notices.style.display = 'none';
+  } else if (section === 'notices') {
+    welcome.style.display = 'none'; cards.style.display = 'none'; idCard.style.display = 'none';
+    title.style.display = ''; notices.style.display = '';
+  }
+};
+// Hide ID card by default on load
+document.addEventListener('DOMContentLoaded', () => {
+  const idCard = document.querySelector('.id-card');
+  if (idCard) idCard.style.display = 'none';
+  const title = document.querySelector('.section-title');
+  if (title) title.style.display = 'none';
+  const notices = document.getElementById('notices-list');
+  if (notices) notices.style.display = 'none';
+});
+
+window.adminTab = (tab, btn) => {
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-'+tab).classList.add('active');
+};
+</script>
+
+</body>
+</html>
