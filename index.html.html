@@ -4,293 +4,589 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#064e73">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>ZEL — Zone for English Learners</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --ocean:#0a6e9f; --ocean-dark:#064e73; --ocean-deep:#03324a;
-  --accent:#00b4d8; --sky:#e8f4fb; --white:#ffffff;
-  --ink:#0d1f2d; --muted:#5a7d94; --border:rgba(10,110,159,0.2);
+  --accent:#00b4d8; --sky:#e8f4fb; --sky-mid:#bde0f5;
+  --white:#ffffff; --ink:#0d1f2d; --muted:#5a7d94;
+  --border:rgba(10,110,159,0.2);
   --success:#16a34a; --danger:#dc2626; --warning:#d97706;
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html, body { font-family:'DM Sans',sans-serif; background:var(--sky); color:var(--ink); overflow-x:hidden; }
+html, body { height:100%; font-family:'DM Sans',sans-serif; background:var(--sky); color:var(--ink); overflow-x:hidden; }
+
 .screen { display:none; min-height:100vh; }
 .screen.active { display:flex; }
 
-#screen-login { flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(145deg,var(--ocean-deep) 0%,var(--ocean-dark) 60%,var(--ocean) 100%); padding:2rem 1.5rem; position:relative; overflow:hidden; }
-#screen-login::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; border:1px solid rgba(255,255,255,0.06); top:-150px; right:-150px; }
-#screen-login::after { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:rgba(0,180,216,0.07); bottom:-100px; left:-80px; }
-.login-card { background:rgba(255,255,255,0.97); border-radius:20px; padding:2.5rem 2rem; width:100%; max-width:400px; box-shadow:0 30px 80px rgba(0,0,0,0.35); position:relative; z-index:2; animation:slideUp 0.5s ease both; }
+/* ══ LOGIN SCREEN ══ */
+#screen-login {
+  flex-direction:column; align-items:center; justify-content:center;
+  background:linear-gradient(145deg, var(--ocean-deep) 0%, var(--ocean-dark) 60%, var(--ocean) 100%);
+  padding:2rem 1.5rem; position:relative; overflow:hidden;
+}
+#screen-login::before {
+  content:''; position:absolute; width:500px; height:500px; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.06); top:-150px; right:-150px;
+}
+#screen-login::after {
+  content:''; position:absolute; width:300px; height:300px; border-radius:50%;
+  background:rgba(0,180,216,0.07); bottom:-100px; left:-80px;
+}
+
+.login-card {
+  background:rgba(255,255,255,0.97); border-radius:20px; padding:2.5rem 2rem;
+  width:100%; max-width:400px; box-shadow:0 30px 80px rgba(0,0,0,0.35);
+  position:relative; z-index:2; animation:slideUp 0.5s ease both;
+}
+
 .login-logo { text-align:center; margin-bottom:1.75rem; }
-.login-logo .dot { width:12px; height:12px; border-radius:50%; background:var(--accent); display:inline-block; margin-right:0.4rem; vertical-align:middle; }
-.login-logo h1 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--ocean-dark); display:inline; }
-.login-logo p { font-size:0.75rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; margin-top:0.3rem; }
-.login-tabs { display:flex; background:var(--sky); border-radius:10px; padding:4px; margin-bottom:1.75rem; gap:4px; }
-.tab-btn { flex:1; padding:0.6rem; border:none; border-radius:7px; background:transparent; font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.2s; }
-.tab-btn.active { background:var(--white); color:var(--ocean-dark); box-shadow:0 2px 8px rgba(10,110,159,0.15); }
+.login-logo .dot {
+  width:12px; height:12px; border-radius:50%; background:var(--accent);
+  display:inline-block; margin-right:0.4rem; vertical-align:middle;
+}
+.login-logo h1 {
+  font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600;
+  color:var(--ocean-dark); display:inline;
+}
+.login-logo p {
+  font-size:0.75rem; color:var(--muted); letter-spacing:0.15em;
+  text-transform:uppercase; margin-top:0.3rem;
+}
+
+.login-tabs {
+  display:flex; background:var(--sky); border-radius:10px; padding:4px;
+  margin-bottom:1.75rem; gap:4px;
+}
+.tab-btn {
+  flex:1; padding:0.6rem; border:none; border-radius:7px; background:transparent;
+  font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:500;
+  color:var(--muted); cursor:pointer; transition:all 0.2s;
+}
+.tab-btn.active {
+  background:var(--white); color:var(--ocean-dark);
+  box-shadow:0 2px 8px rgba(10,110,159,0.15);
+}
 
 .form-group { margin-bottom:1rem; }
-.form-group label { display:block; font-size:0.75rem; font-weight:500; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.4rem; }
-.form-group input, .form-group select, .form-group textarea {
-  width:100%; background:var(--sky); border:1.5px solid var(--border); border-radius:10px;
-  padding:0.75rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--ink);
-  outline:none; transition:border-color 0.2s,box-shadow 0.2s;
+.form-group label {
+  display:block; font-size:0.75rem; font-weight:500; color:var(--muted);
+  letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.4rem;
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  border-color:var(--ocean); box-shadow:0 0 0 3px rgba(10,110,159,0.1); background:white;
+.form-group input, .form-group select {
+  width:100%; background:var(--sky); border:1.5px solid var(--border);
+  border-radius:10px; padding:0.75rem 1rem; font-family:'DM Sans',sans-serif;
+  font-size:0.9rem; color:var(--ink); outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color:var(--ocean); box-shadow:0 0 0 3px rgba(10,110,159,0.1);
+  background:white;
 }
 
-.btn-main { width:100%; background:linear-gradient(135deg,var(--ocean-dark),var(--ocean)); color:white; border:none; border-radius:50px; padding:0.85rem; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; margin-top:0.5rem; transition:opacity 0.2s,transform 0.2s; box-shadow:0 4px 20px rgba(10,110,159,0.3); }
+.btn-main {
+  width:100%; background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
+  color:white; border:none; border-radius:50px; padding:0.85rem;
+  font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600;
+  letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+  margin-top:0.5rem; transition:opacity 0.2s, transform 0.2s;
+  box-shadow:0 4px 20px rgba(10,110,159,0.3);
+}
 .btn-main:hover { opacity:0.9; transform:translateY(-1px); }
 .btn-main:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
 
-.alert { padding:0.75rem 1rem; border-radius:8px; font-size:0.82rem; margin-bottom:1rem; display:none; word-break:break-word; }
+.alert {
+  padding:0.75rem 1rem; border-radius:8px; font-size:0.82rem;
+  margin-bottom:1rem; display:none;
+}
 .alert.error { background:#fef2f2; border:1px solid #fca5a5; color:#b91c1c; display:block; }
 .alert.success { background:#f0fdf4; border:1px solid #86efac; color:#15803d; display:block; }
-.alert.info { background:#eff6ff; border:1px solid #93c5fd; color:#1e40af; display:block; }
 
-.topbar { background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark)); color:white; padding:1.1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; box-shadow:0 4px 20px rgba(3,50,74,0.3); }
-.topbar-brand { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; display:flex; align-items:center; gap:0.4rem; }
+/* ══ STUDENT DASHBOARD ══ */
+#screen-dashboard { flex-direction:column; background:var(--sky); min-height:100vh; }
+
+.topbar {
+  background:linear-gradient(135deg, var(--ocean-deep), var(--ocean-dark));
+  color:white; padding:1.25rem 1.5rem; display:flex; align-items:center;
+  justify-content:space-between; position:sticky; top:0; z-index:50;
+  box-shadow:0 4px 20px rgba(3,50,74,0.3);
+}
+.topbar-brand {
+  font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600;
+  display:flex; align-items:center; gap:0.4rem;
+}
 .topbar-brand .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+
 .topbar-right { display:flex; align-items:center; gap:0.75rem; }
-.avatar { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:600; color:white; overflow:hidden; }
-.avatar img { width:100%; height:100%; object-fit:cover; }
-.btn-logout { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:0.4rem 0.9rem; border-radius:50px; font-size:0.75rem; font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s; }
+.avatar {
+  width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2);
+  border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center;
+  justify-content:center; font-size:0.9rem; font-weight:600; color:white; cursor:pointer;
+}
+.btn-logout {
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; padding:0.4rem 0.9rem; border-radius:50px; font-size:0.75rem;
+  font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s;
+}
 .btn-logout:hover { background:rgba(255,255,255,0.2); }
 
-#screen-dashboard { flex-direction:column; background:var(--sky); }
-.dash-content { padding:1.5rem; max-width:600px; margin:0 auto; width:100%; padding-bottom:90px; }
+.dash-content { padding:1.5rem; max-width:600px; margin:0 auto; width:100%; padding-bottom:80px; }
 
-.welcome-banner { background:linear-gradient(135deg,var(--ocean-dark),var(--ocean)); border-radius:16px; padding:1.5rem; color:white; margin-bottom:1.5rem; position:relative; overflow:hidden; }
-.welcome-banner::after { content:'ZEL'; position:absolute; right:-10px; top:-10px; font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300; color:rgba(255,255,255,0.06); line-height:1; }
-.welcome-banner h2 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; margin-bottom:0.4rem; }
-.welcome-banner p { font-size:0.82rem; opacity:0.85; line-height:1.6; }
+.welcome-banner {
+  background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
+  border-radius:16px; padding:1.5rem; color:white; margin-bottom:1.5rem;
+  position:relative; overflow:hidden;
+}
+.welcome-banner::after {
+  content:'ZEL'; position:absolute; right:-10px; top:-10px;
+  font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300;
+  color:rgba(255,255,255,0.06); line-height:1;
+}
+.welcome-banner h2 {
+  font-family:'Cormorant Garamond',serif; font-size:1.5rem;
+  font-weight:400; margin-bottom:0.4rem;
+}
+.welcome-banner p { font-size:0.82rem; opacity:0.8; line-height:1.6; }
 
-.id-card { background:white; border-radius:16px; padding:1.5rem; margin-bottom:1.5rem; box-shadow:0 4px 20px rgba(10,110,159,0.08); border:1px solid var(--border); position:relative; overflow:hidden; }
-.id-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--ocean-dark),var(--accent)); }
-.id-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; }
-.id-card-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--ocean-dark); }
-.id-badge { background:var(--sky); border:1px solid var(--border); border-radius:50px; padding:0.3rem 0.9rem; font-size:0.75rem; font-weight:600; color:var(--ocean); letter-spacing:0.08em; }
-.id-photo-row { display:flex; gap:1.25rem; align-items:center; margin-bottom:1.25rem; padding-bottom:1.25rem; border-bottom:1px solid var(--border); }
-.id-photo { width:90px; height:110px; border-radius:8px; background:linear-gradient(135deg,var(--ocean-dark),var(--ocean)); border:3px solid var(--accent); overflow:hidden; display:flex; align-items:center; justify-content:center; color:white; font-family:'Cormorant Garamond',serif; font-size:2.5rem; flex-shrink:0; }
-.id-photo img { width:100%; height:100%; object-fit:cover; }
-.id-photo-info h4 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--ocean-dark); margin-bottom:0.3rem; }
-.id-photo-info p { font-size:0.85rem; color:var(--muted); }
+.id-card {
+  background:white; border-radius:16px; padding:1.5rem; margin-bottom:1.5rem;
+  box-shadow:0 4px 20px rgba(10,110,159,0.08); border:1px solid var(--border);
+  position:relative; overflow:hidden;
+}
+.id-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--ocean-dark), var(--accent));
+}
+
+.id-card-header {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;
+}
+.id-card-header h3 {
+  font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--ocean-dark);
+}
+.id-badge {
+  background:var(--sky); border:1px solid var(--border); border-radius:50px;
+  padding:0.3rem 0.9rem; font-size:0.75rem; font-weight:600;
+  color:var(--ocean); letter-spacing:0.08em;
+}
+
+.id-photo-wrap {
+  text-align:center; margin-bottom:1.25rem;
+}
+.id-photo {
+  width:100px; height:100px; border-radius:50%; object-fit:cover;
+  border:3px solid var(--ocean); box-shadow:0 4px 12px rgba(10,110,159,0.2);
+}
+.id-photo-placeholder {
+  width:100px; height:100px; border-radius:50%; background:var(--sky);
+  border:3px solid var(--border); display:inline-flex; align-items:center;
+  justify-content:center; font-size:2.5rem; color:var(--ocean);
+}
+
 .id-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.id-field label { display:block; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.2rem; }
-.id-field span { font-size:0.9rem; font-weight:500; color:var(--ink); word-break:break-word; }
+.id-field label {
+  display:block; font-size:0.68rem; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--muted); margin-bottom:0.2rem;
+}
+.id-field span { font-size:0.9rem; font-weight:500; color:var(--ink); }
 .id-field.full { grid-column:1/-1; }
 
-.section-title { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--ocean-dark); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
-.notice-card { background:white; border-radius:12px; padding:1.1rem 1.25rem; margin-bottom:0.75rem; border:1px solid var(--border); border-left:3px solid var(--ocean); box-shadow:0 2px 8px rgba(10,110,159,0.05); }
+/* Attendance grid */
+.attendance-grid {
+  display:grid; grid-template-columns:repeat(7, 1fr); gap:0.4rem; margin:1rem 0;
+}
+.att-cell {
+  aspect-ratio:1; border-radius:6px; display:flex; align-items:center;
+  justify-content:center; font-size:0.7rem; font-weight:600;
+  border:1px solid var(--border);
+}
+.att-cell.present { background:var(--success); color:white; border-color:var(--success); }
+.att-cell.absent  { background:var(--danger); color:white; border-color:var(--danger); }
+.att-cell.late    { background:var(--warning); color:white; border-color:var(--warning); }
+.att-cell.empty   { background:var(--sky); color:var(--muted); }
+
+.progress-bar {
+  height:8px; background:var(--sky); border-radius:50px; overflow:hidden; margin-top:0.5rem;
+}
+.progress-fill {
+  height:100%; background:linear-gradient(90deg, var(--success), #22c55e);
+  transition:width 0.3s;
+}
+
+/* Fee breakdown */
+.fee-row {
+  display:flex; justify-content:space-between; padding:0.6rem 0;
+  border-bottom:1px solid var(--border);
+}
+.fee-row:last-child { border:none; }
+.fee-label { font-size:0.82rem; color:var(--muted); }
+.fee-value { font-size:0.9rem; font-weight:600; color:var(--ink); }
+
+.cards-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;
+}
+.info-card {
+  background:white; border-radius:14px; padding:1.25rem;
+  box-shadow:0 2px 12px rgba(10,110,159,0.06); border:1px solid var(--border);
+}
+.info-card .icon { font-size:1.5rem; margin-bottom:0.6rem; display:block; }
+.info-card h4 {
+  font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--muted); margin-bottom:0.3rem;
+}
+.info-card p { font-size:0.9rem; font-weight:500; color:var(--ocean-dark); line-height:1.4; }
+
+.section-title {
+  font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--ocean-dark);
+  margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;
+}
+
+.notice-card {
+  background:white; border-radius:12px; padding:1.1rem 1.25rem; margin-bottom:0.75rem;
+  border:1px solid var(--border); border-left:3px solid var(--ocean);
+  box-shadow:0 2px 8px rgba(10,110,159,0.05);
+}
 .notice-card .notice-date { font-size:0.72rem; color:var(--muted); margin-bottom:0.3rem; }
 .notice-card .notice-title { font-size:0.92rem; font-weight:500; color:var(--ink); }
-.notice-card .notice-body { font-size:0.82rem; color:var(--muted); margin-top:0.3rem; line-height:1.6; }
+.notice-card .notice-body {
+  font-size:0.82rem; color:var(--muted); margin-top:0.3rem; line-height:1.6;
+}
+
 .empty-state { text-align:center; padding:2rem; color:var(--muted); font-size:0.85rem; }
 .empty-state .empty-icon { font-size:2rem; display:block; margin-bottom:0.5rem; }
 
-.percent-bar-wrap { background:white; border:1px solid var(--border); border-radius:14px; padding:1.25rem; margin-bottom:1.25rem; }
-.percent-bar-wrap h4 { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.6rem; }
-.percent-num { font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:var(--ocean-dark); font-weight:400; line-height:1; margin-bottom:0.5rem; }
-.percent-bar { height:10px; background:var(--sky); border-radius:6px; overflow:hidden; margin-top:0.6rem; }
-.percent-bar-fill { height:100%; background:linear-gradient(90deg,var(--ocean),var(--accent)); transition:width 0.6s; }
-
-.attendance-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:1rem; }
-.att-cell { aspect-ratio:1/1; border-radius:5px; background:var(--sky); display:flex; align-items:center; justify-content:center; font-size:0.65rem; color:var(--muted); }
-.att-cell.present { background:var(--success); color:white; }
-.att-cell.absent { background:var(--danger); color:white; }
-.att-cell.late { background:var(--warning); color:white; }
-
-.fee-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-bottom:1.25rem; }
-.fee-box { background:white; border:1px solid var(--border); border-radius:12px; padding:1rem; text-align:center; }
-.fee-box .label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.4rem; }
-.fee-box .amt { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:500; }
-.fee-box.total .amt { color:var(--ocean-dark); }
-.fee-box.paid .amt { color:var(--success); }
-.fee-box.outstanding .amt { color:var(--danger); }
-
-.fee-row { background:white; border:1px solid var(--border); border-radius:10px; padding:0.9rem 1rem; margin-bottom:0.6rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap; }
-.fee-row-info .month { font-weight:500; font-size:0.9rem; color:var(--ink); }
-.fee-row-info .amt { font-size:0.78rem; color:var(--muted); margin-top:0.15rem; }
-.fee-status { padding:0.25rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:600; letter-spacing:0.05em; }
-.fee-status.Paid { background:#d1fae5; color:#065f46; }
-.fee-status.Partial { background:#fef3c7; color:#92400e; }
-.fee-status.Unpaid { background:#fee2e2; color:#991b1b; }
-
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid var(--border); display:flex; z-index:50; box-shadow:0 -4px 20px rgba(10,110,159,0.08); }
-.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; padding:0.65rem 0.4rem; background:none; border:none; cursor:pointer; transition:color 0.2s; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.6rem; gap:0.2rem; }
-.nav-item .nav-icon { font-size:1.15rem; }
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; background:white;
+  border-top:1px solid var(--border); display:flex; z-index:50;
+  box-shadow:0 -4px 20px rgba(10,110,159,0.08);
+}
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  padding:0.65rem 0.5rem; background:none; border:none; cursor:pointer;
+  transition:color 0.2s; color:var(--muted); font-family:'DM Sans',sans-serif;
+  font-size:0.65rem; gap:0.2rem;
+}
+.nav-item .nav-icon { font-size:1.2rem; }
 .nav-item.active { color:var(--ocean); }
+.nav-item.active .nav-icon { transform:scale(1.1); }
 
-.sub-screen { display:none; }
-.sub-screen.active { display:block; animation:fadeIn 0.3s ease both; }
+/* ══ ADMIN PANEL ══ */
+#screen-admin { flex-direction:column; background:#0d1117; min-height:100vh; }
 
-#screen-admin { flex-direction:column; background:#0d1117; }
-.admin-topbar { background:#161b22; border-bottom:1px solid #30363d; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
-.admin-topbar .brand { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:white; display:flex; align-items:center; gap:0.5rem; }
-.admin-badge { background:var(--accent); color:#0d1117; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; padding:0.2rem 0.5rem; border-radius:4px; text-transform:uppercase; }
-.admin-content { padding:1.25rem 1rem; max-width:1000px; margin:0 auto; width:100%; }
+.admin-topbar {
+  background:#161b22; border-bottom:1px solid #30363d; padding:1rem 1.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:50;
+}
+.admin-topbar .brand {
+  font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:white;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.admin-badge {
+  background:#00b4d8; color:#0d1117; font-size:0.65rem; font-weight:700;
+  letter-spacing:0.1em; padding:0.2rem 0.5rem; border-radius:4px;
+  text-transform:uppercase;
+}
 
-.admin-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; margin-bottom:1.5rem; }
-.stat-box { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:1rem 0.75rem; text-align:center; }
-.stat-box .num { font-family:'Cormorant Garamond',serif; font-size:1.7rem; color:var(--accent); font-weight:300; line-height:1; margin-bottom:0.25rem; }
-.stat-box .lbl { font-size:0.65rem; color:#8b949e; text-transform:uppercase; letter-spacing:0.08em; }
+.admin-content { padding:1.5rem; max-width:900px; margin:0 auto; width:100%; }
 
-.admin-tabs { display:flex; gap:0.4rem; margin-bottom:1.25rem; border-bottom:1px solid #30363d; padding-bottom:0; overflow-x:auto; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; }
-.admin-tab { background:transparent; border:none; border-bottom:2px solid transparent; color:#8b949e; font-family:'DM Sans',sans-serif; font-size:0.8rem; padding:0.55rem 0.85rem; cursor:pointer; transition:all 0.2s; margin-bottom:-1px; white-space:nowrap; }
-.admin-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.admin-stats {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;
+}
+.stat-box {
+  background:#161b22; border:1px solid #30363d; border-radius:12px;
+  padding:1.25rem; text-align:center;
+}
+.stat-box .num {
+  font-family:'Cormorant Garamond',serif; font-size:2rem; color:#00b4d8;
+  font-weight:300; line-height:1; margin-bottom:0.3rem;
+}
+.stat-box .lbl {
+  font-size:0.72rem; color:#8b949e; text-transform:uppercase; letter-spacing:0.08em;
+}
+
+.admin-tabs {
+  display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1px solid #30363d;
+  padding-bottom:0; overflow-x:auto;
+}
+.admin-tab {
+  background:transparent; border:none; border-bottom:2px solid transparent;
+  color:#8b949e; font-family:'DM Sans',sans-serif; font-size:0.85rem;
+  padding:0.6rem 1rem; cursor:pointer; transition:all 0.2s;
+  margin-bottom:-1px; white-space:nowrap;
+}
+.admin-tab.active { color:#00b4d8; border-bottom-color:#00b4d8; }
+
 .admin-section { display:none; }
-.admin-section.active { display:block; animation:fadeIn 0.3s ease both; }
+.admin-section.active { display:block; }
 
-.dark-input, .dark-select { width:100%; background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:0.7rem 1rem; color:white; font-family:'DM Sans',sans-serif; font-size:0.88rem; outline:none; margin-bottom:0.7rem; transition:border-color 0.2s; }
-.dark-input:focus, .dark-select:focus { border-color:var(--accent); }
-textarea.dark-input { min-height:80px; resize:vertical; }
-.dark-card { background:#161b22; border:1px solid #30363d; border-radius:12px; padding:1.25rem; margin-bottom:1rem; }
-.dark-card h3 { color:white; font-family:'Cormorant Garamond',serif; font-size:1.1rem; margin-bottom:1rem; }
+.table-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;
+}
+.table-header h3 {
+  color:white; font-family:'Cormorant Garamond',serif; font-size:1.2rem;
+}
 
-.btn-admin { background:var(--accent); color:#0d1117; border:none; border-radius:8px; padding:0.55rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
+.btn-admin {
+  background:#00b4d8; color:#0d1117; border:none; border-radius:8px;
+  padding:0.5rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.8rem;
+  font-weight:600; cursor:pointer; transition:opacity 0.2s;
+}
 .btn-admin:hover { opacity:0.85; }
-.btn-admin:disabled { opacity:0.5; cursor:not-allowed; }
-.btn-danger { background:var(--danger); color:white; border:none; border-radius:6px; padding:0.3rem 0.7rem; font-size:0.72rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:opacity 0.2s; }
+
+.btn-danger {
+  background:#dc2626; color:white; border:none; border-radius:6px;
+  padding:0.3rem 0.7rem; font-size:0.75rem; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:opacity 0.2s;
+}
 .btn-danger:hover { opacity:0.8; }
-.btn-secondary-dark { background:#30363d; color:white; border:none; border-radius:6px; padding:0.5rem 1rem; font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
-.btn-secondary-dark:hover { background:#3f4651; }
 
-.batch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem; }
-.batch-card { background:#161b22; border:1px solid #30363d; border-radius:14px; padding:1.25rem; cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; }
-.batch-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); opacity:0; transition:opacity 0.2s; }
-.batch-card:hover { border-color:var(--accent); transform:translateY(-2px); }
-.batch-card:hover::before { opacity:1; }
-.batch-card .icon { font-size:1.8rem; margin-bottom:0.6rem; }
-.batch-card .name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:white; font-weight:500; margin-bottom:0.4rem; line-height:1.3; }
-.batch-card .count { font-size:0.78rem; color:#8b949e; }
-.batch-card .count strong { color:var(--accent); font-weight:600; }
+.btn-sm {
+  background:#00b4d8; color:#0d1117; border:none; border-radius:6px;
+  padding:0.25rem 0.6rem; font-size:0.72rem; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:opacity 0.2s; font-weight:600;
+}
+.btn-sm:hover { opacity:0.8; }
 
-.back-link { display:inline-flex; align-items:center; gap:0.4rem; color:var(--accent); cursor:pointer; font-size:0.85rem; margin-bottom:1rem; padding:0.4rem 0; background:none; border:none; font-family:'DM Sans',sans-serif; }
-.back-link:hover { text-decoration:underline; }
+/* Batch cards */
+.batch-card {
+  background:#161b22; border:1px solid #30363d; border-radius:12px;
+  padding:1.25rem; margin-bottom:0.75rem; cursor:pointer;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.batch-card:hover { border-color:#00b4d8; box-shadow:0 4px 12px rgba(0,180,216,0.15); }
+.batch-name {
+  font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:white;
+  margin-bottom:0.3rem;
+}
+.batch-count {
+  font-size:0.8rem; color:#8b949e; display:flex; align-items:center; gap:0.3rem;
+}
 
-.student-row { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:0.85rem 1rem; margin-bottom:0.55rem; display:flex; align-items:center; gap:0.85rem; cursor:pointer; transition:all 0.2s; }
-.student-row:hover { border-color:var(--accent); background:#1c2128; }
-.s-photo { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--ocean-dark),var(--ocean)); display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:0.95rem; overflow:hidden; flex-shrink:0; }
-.s-photo img { width:100%; height:100%; object-fit:cover; }
-.s-info { flex:1; min-width:0; }
-.s-id { font-size:0.7rem; color:var(--accent); font-weight:600; letter-spacing:0.08em; }
-.s-name { font-size:0.92rem; color:white; font-weight:500; margin-top:0.1rem; }
-.s-meta { font-size:0.75rem; color:#8b949e; margin-top:0.1rem; word-break:break-word; }
-.s-arrow { color:#8b949e; font-size:1.2rem; }
+/* Student list in batch */
+.student-card {
+  background:#161b22; border:1px solid #30363d; border-radius:12px;
+  padding:1.1rem 1.25rem; margin-bottom:0.75rem; display:flex;
+  align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  cursor:pointer; transition:border-color 0.2s;
+}
+.student-card:hover { border-color:#00b4d8; }
 
-.detail-id-card { background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark)); border-radius:18px; padding:2rem 1.5rem; color:white; position:relative; overflow:hidden; margin-bottom:1.25rem; border:1px solid #30363d; }
-.detail-id-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,var(--accent),var(--ocean)); }
-.detail-id-card::after { content:'ZEL'; position:absolute; right:-10px; bottom:-30px; font-family:'Cormorant Garamond',serif; font-size:7rem; font-weight:300; color:rgba(255,255,255,0.05); line-height:1; }
-.detail-photo-row { display:flex; gap:1.25rem; align-items:center; margin-bottom:1.5rem; position:relative; z-index:2; }
-.detail-photo { width:100px; height:120px; border-radius:10px; background:rgba(255,255,255,0.1); border:3px solid var(--accent); overflow:hidden; display:flex; align-items:center; justify-content:center; color:white; font-family:'Cormorant Garamond',serif; font-size:2.5rem; flex-shrink:0; }
-.detail-photo img { width:100%; height:100%; object-fit:cover; }
-.detail-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; margin-bottom:0.4rem; }
-.detail-id-num { font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:0.1em; background:rgba(0,180,216,0.15); padding:0.25rem 0.7rem; border-radius:50px; display:inline-block; }
-.detail-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; position:relative; z-index:2; }
-.detail-field label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.5); margin-bottom:0.2rem; display:block; }
-.detail-field span { font-size:0.9rem; word-break:break-word; }
+.student-info { flex:1; min-width:200px; }
+.student-id-badge {
+  background:#0d1117; border:1px solid #00b4d8; color:#00b4d8;
+  font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem;
+  border-radius:4px; letter-spacing:0.1em; margin-bottom:0.4rem; display:inline-block;
+}
+.student-name { font-size:0.95rem; font-weight:500; color:white; margin-bottom:0.2rem; }
+.student-meta { font-size:0.78rem; color:#8b949e; }
+.student-actions { display:flex; gap:0.5rem; align-items:center; }
+
+/* Detail card view */
+.detail-card {
+  background:#161b22; border:1px solid #30363d; border-radius:16px;
+  padding:2rem; margin-bottom:1.5rem;
+}
+.detail-header {
+  text-align:center; margin-bottom:1.5rem;
+}
+.detail-photo {
+  width:120px; height:120px; border-radius:50%; object-fit:cover;
+  border:4px solid #00b4d8; box-shadow:0 4px 16px rgba(0,180,216,0.3);
+  margin-bottom:1rem;
+}
+.detail-photo-placeholder {
+  width:120px; height:120px; border-radius:50%; background:#0d1117;
+  border:4px solid #30363d; display:inline-flex; align-items:center;
+  justify-content:center; font-size:3rem; color:#8b949e; margin-bottom:1rem;
+}
+.detail-id { color:#00b4d8; font-size:0.85rem; font-weight:700; letter-spacing:0.1em; }
+.detail-name {
+  color:white; font-family:'Cormorant Garamond',serif; font-size:1.6rem;
+  margin:0.5rem 0;
+}
+
+.detail-fields {
+  display:grid; grid-template-columns:1fr 1fr; gap:1rem;
+}
+.detail-field { margin-bottom:0.5rem; }
 .detail-field.full { grid-column:1/-1; }
+.detail-field label {
+  font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;
+  color:#8b949e; display:block; margin-bottom:0.2rem;
+}
+.detail-field span { font-size:0.88rem; color:white; font-weight:500; }
 
-.action-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; margin-bottom:1rem; }
-.action-btn { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:0.85rem 0.5rem; color:white; font-family:'DM Sans',sans-serif; font-size:0.78rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:0.3rem; text-align:center; }
-.action-btn:hover { border-color:var(--accent); background:#1c2128; }
+/* Form */
+.notice-form {
+  background:#161b22; border:1px solid #30363d; border-radius:12px;
+  padding:1.5rem; margin-bottom:1.5rem;
+}
+.notice-form h3 {
+  color:white; font-family:'Cormorant Garamond',serif; font-size:1.1rem;
+  margin-bottom:1rem;
+}
 
-.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:999; display:none; align-items:center; justify-content:center; padding:1rem; }
-.modal-overlay.open { display:flex; }
-.modal { background:white; border-radius:14px; padding:1.75rem; width:100%; max-width:420px; max-height:90vh; overflow-y:auto; animation:slideUp 0.3s ease both; }
-.modal.dark { background:#161b22; border:1px solid #30363d; }
-.modal.dark h3 { color:white; }
-.modal h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--ocean-dark); margin-bottom:1.25rem; }
-.modal-close { float:right; background:none; border:none; cursor:pointer; font-size:1.3rem; line-height:1; color:var(--muted); }
-.modal.dark .modal-close { color:#8b949e; }
+.dark-input {
+  width:100%; background:#0d1117; border:1px solid #30363d; border-radius:8px;
+  padding:0.7rem 1rem; color:white; font-family:'DM Sans',sans-serif;
+  font-size:0.88rem; outline:none; margin-bottom:0.75rem;
+  transition:border-color 0.2s;
+}
+.dark-input:focus { border-color:#00b4d8; }
+textarea.dark-input { min-height:90px; resize:vertical; }
 
-.photo-upload { width:120px; height:120px; border-radius:50%; background:var(--sky); border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; margin:0 auto 1rem; overflow:hidden; position:relative; transition:border-color 0.2s; }
-.photo-upload:hover { border-color:var(--ocean); }
-.photo-upload img { width:100%; height:100%; object-fit:cover; }
-.photo-upload .upload-icon { font-size:1.8rem; color:var(--muted); }
-.photo-upload-dark { background:#0d1117; border-color:#30363d; }
-.photo-upload-dark:hover { border-color:var(--accent); }
-.photo-upload-dark .upload-icon { color:#8b949e; }
-.photo-upload input { display:none; }
+select.dark-input option { background:#0d1117; color:white; }
 
-/* Searchable picker */
-.picker-wrap { position:relative; margin-bottom:0.7rem; }
-.picker-results { position:absolute; top:100%; left:0; right:0; background:#0d1117; border:1px solid #30363d; border-radius:8px; max-height:240px; overflow-y:auto; z-index:10; margin-top:4px; display:none; }
-.picker-results.open { display:block; }
-.picker-result { padding:0.65rem 0.85rem; cursor:pointer; border-bottom:1px solid #1c2128; transition:background 0.15s; }
-.picker-result:hover, .picker-result.active { background:#1c2128; }
-.picker-result:last-child { border-bottom:none; }
-.picker-result .pr-id { font-size:0.7rem; color:var(--accent); font-weight:600; letter-spacing:0.05em; }
-.picker-result .pr-name { font-size:0.85rem; color:white; margin-top:0.15rem; }
-.picker-result .pr-batch { font-size:0.72rem; color:#8b949e; margin-top:0.1rem; }
-.picker-empty { padding:0.85rem; text-align:center; color:#8b949e; font-size:0.8rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
 
-/* Selected student chip */
-.picker-chip { display:flex; align-items:center; justify-content:space-between; background:rgba(0,180,216,0.1); border:1px solid var(--accent); border-radius:8px; padding:0.55rem 0.85rem; margin-bottom:0.7rem; }
-.picker-chip .chip-info { color:white; font-size:0.85rem; }
-.picker-chip .chip-info strong { color:var(--accent); margin-right:0.4rem; }
-.picker-chip .chip-clear { background:none; border:none; color:#8b949e; cursor:pointer; font-size:1rem; padding:0 0.3rem; }
-.picker-chip .chip-clear:hover { color:white; }
-
-.loader { display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:0.4rem; }
+.loader {
+  display:inline-block; width:18px; height:18px;
+  border:2px solid rgba(255,255,255,0.3); border-top-color:white;
+  border-radius:50%; animation:spin 0.7s linear infinite;
+  vertical-align:middle; margin-right:0.4rem;
+}
 
 @keyframes spin { to { transform:rotate(360deg); } }
 @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999;
+  display:none; align-items:center; justify-content:center; padding:1.5rem;
+}
+.modal-overlay.open { display:flex; }
+
+.modal {
+  background:white; border-radius:16px; padding:2rem; width:100%;
+  max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  animation:slideUp 0.3s ease both; max-height:80vh; overflow-y:auto;
+}
+.modal h3 {
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+  color:var(--ocean-dark); margin-bottom:1.25rem;
+}
+
+.modal-dark {
+  background:#161b22; border:1px solid #30363d; border-radius:16px;
+  padding:2rem; width:100%; max-width:500px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6); animation:slideUp 0.3s ease both;
+  max-height:85vh; overflow-y:auto;
+}
+.modal-dark h3 {
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+  color:white; margin-bottom:1.25rem;
+}
+
+.btn-close {
+  background:var(--sky); border:1px solid var(--border); color:var(--ink);
+  border-radius:8px; padding:0.5rem 1rem; font-family:'DM Sans',sans-serif;
+  font-size:0.82rem; cursor:pointer; transition:opacity 0.2s; margin-top:1rem;
+  width:100%;
+}
+.btn-close:hover { opacity:0.8; }
 
 @media(max-width:600px) {
+  .cards-grid { grid-template-columns:1fr; }
   .admin-stats { grid-template-columns:1fr 1fr; }
   .id-fields { grid-template-columns:1fr; }
   .detail-fields { grid-template-columns:1fr; }
-  .fee-summary { grid-template-columns:1fr; }
-  .detail-photo-row { flex-direction:column; align-items:flex-start; }
-  .action-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ══ SCREEN 1: LOGIN ══ -->
 <div class="screen active" id="screen-login">
   <div class="login-card">
     <div class="login-logo">
-      <span class="dot"></span>
-      <h1>ZEL</h1>
+      <span class="dot"></span><h1>ZEL</h1>
       <p>Zone for English Learners</p>
     </div>
+
     <div id="login-alert" class="alert"></div>
+
     <div class="login-tabs">
       <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
       <button class="tab-btn" onclick="switchTab('register')">Register</button>
     </div>
+
+    <!-- LOGIN -->
     <div id="tab-login">
-      <div class="form-group"><label>Email Address</label><input type="email" id="login-email" placeholder="your@gmail.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"></div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="your@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
       <button class="btn-main" onclick="doLogin()" id="btn-login">Sign In</button>
+      <p style="text-align:center; font-size:0.75rem; color:var(--muted); margin-top:1rem;">
+        Admin? Use your admin credentials to access the panel.
+      </p>
     </div>
+
+    <!-- REGISTER -->
     <div id="tab-register" style="display:none;">
-      <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" id="reg-phone" placeholder="0761864245"></div>
-      <div class="form-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@gmail.com"></div>
-      <div class="form-group"><label>Batch</label><select id="reg-course">
-        <option value="">Select batch...</option>
-        <option>Batch 20</option>
-        <option>Batch 21</option>
-        <option>Batch 22</option>
-        <option>Batch 23</option>
-        <option>Batch 24</option>
-      </select></div>
-      <div class="form-group"><label>Password (min. 6 chars)</label><input type="password" id="reg-password"></div>
-      <button class="btn-main" onclick="doRegister()" id="btn-register">Create Account</button>
+      <!-- Step 1 -->
+      <div id="reg-step1">
+        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
+        <div class="form-group">
+          <label>Phone / WhatsApp</label>
+          <div style="display:flex;gap:.5rem">
+            <select id="reg-country" style="width:100px;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;padding:.75rem .4rem;font-size:.85rem;color:var(--ink);outline:none;flex-shrink:0;font-family:'DM Sans',sans-serif">
+              <option value="+94">+94 LK</option>
+              <option value="+91">+91 IN</option>
+              <option value="+92">+92 PK</option>
+              <option value="+880">+880 BD</option>
+              <option value="+971">+971 AE</option>
+              <option value="+966">+966 SA</option>
+              <option value="+60">+60 MY</option>
+              <option value="+1">+1 US</option>
+              <option value="+44">+44 UK</option>
+            </select>
+            <input type="tel" id="reg-phone" placeholder="761234567" style="flex:1;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;font-size:.9rem;color:var(--ink);outline:none;font-family:'DM Sans',sans-serif">
+          </div>
+        </div>
+        <div class="form-group"><label>Batch</label><select id="reg-course">
+          <option value="">Select batch...</option>
+          <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
+        </select></div>
+        <div class="form-group"><label>Password (min. 6 chars)</label><input type="password" id="reg-password" placeholder="Create a password"></div>
+        <div id="recaptcha-container"></div>
+        <button class="btn-main" onclick="sendOTP()" id="btn-send-otp">Send OTP via SMS &rarr;</button>
+      </div>
+      <!-- Step 2: OTP -->
+      <div id="reg-step2" style="display:none">
+        <div style="text-align:center;margin-bottom:1.25rem">
+          <div style="font-size:.9rem;color:var(--ocean-dark);font-weight:600" id="otp-phone-shown">Code sent!</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem">Enter the 6-digit SMS code</div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:1.25rem">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp0" oninput="otpMove(0)" onkeydown="otpBack(event,0)">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp1" oninput="otpMove(1)" onkeydown="otpBack(event,1)">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp2" oninput="otpMove(2)" onkeydown="otpBack(event,2)">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp3" oninput="otpMove(3)" onkeydown="otpBack(event,3)">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp4" oninput="otpMove(4)" onkeydown="otpBack(event,4)">
+          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp5" oninput="otpMove(5)" onkeydown="otpBack(event,5)">
+        </div>
+        <button class="btn-main" onclick="verifyOTP()" id="btn-verify-otp">Verify &amp; Create Account</button>
+        <button style="width:100%;background:transparent;color:var(--ocean-dark);border:1.5px solid var(--border);border-radius:50px;padding:.75rem;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;margin-top:.5rem" onclick="backToOTPStep1()">&larr; Change Details</button>
+        <div id="resend-timer" style="font-size:.78rem;color:var(--muted);text-align:center;margin-top:.75rem">Resend in <b id="resend-count">30</b>s</div>
+        <div id="resend-btn" style="font-size:.78rem;color:var(--ocean);cursor:pointer;text-align:center;margin-top:.75rem;display:none" onclick="resendOTP()">&circlearrowleft; Resend OTP</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- STUDENT DASHBOARD -->
+<!-- ══ SCREEN 2: STUDENT DASHBOARD ══ -->
 <div class="screen" id="screen-dashboard">
-  <div style="width:100%;">
+  <div style="width:100%; padding-bottom:70px;">
     <div class="topbar">
       <div class="topbar-brand"><span class="dot"></span> ZEL</div>
       <div class="topbar-right">
@@ -301,246 +597,297 @@ textarea.dark-input { min-height:80px; resize:vertical; }
 
     <div class="dash-content">
 
-      <div class="sub-screen active" id="stu-home">
+      <!-- HOME TAB -->
+      <div id="student-tab-home">
         <div class="welcome-banner">
           <h2 id="dash-welcome">Welcome back! 👋</h2>
-          <p>Keep up the great work — your English journey is progressing well!</p>
+          <p>Keep up the great work. Your English journey is progressing well!</p>
         </div>
-        <div class="section-title">📊 Quick Info</div>
-        <div style="background:white; border:1px solid var(--border); border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
-          <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-            <div style="flex:1; min-width:120px;">
-              <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.3rem;">My Batch</div>
-              <div style="font-size:0.95rem; color:var(--ocean-dark); font-weight:500;" id="home-course">—</div>
-            </div>
-            <div style="flex:1; min-width:120px;">
-              <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.3rem;">Student ID</div>
-              <div style="font-size:0.95rem; color:var(--ocean-dark); font-weight:500;" id="home-id">—</div>
-            </div>
+
+        <div class="cards-grid">
+          <div class="info-card">
+            <span class="icon">📚</span><h4>My Course</h4>
+            <p id="card-course">—</p>
+          </div>
+          <div class="info-card">
+            <span class="icon">📅</span><h4>Enrolled</h4>
+            <p id="card-enrolled">—</p>
           </div>
         </div>
-        <div class="section-title">📢 Latest Announcements</div>
-        <div id="home-notices"><div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div></div>
+
+        <div class="section-title">📢 Announcements</div>
+        <div id="notices-list">
+          <div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div>
+        </div>
       </div>
 
-      <div class="sub-screen" id="stu-id">
+      <!-- MY ID TAB -->
+      <div id="student-tab-id" style="display:none;">
         <div class="id-card">
           <div class="id-card-header">
-            <h3>🪪 Student ID</h3>
+            <h3>🪪 Student ID Card</h3>
             <span class="id-badge" id="dash-student-id">ZEL-0000</span>
           </div>
-          <div class="id-photo-row">
-            <div class="id-photo" id="id-photo">S</div>
-            <div class="id-photo-info">
-              <h4 id="id-name-big">—</h4>
-              <p id="id-course-small">—</p>
-            </div>
+          <div class="id-photo-wrap">
+            <img id="id-photo-img" class="id-photo" style="display:none;">
+            <div id="id-photo-placeholder" class="id-photo-placeholder">👤</div>
           </div>
           <div class="id-fields">
-            <div class="id-field"><label>Full Name</label><span id="id-name">—</span></div>
+            <div class="id-field full"><label>Full Name</label><span id="id-name">—</span></div>
             <div class="id-field"><label>Phone</label><span id="id-phone">—</span></div>
-            <div class="id-field full"><label>Email</label><span id="id-email">—</span></div>
-            <div class="id-field"><label>Status</label><span style="color:var(--success); font-weight:600;">✅ Active</span></div>
-            <div class="id-field"><label>Enrolled</label><span id="id-enrolled">—</span></div>
+            <div class="id-field"><label>Batch</label><span id="id-batch">—</span></div>
+            <div class="id-field full"><label>Course</label><span id="id-course">—</span></div>
+            <div class="id-field"><label>Email</label><span id="id-email">—</span></div>
+            <div class="id-field">
+              <label>Status</label>
+              <span style="color:var(--success); font-weight:600;">✅ Active</span>
+            </div>
           </div>
         </div>
-        <button class="btn-main" onclick="openPhotoUpload()" style="width:auto; padding:0.6rem 1.5rem; font-size:0.78rem;">📷 Update Photo</button>
       </div>
 
-      <div class="sub-screen" id="stu-att">
-        <div class="section-title">📋 My Attendance</div>
-        <div class="percent-bar-wrap">
-          <h4>Attendance Rate</h4>
-          <div class="percent-num" id="att-percent">0%</div>
-          <div style="font-size:0.78rem; color:var(--muted);" id="att-summary">No records yet</div>
-          <div class="percent-bar"><div class="percent-bar-fill" id="att-bar" style="width:0%"></div></div>
-        </div>
-        <div style="background:white; border:1px solid var(--border); border-radius:14px; padding:1.25rem;">
-          <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.8rem;">Recent History</h4>
-          <div style="display:flex; gap:0.75rem; font-size:0.7rem; color:var(--muted); margin-bottom:0.5rem;">
-            <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:var(--success); border-radius:2px;"></span> Present</span>
-            <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:var(--danger); border-radius:2px;"></span> Absent</span>
-            <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:var(--warning); border-radius:2px;"></span> Late</span>
+      <!-- ATTENDANCE TAB -->
+      <div id="student-tab-attendance" style="display:none;">
+        <div class="id-card">
+          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
+            📅 My Attendance
+          </h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+            <span style="font-size:0.82rem; color:var(--muted);">Attendance Rate</span>
+            <span style="font-size:1.1rem; font-weight:600; color:var(--success);" id="att-rate">0%</span>
           </div>
-          <div id="stu-att-list"><div class="empty-state">No attendance records yet</div></div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="att-bar" style="width:0%;"></div>
+          </div>
+          <p style="font-size:0.75rem; color:var(--muted); margin-top:0.5rem; text-align:center;" id="att-summary">
+            Loading attendance...
+          </p>
+          <div class="attendance-grid" id="att-grid" style="margin-top:1rem;"></div>
         </div>
       </div>
 
-      <div class="sub-screen" id="stu-fees">
-        <div class="section-title">💳 My Fees</div>
-        <div class="fee-summary">
-          <div class="fee-box total"><div class="label">Total</div><div class="amt" id="stu-fee-total">Rs 0</div></div>
-          <div class="fee-box paid"><div class="label">Paid</div><div class="amt" id="stu-fee-paid">Rs 0</div></div>
-          <div class="fee-box outstanding"><div class="label">Due</div><div class="amt" id="stu-fee-due">Rs 0</div></div>
+      <!-- FEES TAB -->
+      <div id="student-tab-fees" style="display:none;">
+        <div class="id-card">
+          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
+            💳 Fee Records
+          </h3>
+          <div class="fee-row">
+            <span class="fee-label">Total Fees</span>
+            <span class="fee-value" id="fee-total">Rs. 0</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-label">Paid</span>
+            <span class="fee-value" style="color:var(--success);" id="fee-paid">Rs. 0</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-label">Outstanding</span>
+            <span class="fee-value" style="color:var(--danger);" id="fee-outstanding">Rs. 0</span>
+          </div>
+          <div style="margin-top:1rem;" id="fee-details-list"></div>
         </div>
-        <div id="stu-fee-list"><div class="empty-state"><span class="empty-icon">💳</span>No fee records yet</div></div>
       </div>
 
-      <div class="sub-screen" id="stu-settings">
-        <div class="section-title">⚙️ Account Settings</div>
-        <div style="background:white; border:1px solid var(--border); border-radius:14px; padding:1.5rem; margin-bottom:1.25rem;">
-          <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; color:var(--ocean-dark); margin-bottom:1rem;">🔐 Change Password</h4>
-          <div id="pw-alert" class="alert"></div>
-          <div class="form-group"><label>Current Password</label><input type="password" id="pw-current"></div>
-          <div class="form-group"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 6 chars"></div>
-          <div class="form-group"><label>Confirm New Password</label><input type="password" id="pw-confirm"></div>
-          <button class="btn-main" onclick="changePassword()" id="btn-change-pw">Update Password</button>
+      <!-- CHANGE PASSWORD TAB -->
+      <div id="student-tab-password" style="display:none;">
+        <div class="id-card">
+          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
+            🔐 Change Password
+          </h3>
+          <div id="pass-alert" class="alert"></div>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="pass-current" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label>New Password (min. 6 chars)</label>
+            <input type="password" id="pass-new" placeholder="Enter new password">
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="pass-confirm" placeholder="Confirm new password">
+          </div>
+          <button class="btn-main" onclick="changePassword()" id="btn-pass">Update Password</button>
         </div>
-        <button class="btn-main" onclick="doLogout()" style="background:var(--danger); box-shadow:0 4px 20px rgba(220,38,38,0.3);">Sign Out</button>
       </div>
 
     </div>
   </div>
 
   <div class="bottom-nav">
-    <button class="nav-item active" onclick="stuNav('home',this)"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-item" onclick="stuNav('id',this)"><span class="nav-icon">🪪</span>ID</button>
-    <button class="nav-item" onclick="stuNav('att',this)"><span class="nav-icon">📋</span>Attend</button>
-    <button class="nav-item" onclick="stuNav('fees',this)"><span class="nav-icon">💳</span>Fees</button>
-    <button class="nav-item" onclick="stuNav('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
+    <button class="nav-item active" onclick="studentNav('home',this)">
+      <span class="nav-icon">🏠</span>Home
+    </button>
+    <button class="nav-item" onclick="studentNav('id',this)">
+      <span class="nav-icon">🪪</span>My ID
+    </button>
+    <button class="nav-item" onclick="studentNav('attendance',this)">
+      <span class="nav-icon">📅</span>Attend
+    </button>
+    <button class="nav-item" onclick="studentNav('fees',this)">
+      <span class="nav-icon">💳</span>Fees
+    </button>
+    <button class="nav-item" onclick="studentNav('password',this)">
+      <span class="nav-icon">🔐</span>Password
+    </button>
   </div>
 </div>
 
-<!-- ADMIN -->
+<!-- ══ SCREEN 3: ADMIN PANEL ══ -->
 <div class="screen" id="screen-admin">
-  <div style="width:100%;">
+  <div style="width:100%; padding-bottom:20px;">
+
     <div class="admin-topbar">
       <div class="brand">ZEL <span class="admin-badge">Admin</span></div>
-      <button class="btn-logout" onclick="doLogout()">Logout</button>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <span id="admin-name-display" style="color:#8b949e;font-size:.75rem"></span>
+        <button class="btn-logout" onclick="doLogout()">Logout</button>
+      </div>
     </div>
 
     <div class="admin-content">
+
       <div class="admin-stats">
         <div class="stat-box"><div class="num" id="stat-total">0</div><div class="lbl">Students</div></div>
         <div class="stat-box"><div class="num" id="stat-batches">0</div><div class="lbl">Batches</div></div>
-        <div class="stat-box"><div class="num" id="stat-fees">Rs 0</div><div class="lbl">Total Paid</div></div>
         <div class="stat-box"><div class="num" id="stat-notices">0</div><div class="lbl">Notices</div></div>
+        <div class="stat-box"><div class="num" id="stat-fees">0</div><div class="lbl">Fees Collected</div></div>
       </div>
 
       <div class="admin-tabs">
-        <button class="admin-tab active" onclick="adminTab('batches',this)">📚 Batches</button>
-        <button class="admin-tab" onclick="adminTab('attendance',this)">📋 Attendance</button>
+        <button class="admin-tab active" onclick="adminTab('batches',this)">🗂 Batches</button>
+        <button class="admin-tab" onclick="adminTab('attendance',this)">📅 Attendance</button>
         <button class="admin-tab" onclick="adminTab('fees',this)">💳 Fees</button>
         <button class="admin-tab" onclick="adminTab('notices',this)">📢 Notices</button>
-        <button class="admin-tab" onclick="adminTab('addstudent',this)">➕ Add</button>
+        <button class="admin-tab" onclick="adminTab('addstudent',this)">➕ Add Student</button>
       </div>
 
+      <!-- BATCHES -->
       <div class="admin-section active" id="section-batches">
-        <div id="batches-view">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-            <h3 style="color:white; font-family:'Cormorant Garamond',serif; font-size:1.3rem;">All Batches</h3>
-            <button class="btn-admin" onclick="loadBatches()">🔄 Refresh</button>
-          </div>
-          <div class="batch-grid" id="batch-grid"><div class="empty-state" style="color:#8b949e;">Loading...</div></div>
+        <div class="table-header">
+          <h3>All Batches</h3>
+          <button class="btn-admin" onclick="loadBatches()">🔄 Refresh</button>
         </div>
-
-        <div id="batch-students-view" style="display:none;">
-          <button class="back-link" onclick="showBatchesView()">← Back to Batches</button>
-          <h3 style="color:white; font-family:'Cormorant Garamond',serif; font-size:1.3rem; margin-bottom:1rem;" id="batch-title">Batch</h3>
-          <input type="text" class="dark-input" id="batch-search" placeholder="🔍 Search by name or ID..." oninput="filterBatchStudents()">
-          <div id="batch-students-list"></div>
-          <button class="btn-secondary-dark" id="batch-load-more" onclick="loadMoreBatchStudents()" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
-        </div>
-
-        <div id="student-detail-view" style="display:none;">
-          <button class="back-link" onclick="backToBatchStudents()">← Back to Students</button>
-          <div id="student-detail-content"></div>
+        <div id="batches-list">
+          <div class="empty-state" style="color:#8b949e;">Loading batches...</div>
         </div>
       </div>
 
+      <!-- BATCH DETAIL -->
+      <div class="admin-section" id="section-batch-detail">
+        <div class="table-header">
+          <h3 id="batch-detail-title">—</h3>
+          <button class="btn-admin" onclick="backToBatches()">← Back</button>
+        </div>
+        <div id="batch-students-list"></div>
+      </div>
+
+      <!-- STUDENT DETAIL -->
+      <div class="admin-section" id="section-student-detail">
+        <div class="table-header">
+          <button class="btn-admin" onclick="backToBatchDetail()">← Back</button>
+        </div>
+        <div class="detail-card" id="student-detail-card"></div>
+      </div>
+
+      <!-- ATTENDANCE -->
       <div class="admin-section" id="section-attendance">
-        <div class="dark-card">
-          <h3>📋 Mark Attendance</h3>
-          <div id="att-alert" class="alert"></div>
-
-          <!-- Searchable student picker -->
-          <div id="att-picker-wrap" class="picker-wrap">
-            <input type="text" class="dark-input" id="att-picker-input" placeholder="🔍 Search student by ID or name..." oninput="searchPicker('att', this.value)" onfocus="this.nextElementSibling.classList.add('open')">
-            <div class="picker-results" id="att-picker-results"></div>
-          </div>
-          <div id="att-selected-chip" style="display:none;"></div>
-
+        <div class="notice-form">
+          <h3>📅 Mark Attendance</h3>
+          <select class="dark-input" id="att-student" style="color:white;">
+            <option value="" style="color:black;">Select student...</option>
+          </select>
           <input type="date" class="dark-input" id="att-date">
-          <select class="dark-select" id="att-status">
-            <option value="">Select status...</option>
+          <select class="dark-input" id="att-status" style="color:white;">
+            <option value="" style="color:black;">Status...</option>
             <option value="present">✅ Present</option>
             <option value="absent">❌ Absent</option>
             <option value="late">⏰ Late</option>
           </select>
-          <button class="btn-admin" onclick="markAttendance()" style="width:100%; padding:0.75rem;">Save Attendance</button>
+          <button class="btn-admin" onclick="markAttendance()">Save Attendance</button>
         </div>
-
-        <div class="dark-card">
-          <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
-            <input type="month" class="dark-input" id="att-filter-month" style="flex:1; margin-bottom:0;">
-            <button class="btn-admin" onclick="loadAttendanceRecords(true)">Filter</button>
-          </div>
-          <div id="att-records-list"><div class="empty-state" style="color:#8b949e;">Pick a month to view records</div></div>
-          <button class="btn-secondary-dark" id="att-load-more" onclick="loadAttendanceRecords(false)" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
+        <div id="att-records-list">
+          <div class="empty-state" style="color:#8b949e;">No records yet</div>
         </div>
       </div>
 
+      <!-- FEES -->
       <div class="admin-section" id="section-fees">
-        <div class="dark-card">
-          <h3>💳 Add Fee Entry</h3>
-          <div id="fee-alert" class="alert"></div>
-
-          <div id="fee-picker-wrap" class="picker-wrap">
-            <input type="text" class="dark-input" id="fee-picker-input" placeholder="🔍 Search student by ID or name..." oninput="searchPicker('fee', this.value)" onfocus="this.nextElementSibling.classList.add('open')">
-            <div class="picker-results" id="fee-picker-results"></div>
-          </div>
-          <div id="fee-selected-chip" style="display:none;"></div>
-
-          <input type="text" class="dark-input" id="fee-month" placeholder="Month (e.g. May 2026)">
-          <input type="number" class="dark-input" id="fee-amount" placeholder="Amount (Rs)">
-          <input type="date" class="dark-input" id="fee-due">
-          <select class="dark-select" id="fee-status">
-            <option value="Unpaid">Unpaid</option>
-            <option value="Partial">Partial</option>
-            <option value="Paid">Paid</option>
+        <div class="notice-form">
+          <h3>💳 Add Fee Record</h3>
+          <select class="dark-input" id="fee-student" style="color:white;">
+            <option value="" style="color:black;">Select student...</option>
           </select>
-          <button class="btn-admin" onclick="addFee()" style="width:100%; padding:0.75rem;">Add Fee Entry</button>
+          <input type="number" class="dark-input" id="fee-amount" placeholder="Amount (Rs.)">
+          <input type="date" class="dark-input" id="fee-due">
+          <button class="btn-admin" onclick="addFee()">Add Fee</button>
         </div>
-
-        <div class="dark-card">
-          <h3>All Fee Records</h3>
-          <div id="fees-list"><div class="empty-state" style="color:#8b949e;">Loading...</div></div>
-          <button class="btn-secondary-dark" id="fee-load-more" onclick="loadAdminFees(false)" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
+        <div id="fee-records-list">
+          <div class="empty-state" style="color:#8b949e;">No fee records yet</div>
         </div>
       </div>
 
+      <!-- NOTICES -->
       <div class="admin-section" id="section-notices">
-        <div class="dark-card">
+        <div class="notice-form">
           <h3>📢 Post Announcement</h3>
           <input type="text" class="dark-input" id="notice-title" placeholder="Notice title...">
-          <textarea class="dark-input" id="notice-body" placeholder="Write your announcement..."></textarea>
+          <textarea class="dark-input" id="notice-body" placeholder="Write your announcement here..."></textarea>
           <button class="btn-admin" onclick="postNotice()">Post Announcement</button>
         </div>
-        <div id="admin-notices-list"><div class="empty-state" style="color:#8b949e;">No notices yet</div></div>
+        <div id="admin-notices-list">
+          <div class="empty-state" style="color:#8b949e;">No notices yet</div>
+        </div>
       </div>
 
-      <div class="admin-section" id="section-addstudent">
+      <!-- ADMINS (super admin only) -->
+      <div class="admin-section" id="section-admins">
         <div class="dark-card">
+          <h3>👑 Manage Admins</h3>
+          <div id="admin-mgmt-alert" class="alert"></div>
+          <p style="color:#8b949e;font-size:.82rem;margin-bottom:1rem;line-height:1.6">
+            Give someone admin access by entering their email. They must first 
+            <strong style="color:white">create an account</strong> in the app (Register tab), 
+            then you add their email here. Next login they will see the admin panel.
+          </p>
+          <input type="email" class="dark-input" id="new-admin-email" placeholder="Enter email to grant admin access...">
+          <button class="btn-admin" onclick="addAdmin()" style="width:100%;padding:.75rem">Grant Admin Access</button>
+        </div>
+        <div class="dark-card">
+          <h3>Current Admins</h3>
+          <div id="admins-list"><div class="empty-state" style="color:#8b949e">Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- ADD STUDENT -->
+      <div class="admin-section" id="section-addstudent">
+        <div class="notice-form">
           <h3>➕ Add New Student</h3>
           <div id="add-alert" class="alert"></div>
-          <label class="photo-upload photo-upload-dark" for="add-photo-input" id="add-photo-label">
-            <span class="upload-icon">📷</span>
-            <input type="file" id="add-photo-input" accept="image/*" onchange="previewAddPhoto(event)">
-          </label>
-          <div style="text-align:center; font-size:0.72rem; color:#8b949e; margin-bottom:1rem;">Click to add photo (auto-resized)</div>
-          <input type="text" class="dark-input" id="add-name" placeholder="Full Name *">
-          <input type="tel" class="dark-input" id="add-phone" placeholder="Phone *">
-          <input type="email" class="dark-input" id="add-email" placeholder="Email *">
-          <input type="password" class="dark-input" id="add-password" placeholder="Password (min. 6) *">
-          <select class="dark-select" id="add-course">
-            <option value="">Select Batch *</option>
-            <option>Batch 20</option>
-            <option>Batch 21</option>
-            <option>Batch 22</option>
-            <option>Batch 23</option>
-            <option>Batch 24</option>
+          <input type="text"  class="dark-input" id="add-name"     placeholder="Full Name *">
+          <input type="tel"   class="dark-input" id="add-phone"    placeholder="Phone / WhatsApp *">
+          <input type="email" class="dark-input" id="add-email"    placeholder="Email Address *">
+          <input type="password" class="dark-input" id="add-password" placeholder="Set Password (min. 6 chars) *">
+          <select class="dark-input" id="add-batch" style="color:white;">
+            <option value="" style="color:black;">Select Batch *</option>
+            <option>Batch 2026A</option>
+            <option>Batch 2026B</option>
+            <option>Batch 2025A</option>
+            <option>Batch 2025B</option>
           </select>
-          <button class="btn-admin" onclick="adminAddStudent()" id="btn-add-student" style="width:100%; padding:0.75rem;">Create Student Account</button>
+          <select class="dark-input" id="add-course" style="color:white;">
+            <option value="" style="color:black;">Select Course *</option>
+            <option>After Finishing O/L</option>
+            <option>After Finishing A/L</option>
+            <option>IELTS Preparation</option>
+            <option>English for Kids (Ages 6–14)</option>
+            <option>Business English</option>
+          </select>
+          <label style="color:#8b949e; font-size:0.8rem; margin-bottom:0.4rem;">Student Photo (optional)</label>
+          <input type="file" class="dark-input" id="add-photo" accept="image/*">
+          <button class="btn-admin" onclick="adminAddStudent()" id="btn-add-student" style="width:100%; padding:0.75rem;">
+            Create Student Account
+          </button>
         </div>
       </div>
 
@@ -548,899 +895,810 @@ textarea.dark-input { min-height:80px; resize:vertical; }
   </div>
 </div>
 
-<!-- STUDENT PHOTO MODAL -->
+<!-- ══ MODALS ══ -->
 <div class="modal-overlay" id="modal-photo">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-photo')">✕</button>
-    <h3>Update Profile Photo</h3>
-    <div id="photo-alert" class="alert"></div>
-    <label class="photo-upload" for="upload-photo-input" id="upload-photo-label">
-      <span class="upload-icon">📷</span>
-      <input type="file" id="upload-photo-input" accept="image/*" onchange="previewStudentPhoto(event)">
-    </label>
-    <div style="text-align:center; font-size:0.78rem; color:var(--muted); margin-bottom:1rem;">Tap to choose a photo</div>
-    <button class="btn-main" onclick="saveStudentPhoto()" id="btn-save-photo">Save Photo</button>
+    <h3>📷 Upload Photo</h3>
+    <input type="file" class="dark-input" id="upload-photo" accept="image/*" style="background:var(--sky); color:var(--ink); border:1.5px solid var(--border);">
+    <button class="btn-main" onclick="uploadPhoto()">Upload</button>
+    <button class="btn-close" onclick="closeModal('modal-photo')">Cancel</button>
   </div>
 </div>
 
-<!-- ADMIN: STUDENT PHOTO UPLOAD MODAL -->
-<div class="modal-overlay" id="modal-admin-photo">
-  <div class="modal dark">
-    <button class="modal-close" onclick="closeModal('modal-admin-photo')">✕</button>
-    <h3>Update Student Photo</h3>
-    <div id="admin-photo-alert" class="alert"></div>
-    <label class="photo-upload photo-upload-dark" for="admin-photo-input" id="admin-photo-label">
-      <span class="upload-icon">📷</span>
-      <input type="file" id="admin-photo-input" accept="image/*" onchange="previewAdminEditPhoto(event)">
-    </label>
-    <div style="text-align:center; font-size:0.78rem; color:#8b949e; margin-bottom:1rem;">Tap to choose photo</div>
-    <button class="btn-admin" onclick="saveAdminEditPhoto()" id="btn-admin-save-photo" style="width:100%; padding:0.75rem;">Save Photo</button>
-  </div>
-</div>
-
+<!-- ══ FIREBASE ══ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, where, serverTimestamp, limit, startAfter, getCountFromServer, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword,
+         signInWithEmailAndPassword, signOut,
+         onAuthStateChanged, updatePassword,
+         reauthenticateWithCredential,
+         EmailAuthProvider,
+         RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc,
+         collection, getDocs, addDoc,
+         deleteDoc, query, orderBy, where,
+         serverTimestamp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes,
+         getDownloadURL }                         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
-  authDomain: "zel-app-cfb38.firebaseapp.com",
-  projectId: "zel-app-cfb38",
-  storageBucket: "zel-app-cfb38.firebasestorage.app",
+  apiKey:            "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
+  authDomain:        "zel-app-cfb38.firebaseapp.com",
+  projectId:         "zel-app-cfb38",
+  storageBucket:     "zel-app-cfb38.firebasestorage.app",
   messagingSenderId: "178893517113",
-  appId: "1:178893517113:web:65cfce0b5cdd2a655d78e8"
+  appId:             "1:178893517113:web:65cfce0b5cdd2a655d78e8"
 };
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-const ADMIN_EMAIL = "zhakeel.mhd@gmail.com";
+const app     = initializeApp(firebaseConfig);
+const auth    = getAuth(app);
+const db      = getFirestore(app);
+const storage = getStorage(app);
 
-// All known batches (used to render the grid even before any students exist)
-const BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
-const PAGE_SIZE = 30;  // pagination size for lists
+const SUPER_ADMIN = "zhakeel.mhd@gmail.com";
+const BATCHES_LIST = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
 
-function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + id).classList.add('active'); }
-function showAlert(elId, msg, type='error', persist=false) {
+async function isAdmin(email) {
+  if (!email) return false;
+  if (email === SUPER_ADMIN) return true;
+  try { const s = await getDoc(doc(db,'admins',email)); return s.exists(); }
+  catch(e) { return false; }
+}
+let currentUser = null;
+let currentBatchView = null;
+
+async function generateStudentId() {
+  const year = new Date().getFullYear();
+  const snap = await getDocs(collection(db, 'students'));
+  return `ZEL-${year}-${String(snap.size + 1).padStart(3,'0')}`;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function showAlert(elId, msg, type='error') {
   const el = document.getElementById(elId);
   el.className = 'alert ' + type;
   el.textContent = msg;
-  if (!persist) setTimeout(() => { el.className = 'alert'; }, 5000);
+  setTimeout(() => { el.className = 'alert'; }, 4000);
 }
-function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-window.escapeHtml = escapeHtml;
-
-// ── Generate next student ID using counter doc (scales to thousands) ──
-async function generateStudentId() {
-  const year = new Date().getFullYear();
-  const counterRef = doc(db, 'meta', 'counters');
-  const counterSnap = await getDoc(counterRef);
-  let next = 1;
-  if (counterSnap.exists()) {
-    const data = counterSnap.data();
-    next = (data.studentCount || 0) + 1;
-    await updateDoc(counterRef, { studentCount: increment(1) });
-  } else {
-    // Initialize counter — count existing students once
-    const allSnap = await getDocs(collection(db,'students'));
-    next = allSnap.size + 1;
-    await setDoc(counterRef, { studentCount: next });
-  }
-  return `ZEL-${year}-${String(next).padStart(3,'0')}`;
-}
-
-// ── Image resizer ──
-function resizeImage(file, maxDim=400, quality=0.7) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        let { width, height } = img;
-        if (width > height && width > maxDim) { height = height * (maxDim / width); width = maxDim; }
-        else if (height > maxDim) { width = width * (maxDim / height); height = maxDim; }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, width, height);
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = () => reject(new Error('Could not load image'));
-      img.src = e.target.result;
-    };
-    reader.onerror = () => reject(new Error('Could not read file'));
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── Global state ──
-let currentUser = null;
-let currentUserData = null;
-let pendingPhoto = null;
-let pendingAddPhoto = null;
-let pendingAdminEditPhoto = null;
-let editingStudentUid = null;
-
-// Pagination cursors
-let attCursor = null, feeCursor = null;
-let batchCursor = null, currentBatch = null, batchAllLoaded = [];
-
-// Picker selections
-let pickerSelections = { att: null, fee: null };
-let pickerSearchTimers = { att: null, fee: null };
 
 onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
   if (user) {
-    if (user.email === ADMIN_EMAIL) {
+    currentUser = user;
+    if (await isAdmin(user.email)) {
       showScreen('admin');
-      loadBatches(); loadAdminNotices(); loadAdminFees(true);
+      loadBatches();
+      loadAdminNotices();
+      loadStudentDropdowns();
+      loadAttendanceRecords();
+      loadFeeRecords();
+      // Multi-admin extras
+      const _admEl = document.getElementById('admin-name-display');
+      if (_admEl) _admEl.textContent = user.email;
+      const _tabBtn = document.getElementById('admins-tab-btn');
+      if (_tabBtn) _tabBtn.style.display = (user.email === SUPER_ADMIN) ? 'block' : 'none';
+      if (user.email === SUPER_ADMIN) { try { loadAdmins(); } catch(e) {} }
     } else {
-      try {
-        const snap = await getDoc(doc(db,'students',user.uid));
-        currentUserData = snap.exists() ? snap.data() : null;
-      } catch(e) { console.error(e); }
       showScreen('dashboard');
-      loadStudentData(); loadStudentNotices(); loadStudentAttendance(); loadStudentFees();
+      loadStudentData(user);
+      loadNotices();
+      loadStudentAttendance(user.uid);
+      loadStudentFees(user.uid);
     }
   } else {
-    currentUser = null; currentUserData = null;
     showScreen('login');
   }
 });
 
 window.doLogin = async () => {
   const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-password').value;
-  const btn = document.getElementById('btn-login');
-  if (!email||!pass) { showAlert('login-alert','Please fill in all fields.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Signing in...'; btn.disabled = true;
-  try { await signInWithEmailAndPassword(auth, email, pass); }
-  catch(e) {
-    let msg='Login failed.';
-    if(e.code==='auth/user-not-found')msg='No account found.';
-    if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')msg='Incorrect email or password.';
-    showAlert('login-alert',msg);
-    btn.innerHTML='Sign In'; btn.disabled=false;
+  const pass  = document.getElementById('login-password').value;
+  const btn   = document.getElementById('btn-login');
+  if (!email || !pass) { showAlert('login-alert','Please fill in all fields.'); return; }
+  btn.innerHTML = '<span class="loader"></span> Signing in...';
+  btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    let msg = 'Login failed. Check your credentials.';
+    if (e.code === 'auth/user-not-found')  msg = 'No account found with this email.';
+    if (e.code === 'auth/wrong-password')  msg = 'Incorrect password.';
+    showAlert('login-alert', msg);
+    btn.innerHTML = 'Sign In';
+    btn.disabled = false;
   }
 };
 
 window.doRegister = async () => {
-  const name = document.getElementById('reg-name').value.trim();
-  const phone = document.getElementById('reg-phone').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
+  const name   = document.getElementById('reg-name').value.trim();
+  const phone  = document.getElementById('reg-phone').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const batch  = document.getElementById('reg-batch').value;
   const course = document.getElementById('reg-course').value;
-  const pass = document.getElementById('reg-password').value;
-  const btn = document.getElementById('btn-register');
-  if (!name||!phone||!email||!course||!pass) { showAlert('login-alert','Fill all fields.'); return; }
-  if (pass.length<6) { showAlert('login-alert','Password must be ≥6 chars.'); return; }
-  btn.innerHTML='<span class="loader"></span> Creating...'; btn.disabled=true;
+  const pass   = document.getElementById('reg-password').value;
+  const btn    = document.getElementById('btn-register');
+
+  if (!name||!phone||!email||!batch||!course||!pass) { showAlert('login-alert','Please fill in all fields.'); return; }
+  if (pass.length < 6) { showAlert('login-alert','Password must be at least 6 characters.'); return; }
+
+  btn.innerHTML = '<span class="loader"></span> Creating account...';
+  btn.disabled = true;
+
   try {
-    const cred = await createUserWithEmailAndPassword(auth,email,pass);
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const studentId = await generateStudentId();
-    const nameLower = name.toLowerCase();
-    await setDoc(doc(db,'students',cred.user.uid),{
-      name, nameLower, phone, email, course, studentId,
-      photo:'', enrolledAt: serverTimestamp(), role:'student'
+    await setDoc(doc(db, 'students', cred.user.uid), {
+      name, phone, email, batch, course, studentId,
+      enrolledAt: serverTimestamp(),
+      role: 'student'
     });
-    showAlert('login-alert',`Account created! ID: ${studentId}`,'success');
+    showAlert('login-alert', `Account created! Your ID: ${studentId}`, 'success');
   } catch(e) {
-    let msg='Registration failed.';
-    if(e.code==='auth/email-already-in-use')msg='Email already registered.';
-    showAlert('login-alert',msg);
-    btn.innerHTML='Create Account'; btn.disabled=false;
+    let msg = 'Registration failed.';
+    if (e.code === 'auth/email-already-in-use') msg = 'This email is already registered.';
+    showAlert('login-alert', msg);
+    btn.innerHTML = 'Create Account';
+    btn.disabled = false;
   }
 };
 
 window.doLogout = async () => { await signOut(auth); };
 
-async function loadStudentData() {
-  if (!currentUserData) return;
-  const d = currentUserData;
+async function loadStudentData(user) {
+  const snap = await getDoc(doc(db, 'students', user.uid));
+  if (!snap.exists()) return;
+  const d = snap.data();
   const firstName = d.name?.split(' ')[0] || 'Student';
-  const initial = firstName[0]?.toUpperCase() || 'S';
-  document.getElementById('dash-welcome').textContent = `Welcome, ${firstName}! 👋`;
+
+  document.getElementById('dash-welcome').textContent   = `Welcome, ${firstName}! 👋`;
+  document.getElementById('dash-avatar').textContent    = firstName[0].toUpperCase();
   document.getElementById('dash-student-id').textContent = d.studentId || 'ZEL-0000';
-  document.getElementById('id-name-big').textContent = d.name || '—';
-  document.getElementById('id-course-small').textContent = d.course || '—';
-  document.getElementById('id-name').textContent = d.name || '—';
-  document.getElementById('id-phone').textContent = d.phone || '—';
-  document.getElementById('id-email').textContent = d.email || '—';
-  document.getElementById('home-course').textContent = d.course || '—';
-  document.getElementById('home-id').textContent = d.studentId || '—';
+  document.getElementById('id-name').textContent        = d.name    || '—';
+  document.getElementById('id-phone').textContent       = d.phone   || '—';
+  document.getElementById('id-batch').textContent       = d.batch   || '—';
+  document.getElementById('id-course').textContent      = d.course  || '—';
+  document.getElementById('id-email').textContent       = d.email   || '—';
+  document.getElementById('card-course').textContent    = d.course  || '—';
+
   if (d.enrolledAt?.toDate) {
-    document.getElementById('id-enrolled').textContent = d.enrolledAt.toDate().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    document.getElementById('card-enrolled').textContent =
+      d.enrolledAt.toDate().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
   }
-  const avatarEl = document.getElementById('dash-avatar');
-  const photoEl = document.getElementById('id-photo');
-  if (d.photo) {
-    avatarEl.innerHTML = `<img src="${d.photo}" alt="">`;
-    photoEl.innerHTML = `<img src="${d.photo}" alt="">`;
-  } else {
-    avatarEl.textContent = initial;
-    photoEl.textContent = initial;
+
+  if (d.photoURL) {
+    document.getElementById('id-photo-img').src = d.photoURL;
+    document.getElementById('id-photo-img').style.display = 'block';
+    document.getElementById('id-photo-placeholder').style.display = 'none';
   }
 }
 
-async function loadStudentNotices() {
-  const list = document.getElementById('home-notices');
+async function loadNotices() {
+  const list = document.getElementById('notices-list');
   try {
-    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
+    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
     const snap = await getDocs(q);
     if (snap.empty) { list.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div>'; return; }
     list.innerHTML = '';
     snap.forEach(d => {
       const n = d.data();
       const date = n.createdAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) || '';
-      list.innerHTML += `<div class="notice-card"><div class="notice-date">${date}</div><div class="notice-title">${escapeHtml(n.title)}</div><div class="notice-body">${escapeHtml(n.body)}</div></div>`;
+      list.innerHTML += `
+        <div class="notice-card">
+          <div class="notice-date">${date}</div>
+          <div class="notice-title">${n.title}</div>
+          <div class="notice-body">${n.body}</div>
+        </div>`;
     });
-  } catch(e) { console.error(e); }
+  } catch(e) {}
 }
 
-async function loadStudentAttendance() {
-  if (!currentUser) return;
-  const list = document.getElementById('stu-att-list');
+async function loadStudentAttendance(uid) {
   try {
-    const q = query(collection(db,'attendance'), where('studentUid','==',currentUser.uid));
+    const q = query(collection(db,'attendance'), where('studentId','==',uid));
     const snap = await getDocs(q);
-    let total=0, present=0, late=0;
-    const records = [];
-    snap.forEach(d => {
-      const r = d.data();
-      records.push({ ...r, id: d.id });
-      total++;
-      if (r.status === 'present') present++;
-      if (r.status === 'late') late++;
-    });
-    records.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
-    const rate = total === 0 ? 0 : Math.round(((present + late*0.5) / total) * 100);
-    document.getElementById('att-percent').textContent = rate + '%';
+    const total = snap.size;
+    let present = 0;
+    snap.forEach(d => { if (d.data().status === 'present') present++; });
+    const rate = total ? Math.round((present/total)*100) : 0;
+    document.getElementById('att-rate').textContent = rate + '%';
     document.getElementById('att-bar').style.width = rate + '%';
-    document.getElementById('att-summary').textContent = `${present} present · ${late} late · ${total - present - late} absent (${total} total)`;
-    if (!records.length) { list.innerHTML = '<div class="empty-state">No attendance records yet</div>'; return; }
-    list.innerHTML = '<div class="attendance-grid">';
-    records.slice(0, 28).forEach(r => {
-      const day = r.date ? r.date.split('-')[2] : '?';
-      list.innerHTML += `<div class="att-cell ${r.status}" title="${r.date} - ${r.status}">${day}</div>`;
+    document.getElementById('att-summary').textContent = `${present} present out of ${total} days`;
+
+    const grid = document.getElementById('att-grid');
+    grid.innerHTML = '';
+    if (snap.empty) {
+      grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--muted); font-size:0.8rem;">No attendance records yet</div>';
+      return;
+    }
+    snap.forEach(d => {
+      const a = d.data();
+      const cls = `att-cell ${a.status}`;
+      const ico = a.status==='present'?'✓':a.status==='absent'?'✕':'⏰';
+      grid.innerHTML += `<div class="${cls}">${ico}</div>`;
     });
-    list.innerHTML += '</div>';
-  } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
+  } catch(e) {}
 }
 
-async function loadStudentFees() {
-  if (!currentUser) return;
-  const list = document.getElementById('stu-fee-list');
+async function loadStudentFees(uid) {
   try {
-    const q = query(collection(db,'fees'), where('studentUid','==',currentUser.uid));
+    const q = query(collection(db,'fees'), where('studentId','==',uid));
     const snap = await getDocs(q);
-    let total=0, paid=0;
-    const records = [];
+    let total = 0, paid = 0;
+    const details = document.getElementById('fee-details-list');
+    details.innerHTML = '';
+    if (snap.empty) {
+      details.innerHTML = '<div class="empty-state"><span class="empty-icon">💳</span>No fee records yet</div>';
+      document.getElementById('fee-total').textContent = 'Rs. 0';
+      document.getElementById('fee-paid').textContent = 'Rs. 0';
+      document.getElementById('fee-outstanding').textContent = 'Rs. 0';
+      return;
+    }
     snap.forEach(d => {
-      const r = d.data();
-      records.push({ ...r, id: d.id });
-      total += Number(r.amount || 0);
-      if (r.status === 'Paid') paid += Number(r.amount || 0);
-      if (r.status === 'Partial') paid += Number(r.amount || 0) / 2;
+      const f = d.data();
+      total += f.amount || 0;
+      if (f.status === 'paid') paid += f.amount || 0;
+      const statusColor = f.status==='paid'?'var(--success)':f.status==='partial'?'var(--warning)':'var(--danger)';
+      details.innerHTML += `
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">${f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-GB') : '—'}</div>
+            <div class="fee-value" style="font-size:0.85rem;">Rs. ${f.amount}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="fee-label" style="color:${statusColor}; font-weight:600; text-transform:uppercase;">
+              ${f.status || 'unpaid'}
+            </div>
+          </div>
+        </div>`;
     });
-    records.sort((a,b) => (b.month || '').localeCompare(a.month || ''));
-    document.getElementById('stu-fee-total').textContent = 'Rs ' + total;
-    document.getElementById('stu-fee-paid').textContent = 'Rs ' + paid;
-    document.getElementById('stu-fee-due').textContent = 'Rs ' + (total - paid);
-    if (!records.length) { list.innerHTML = '<div class="empty-state"><span class="empty-icon">💳</span>No fee records yet</div>'; return; }
-    list.innerHTML = '';
-    records.forEach(r => {
-      list.innerHTML += `<div class="fee-row"><div class="fee-row-info"><div class="month">${escapeHtml(r.month || '—')}</div><div class="amt">Rs ${r.amount || 0} · Due ${r.dueDate || '—'}</div></div><span class="fee-status ${r.status}">${r.status}</span></div>`;
-    });
+    document.getElementById('fee-total').textContent = 'Rs. ' + total;
+    document.getElementById('fee-paid').textContent = 'Rs. ' + paid;
+    document.getElementById('fee-outstanding').textContent = 'Rs. ' + (total - paid);
   } catch(e) {}
 }
 
 window.changePassword = async () => {
-  const cur = document.getElementById('pw-current').value;
-  const neu = document.getElementById('pw-new').value;
-  const conf = document.getElementById('pw-confirm').value;
-  const btn = document.getElementById('btn-change-pw');
-  if (!cur||!neu||!conf) { showAlert('pw-alert','Please fill in all fields.'); return; }
-  if (neu.length < 6) { showAlert('pw-alert','New password must be ≥6 chars.'); return; }
-  if (neu !== conf) { showAlert('pw-alert','New passwords do not match.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Updating...'; btn.disabled = true;
+  const current = document.getElementById('pass-current').value;
+  const newPass = document.getElementById('pass-new').value;
+  const confirm = document.getElementById('pass-confirm').value;
+  const btn = document.getElementById('btn-pass');
+  
+  if (!current || !newPass || !confirm) { showAlert('pass-alert','Please fill in all fields.'); return; }
+  if (newPass.length < 6) { showAlert('pass-alert','New password must be at least 6 characters.'); return; }
+  if (newPass !== confirm) { showAlert('pass-alert','Passwords do not match.'); return; }
+  
+  btn.innerHTML = '<span class="loader"></span> Updating...';
+  btn.disabled = true;
+  
   try {
-    const cred = EmailAuthProvider.credential(currentUser.email, cur);
+    const cred = EmailAuthProvider.credential(currentUser.email, current);
     await reauthenticateWithCredential(currentUser, cred);
-    await updatePassword(currentUser, neu);
-    showAlert('pw-alert','✅ Password updated!','success');
-    document.getElementById('pw-current').value='';
-    document.getElementById('pw-new').value='';
-    document.getElementById('pw-confirm').value='';
+    await updatePassword(currentUser, newPass);
+    showAlert('pass-alert','✅ Password updated successfully!','success');
+    document.getElementById('pass-current').value = '';
+    document.getElementById('pass-new').value = '';
+    document.getElementById('pass-confirm').value = '';
   } catch(e) {
     let msg = 'Failed to update password.';
-    if (e.code === 'auth/wrong-password'||e.code === 'auth/invalid-credential') msg='Current password is incorrect.';
-    showAlert('pw-alert',msg);
+    if (e.code === 'auth/wrong-password') msg = 'Current password is incorrect.';
+    showAlert('pass-alert', msg);
   }
-  btn.innerHTML='Update Password'; btn.disabled=false;
+  
+  btn.innerHTML = 'Update Password';
+  btn.disabled = false;
 };
 
-// ══ STUDENT PHOTO ══
-window.openPhotoUpload = () => {
-  document.getElementById('modal-photo').classList.add('open');
-  pendingPhoto = null;
-  document.getElementById('upload-photo-label').innerHTML = '<span class="upload-icon">📷</span><input type="file" id="upload-photo-input" accept="image/*" onchange="previewStudentPhoto(event)">';
-  document.getElementById('photo-alert').className = 'alert';
-};
-window.closeModal = (id) => { document.getElementById(id).classList.remove('open'); };
-
-window.previewStudentPhoto = async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  showAlert('photo-alert','Processing image...','info', true);
+// ══ ADMIN ══
+async function loadBatches() {
+  const list = document.getElementById('batches-list');
+  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
   try {
-    pendingPhoto = await resizeImage(f, 400, 0.7);
-    document.getElementById('upload-photo-label').innerHTML = `<img src="${pendingPhoto}" alt=""><input type="file" id="upload-photo-input" accept="image/*" onchange="previewStudentPhoto(event)">`;
-    showAlert('photo-alert','✅ Image ready. Tap Save Photo.','success');
-  } catch(err) {
-    showAlert('photo-alert','Could not process image: ' + err.message);
-    pendingPhoto = null;
-  }
-};
-
-window.saveStudentPhoto = async () => {
-  const btn = document.getElementById('btn-save-photo');
-  if (!pendingPhoto) { showAlert('photo-alert','Please choose a photo first.'); return; }
-  if (!currentUser) { showAlert('photo-alert','Not logged in.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Saving...'; btn.disabled = true;
-  try {
-    await updateDoc(doc(db,'students',currentUser.uid), { photo: pendingPhoto });
-    if (currentUserData) currentUserData.photo = pendingPhoto;
-    loadStudentData();
-    showAlert('photo-alert','✅ Photo saved!','success');
-    setTimeout(() => closeModal('modal-photo'), 800);
-  } catch(e) {
-    let msg = 'Save failed: ' + e.message;
-    if (e.code === 'permission-denied') msg = 'Permission denied. Check Firestore rules.';
-    showAlert('photo-alert', msg, 'error', true);
-  }
-  btn.innerHTML = 'Save Photo'; btn.disabled = false;
-};
-
-window.previewAddPhoto = async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  try {
-    pendingAddPhoto = await resizeImage(f, 400, 0.7);
-    document.getElementById('add-photo-label').innerHTML = `<img src="${pendingAddPhoto}" alt=""><input type="file" id="add-photo-input" accept="image/*" onchange="previewAddPhoto(event)">`;
-  } catch(err) { alert('Could not process image: ' + err.message); }
-};
-
-window.openAdminEditPhoto = (uid) => {
-  editingStudentUid = uid;
-  pendingAdminEditPhoto = null;
-  document.getElementById('admin-photo-label').innerHTML = '<span class="upload-icon">📷</span><input type="file" id="admin-photo-input" accept="image/*" onchange="previewAdminEditPhoto(event)">';
-  document.getElementById('admin-photo-alert').className = 'alert';
-  document.getElementById('modal-admin-photo').classList.add('open');
-};
-
-window.previewAdminEditPhoto = async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  showAlert('admin-photo-alert','Processing image...','info', true);
-  try {
-    pendingAdminEditPhoto = await resizeImage(f, 400, 0.7);
-    document.getElementById('admin-photo-label').innerHTML = `<img src="${pendingAdminEditPhoto}" alt=""><input type="file" id="admin-photo-input" accept="image/*" onchange="previewAdminEditPhoto(event)">`;
-    showAlert('admin-photo-alert','✅ Ready. Tap Save Photo.','success');
-  } catch(err) {
-    showAlert('admin-photo-alert','Could not process image: ' + err.message);
-    pendingAdminEditPhoto = null;
-  }
-};
-
-window.saveAdminEditPhoto = async () => {
-  const btn = document.getElementById('btn-admin-save-photo');
-  if (!pendingAdminEditPhoto) { showAlert('admin-photo-alert','Please choose a photo first.'); return; }
-  if (!editingStudentUid) { showAlert('admin-photo-alert','No student selected.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Saving...'; btn.disabled = true;
-  try {
-    await updateDoc(doc(db,'students',editingStudentUid), { photo: pendingAdminEditPhoto });
-    showAlert('admin-photo-alert','✅ Photo saved!','success');
-    setTimeout(() => {
-      closeModal('modal-admin-photo');
-      openStudentDetail(editingStudentUid);
-    }, 800);
-  } catch(e) {
-    let msg = 'Save failed: ' + e.message;
-    if (e.code === 'permission-denied') msg = 'Permission denied. Check Firestore rules.';
-    showAlert('admin-photo-alert', msg, 'error', true);
-  }
-  btn.innerHTML = 'Save Photo'; btn.disabled = false;
-};
-
-// ══ BATCHES — uses count queries (efficient at scale) ══
-window.loadBatches = async () => {
-  const grid = document.getElementById('batch-grid');
-  grid.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  try {
-    // Total student count
-    const totalSnap = await getCountFromServer(collection(db,'students'));
-    const totalCount = totalSnap.data().count;
-    document.getElementById('stat-total').textContent = totalCount;
-    document.getElementById('stat-batches').textContent = BATCHES.length;
-
-    // Per-batch counts (one count query per batch — way cheaper than reading all docs)
-    grid.innerHTML = '';
-    for (const batch of BATCHES) {
-      const batchSnap = await getCountFromServer(query(collection(db,'students'), where('course','==',batch)));
-      const count = batchSnap.data().count;
-      grid.innerHTML += `<div class="batch-card" onclick='openBatch(${JSON.stringify(batch).replace(/'/g,"&#39;")})'><div class="icon">📚</div><div class="name">${escapeHtml(batch)}</div><div class="count"><strong>${count}</strong> student${count===1?'':'s'}</div></div>`;
-    }
-  } catch(e) { grid.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`; }
-};
-
-window.showBatchesView = () => {
-  document.getElementById('batches-view').style.display = 'block';
-  document.getElementById('batch-students-view').style.display = 'none';
-  document.getElementById('student-detail-view').style.display = 'none';
-};
-
-window.openBatch = async (batch) => {
-  currentBatch = batch;
-  batchCursor = null;
-  batchAllLoaded = [];
-  document.getElementById('batches-view').style.display = 'none';
-  document.getElementById('batch-students-view').style.display = 'block';
-  document.getElementById('student-detail-view').style.display = 'none';
-  document.getElementById('batch-title').textContent = batch;
-  document.getElementById('batch-search').value = '';
-  document.getElementById('batch-students-list').innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  await loadMoreBatchStudents();
-};
-
-window.loadMoreBatchStudents = async () => {
-  const list = document.getElementById('batch-students-list');
-  const moreBtn = document.getElementById('batch-load-more');
-  try {
-    let q = query(collection(db,'students'), where('course','==',currentBatch), orderBy('name'), limit(PAGE_SIZE));
-    if (batchCursor) q = query(collection(db,'students'), where('course','==',currentBatch), orderBy('name'), startAfter(batchCursor), limit(PAGE_SIZE));
-    const snap = await getDocs(q);
-    if (snap.empty && batchAllLoaded.length === 0) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch.</div>';
-      moreBtn.style.display = 'none';
+    const snap = await getDocs(collection(db,'students'));
+    const batches = {};
+    snap.forEach(d => {
+      const batch = d.data().batch || 'Unknown';
+      batches[batch] = (batches[batch] || 0) + 1;
+    });
+    document.getElementById('stat-total').textContent = snap.size;
+    document.getElementById('stat-batches').textContent = Object.keys(batches).length;
+    if (Object.keys(batches).length === 0) {
+      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No batches yet</div>';
       return;
     }
-    if (batchAllLoaded.length === 0) list.innerHTML = '';
-    snap.forEach(d => {
-      const s = d.data();
-      batchAllLoaded.push({ ...s, id: d.id });
+    list.innerHTML = '';
+    Object.entries(batches).forEach(([batch, count]) => {
+      list.innerHTML += `
+        <div class="batch-card" onclick="openBatch('${batch}')">
+          <div class="batch-name">${batch}</div>
+          <div class="batch-count">👥 ${count} students</div>
+        </div>`;
     });
-    batchCursor = snap.docs[snap.docs.length - 1];
-    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
-    renderBatchStudents();
-  } catch(e) { list.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`; }
-};
-
-function renderBatchStudents(filter = '') {
-  const list = document.getElementById('batch-students-list');
-  const filtered = filter
-    ? batchAllLoaded.filter(s =>
-        (s.name||'').toLowerCase().includes(filter) ||
-        (s.studentId||'').toLowerCase().includes(filter))
-    : batchAllLoaded;
-  if (!filtered.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No matches.</div>'; return; }
-  list.innerHTML = '';
-  filtered.forEach(s => {
-    const initial = (s.name?.[0] || 'S').toUpperCase();
-    const photoEl = s.photo ? `<img src="${s.photo}" alt="">` : initial;
-    list.innerHTML += `<div class="student-row" onclick="openStudentDetail('${s.id}')"><div class="s-photo">${photoEl}</div><div class="s-info"><div class="s-id">${escapeHtml(s.studentId || 'N/A')}</div><div class="s-name">${escapeHtml(s.name || '—')}</div><div class="s-meta">${escapeHtml(s.email || '')} · ${escapeHtml(s.phone || '')}</div></div><div class="s-arrow">›</div></div>`;
-  });
+  } catch(e) {}
 }
 
-window.filterBatchStudents = () => {
-  const f = document.getElementById('batch-search').value.toLowerCase().trim();
-  renderBatchStudents(f);
+window.openBatch = async (batch) => {
+  currentBatchView = batch;
+  document.getElementById('batch-detail-title').textContent = batch;
+  const list = document.getElementById('batch-students-list');
+  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
+  try {
+    const q = query(collection(db,'students'), where('batch','==',batch));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch</div>';
+      return;
+    }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const s = d.data();
+      list.innerHTML += `
+        <div class="student-card" onclick="openStudentDetail('${d.id}')">
+          <div class="student-info">
+            <div class="student-id-badge">${s.studentId || 'N/A'}</div>
+            <div class="student-name">${s.name}</div>
+            <div class="student-meta">${s.email}</div>
+          </div>
+          <div class="student-actions">
+            <button class="btn-sm" onclick="event.stopPropagation(); openStudentDetail('${d.id}')">View →</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) {}
+  document.getElementById('section-batches').classList.remove('active');
+  document.getElementById('section-batch-detail').classList.add('active');
 };
 
-window.backToBatchStudents = () => {
-  document.getElementById('student-detail-view').style.display = 'none';
-  document.getElementById('batch-students-view').style.display = 'block';
+window.backToBatches = () => {
+  document.getElementById('section-batch-detail').classList.remove('active');
+  document.getElementById('section-batches').classList.add('active');
 };
 
 window.openStudentDetail = async (uid) => {
-  document.getElementById('batch-students-view').style.display = 'none';
-  document.getElementById('student-detail-view').style.display = 'block';
-  const content = document.getElementById('student-detail-content');
-  content.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  const snap = await getDoc(doc(db,'students',uid));
-  if (!snap.exists()) { content.innerHTML = '<div class="empty-state">Not found.</div>'; return; }
-  const s = snap.data();
-  const initial = (s.name?.[0] || 'S').toUpperCase();
-  const photoEl = s.photo ? `<img src="${s.photo}" alt="">` : initial;
-  const enrolled = s.enrolledAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) || '—';
-  content.innerHTML = `
-    <div class="detail-id-card">
-      <div class="detail-photo-row">
-        <div class="detail-photo">${photoEl}</div>
-        <div>
-          <div class="detail-name">${escapeHtml(s.name || '—')}</div>
-          <span class="detail-id-num">${escapeHtml(s.studentId || 'N/A')}</span>
-        </div>
+  const card = document.getElementById('student-detail-card');
+  card.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
+  try {
+    const snap = await getDoc(doc(db,'students',uid));
+    if (!snap.exists()) return;
+    const s = snap.data();
+    const photo = s.photoURL ?
+      `<img src="${s.photoURL}" class="detail-photo">` :
+      `<div class="detail-photo-placeholder">👤</div>`;
+    card.innerHTML = `
+      <div class="detail-header">
+        ${photo}
+        <div class="detail-id">${s.studentId || 'N/A'}</div>
+        <div class="detail-name">${s.name}</div>
       </div>
       <div class="detail-fields">
-        <div class="detail-field"><label>Batch</label><span>${escapeHtml(s.course || '—')}</span></div>
-        <div class="detail-field"><label>Phone</label><span>${escapeHtml(s.phone || '—')}</span></div>
-        <div class="detail-field full"><label>Email</label><span>${escapeHtml(s.email || '—')}</span></div>
-        <div class="detail-field"><label>Enrolled</label><span>${enrolled}</span></div>
-        <div class="detail-field"><label>Status</label><span style="color:#86efac;">✅ Active</span></div>
+        <div class="detail-field"><label>Email</label><span>${s.email}</span></div>
+        <div class="detail-field"><label>Phone</label><span>${s.phone}</span></div>
+        <div class="detail-field"><label>Batch</label><span>${s.batch || '—'}</span></div>
+        <div class="detail-field"><label>Course</label><span>${s.course}</span></div>
+        <div class="detail-field full"><label>Enrolled</label><span>${s.enrolledAt?.toDate?.()?.toLocaleDateString('en-GB') || '—'}</span></div>
       </div>
-    </div>
-    <div class="action-grid">
-      <button class="action-btn" onclick="openAdminEditPhoto('${uid}')">📷 Edit Photo</button>
-      <button class="action-btn" onclick="quickAction('attendance','${uid}','${escapeHtml(s.studentId||'')}','${escapeHtml(s.name||'')}')">📋 Attendance</button>
-      <button class="action-btn" onclick="quickAction('fees','${uid}','${escapeHtml(s.studentId||'')}','${escapeHtml(s.name||'')}')">💳 Fees</button>
-    </div>
-    <button class="btn-danger" style="width:100%; padding:0.75rem;" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>
-  `;
+      <div style="margin-top:1.5rem; display:flex; gap:0.5rem;">
+        <button class="btn-admin" style="flex:1;" onclick="openPhotoModal('${uid}')">📷 Upload Photo</button>
+        <button class="btn-danger" onclick="deleteStudent('${uid}')">🗑 Delete</button>
+      </div>
+    `;
+  } catch(e) {}
+  document.getElementById('section-batch-detail').classList.remove('active');
+  document.getElementById('section-student-detail').classList.add('active');
 };
 
-window.quickAction = (action, uid, studentId, name) => {
-  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-  if (action === 'attendance') {
-    document.querySelectorAll('.admin-tab')[1].classList.add('active');
-    document.getElementById('section-attendance').classList.add('active');
-    selectPicker('att', uid, studentId, name);
-  } else {
-    document.querySelectorAll('.admin-tab')[2].classList.add('active');
-    document.getElementById('section-fees').classList.add('active');
-    selectPicker('fee', uid, studentId, name);
-  }
+window.backToBatchDetail = () => {
+  document.getElementById('section-student-detail').classList.remove('active');
+  document.getElementById('section-batch-detail').classList.add('active');
+  openBatch(currentBatchView);
 };
 
 window.deleteStudent = async (uid) => {
-  if (!confirm('Remove this student from the database? (Their auth account remains — delete it manually from Firebase Auth)')) return;
+  if (!confirm('Delete this student? This cannot be undone.')) return;
   await deleteDoc(doc(db,'students',uid));
-  // Decrement counter
-  try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(e) {}
-  showBatchesView();
+  backToBatchDetail();
   loadBatches();
 };
 
-// ══ SEARCHABLE STUDENT PICKER (queries Firestore by ID prefix) ══
-window.searchPicker = async (kind, term) => {
-  const resultsEl = document.getElementById(`${kind}-picker-results`);
-  resultsEl.classList.add('open');
-  term = term.trim();
-  if (!term) {
-    resultsEl.innerHTML = '<div class="picker-empty">Type to search by ID or name...</div>';
-    return;
-  }
-
-  // Debounce
-  clearTimeout(pickerSearchTimers[kind]);
-  pickerSearchTimers[kind] = setTimeout(async () => {
-    resultsEl.innerHTML = '<div class="picker-empty">Searching...</div>';
-    try {
-      const upper = term.toUpperCase();
-      const lower = term.toLowerCase();
-      const results = new Map();
-
-      // Search by studentId prefix
-      try {
-        const q1 = query(
-          collection(db,'students'),
-          where('studentId','>=', upper),
-          where('studentId','<=', upper + '\uf8ff'),
-          limit(8)
-        );
-        const s1 = await getDocs(q1);
-        s1.forEach(d => results.set(d.id, { ...d.data(), id: d.id }));
-      } catch(e) {}
-
-      // Search by name (lowercase) prefix
-      try {
-        const q2 = query(
-          collection(db,'students'),
-          where('nameLower','>=', lower),
-          where('nameLower','<=', lower + '\uf8ff'),
-          limit(8)
-        );
-        const s2 = await getDocs(q2);
-        s2.forEach(d => results.set(d.id, { ...d.data(), id: d.id }));
-      } catch(e) {}
-
-      const arr = Array.from(results.values()).slice(0, 12);
-      if (!arr.length) {
-        resultsEl.innerHTML = '<div class="picker-empty">No matches.</div>';
-        return;
-      }
-      resultsEl.innerHTML = '';
-      arr.forEach(s => {
-        const div = document.createElement('div');
-        div.className = 'picker-result';
-        div.innerHTML = `<div class="pr-id">${escapeHtml(s.studentId || '')}</div><div class="pr-name">${escapeHtml(s.name || '')}</div><div class="pr-batch">${escapeHtml(s.course || '')}</div>`;
-        div.onclick = () => selectPicker(kind, s.id, s.studentId, s.name);
-        resultsEl.appendChild(div);
-      });
-    } catch(e) {
-      resultsEl.innerHTML = `<div class="picker-empty">Error: ${e.message}</div>`;
-    }
-  }, 250);
+let uploadTargetStudentId = null;
+window.openPhotoModal = (uid) => {
+  uploadTargetStudentId = uid;
+  document.getElementById('modal-photo').classList.add('open');
 };
 
-function selectPicker(kind, uid, studentId, name) {
-  pickerSelections[kind] = { uid, studentId, name };
-  const wrap = document.getElementById(`${kind}-picker-wrap`);
-  const chip = document.getElementById(`${kind}-selected-chip`);
-  wrap.style.display = 'none';
-  chip.style.display = 'block';
-  chip.innerHTML = `<div class="picker-chip"><div class="chip-info"><strong>${escapeHtml(studentId)}</strong>${escapeHtml(name)}</div><button class="chip-clear" onclick="clearPicker('${kind}')">✕</button></div>`;
-  document.getElementById(`${kind}-picker-results`).classList.remove('open');
-}
-window.selectPicker = selectPicker;
-
-window.clearPicker = (kind) => {
-  pickerSelections[kind] = null;
-  document.getElementById(`${kind}-picker-wrap`).style.display = 'block';
-  document.getElementById(`${kind}-selected-chip`).style.display = 'none';
-  document.getElementById(`${kind}-picker-input`).value = '';
+window.closeModal = (id) => {
+  document.getElementById(id).classList.remove('open');
 };
 
-// Click outside to close pickers
-document.addEventListener('click', (e) => {
-  ['att','fee'].forEach(k => {
-    const wrap = document.getElementById(`${k}-picker-wrap`);
-    if (wrap && !wrap.contains(e.target)) {
-      document.getElementById(`${k}-picker-results`).classList.remove('open');
-    }
+window.uploadPhoto = async () => {
+  const file = document.getElementById('upload-photo').files[0];
+  if (!file) { alert('Please select a photo'); return; }
+  try {
+    const storageRef = ref(storage, `students/${uploadTargetStudentId}.jpg`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    await updateDoc(doc(db,'students',uploadTargetStudentId), { photoURL: url });
+    alert('✅ Photo uploaded!');
+    closeModal('modal-photo');
+    openStudentDetail(uploadTargetStudentId);
+  } catch(e) { alert('Upload failed: ' + e.message); }
+};
+
+async function loadStudentDropdowns() {
+  const snap = await getDocs(collection(db,'students'));
+  const attSel = document.getElementById('att-student');
+  const feeSel = document.getElementById('fee-student');
+  attSel.innerHTML = '<option value="">Select student...</option>';
+  feeSel.innerHTML = '<option value="">Select student...</option>';
+  snap.forEach(d => {
+    const s = d.data();
+    const opt = `<option value="${d.id}">${s.name} (${s.studentId})</option>`;
+    attSel.innerHTML += opt;
+    feeSel.innerHTML += opt;
   });
-});
+}
 
-// ══ ATTENDANCE ══
 window.markAttendance = async () => {
-  const sel = pickerSelections.att;
+  const studentId = document.getElementById('att-student').value;
   const date = document.getElementById('att-date').value;
   const status = document.getElementById('att-status').value;
-  if (!sel) { showAlert('att-alert','Please select a student.'); return; }
-  if (!date||!status) { showAlert('att-alert','Fill all fields.'); return; }
-  try {
-    await addDoc(collection(db,'attendance'), {
-      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
-      date, status, createdAt: serverTimestamp()
-    });
-    showAlert('att-alert','✅ Attendance saved!','success');
-    document.getElementById('att-status').value = '';
-    loadAttendanceRecords(true);
-  } catch(e) { showAlert('att-alert','Save failed: ' + e.message); }
+  if (!studentId || !date || !status) { alert('Please fill all fields'); return; }
+  await addDoc(collection(db,'attendance'), { studentId, date, status, createdAt: serverTimestamp() });
+  alert('✅ Attendance marked!');
+  document.getElementById('att-status').value = '';
+  loadAttendanceRecords();
 };
 
-let attRecords = [];
-window.loadAttendanceRecords = async (reset=true) => {
-  const month = document.getElementById('att-filter-month').value;
-  if (!month) {
-    document.getElementById('att-records-list').innerHTML = '<div class="empty-state" style="color:#8b949e;">Pick a month to view records</div>';
-    document.getElementById('att-load-more').style.display = 'none';
-    return;
-  }
+async function loadAttendanceRecords() {
   const list = document.getElementById('att-records-list');
-  const moreBtn = document.getElementById('att-load-more');
-  if (reset) { attCursor = null; attRecords = []; list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>'; }
   try {
-    let q = query(collection(db,'attendance'), where('date','>=',month+'-01'), where('date','<=',month+'-31'), orderBy('date','desc'), limit(PAGE_SIZE));
-    if (attCursor) q = query(collection(db,'attendance'), where('date','>=',month+'-01'), where('date','<=',month+'-31'), orderBy('date','desc'), startAfter(attCursor), limit(PAGE_SIZE));
+    const q = query(collection(db,'attendance'), orderBy('createdAt','desc'));
     const snap = await getDocs(q);
-    if (snap.empty && !attRecords.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No records found.</div>'; moreBtn.style.display = 'none'; return; }
-    snap.forEach(d => attRecords.push({ ...d.data(), id: d.id }));
-    attCursor = snap.docs[snap.docs.length - 1];
-    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
-    renderAttendanceRecords();
-  } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
-};
-
-function renderAttendanceRecords() {
-  const list = document.getElementById('att-records-list');
-  const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
-  list.innerHTML = '';
-  attRecords.forEach(r => {
-    list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.date)}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><span style="background:${colors[r.status]}; color:white; padding:0.25rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:600; text-transform:capitalize;">${r.status}</span><button class="btn-danger" onclick="deleteAttendance('${r.id}')">🗑</button></div></div>`;
-  });
-}
-
-window.deleteAttendance = async (id) => {
-  if (!confirm('Delete this attendance record?')) return;
-  await deleteDoc(doc(db,'attendance',id));
-  loadAttendanceRecords(true);
-};
-
-// ══ FEES ══
-window.addFee = async () => {
-  const sel = pickerSelections.fee;
-  const month = document.getElementById('fee-month').value.trim();
-  const amount = document.getElementById('fee-amount').value;
-  const dueDate = document.getElementById('fee-due').value;
-  const status = document.getElementById('fee-status').value;
-  if (!sel) { showAlert('fee-alert','Please select a student.'); return; }
-  if (!month||!amount||!status) { showAlert('fee-alert','Fill required fields.'); return; }
-  try {
-    await addDoc(collection(db,'fees'), {
-      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
-      month, amount: Number(amount), dueDate, status, createdAt: serverTimestamp()
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No attendance records yet</div>';
+      return;
+    }
+    list.innerHTML = '';
+    const studentsSnap = await getDocs(collection(db,'students'));
+    const studentsMap = {};
+    studentsSnap.forEach(d => studentsMap[d.id] = d.data());
+    
+    snap.forEach(d => {
+      const a = d.data();
+      const student = studentsMap[a.studentId] || {};
+      const statusColor = a.status==='present'?'var(--success)':a.status==='absent'?'var(--danger)':'var(--warning)';
+      list.innerHTML += `
+        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="color:white; font-weight:500; font-size:0.9rem;">${student.name || '—'}</div>
+              <div style="color:#8b949e; font-size:0.78rem;">${a.date} · <span style="color:${statusColor}; text-transform:uppercase; font-weight:600;">${a.status}</span></div>
+            </div>
+            <button class="btn-danger" onclick="deleteRecord('attendance','${d.id}')">🗑</button>
+          </div>
+        </div>`;
     });
-    showAlert('fee-alert','✅ Fee added!','success');
-    document.getElementById('fee-month').value = '';
-    document.getElementById('fee-amount').value = '';
-    document.getElementById('fee-due').value = '';
-    loadAdminFees(true);
-  } catch(e) { showAlert('fee-alert','Save failed: ' + e.message); }
-};
-
-let feeRecords = [];
-window.loadAdminFees = async (reset=true) => {
-  const list = document.getElementById('fees-list');
-  const moreBtn = document.getElementById('fee-load-more');
-  if (reset) { feeCursor = null; feeRecords = []; list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>'; }
-  try {
-    let q = query(collection(db,'fees'), orderBy('createdAt','desc'), limit(PAGE_SIZE));
-    if (feeCursor) q = query(collection(db,'fees'), orderBy('createdAt','desc'), startAfter(feeCursor), limit(PAGE_SIZE));
-    const snap = await getDocs(q);
-    if (snap.empty && !feeRecords.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No fees yet.</div>'; moreBtn.style.display = 'none'; }
-    snap.forEach(d => feeRecords.push({ ...d.data(), id: d.id }));
-    feeCursor = snap.docs[snap.docs.length - 1];
-    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
-    renderFeeRecords();
-
-    // Update Total Paid stat from cached aggregate (if available)
-    try {
-      const metaSnap = await getDoc(doc(db,'meta','counters'));
-      const totalPaid = metaSnap.exists() ? (metaSnap.data().totalPaid || 0) : 0;
-      document.getElementById('stat-fees').textContent = 'Rs ' + totalPaid;
-    } catch(e) {}
-  } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
-};
-
-function renderFeeRecords() {
-  const list = document.getElementById('fees-list');
-  list.innerHTML = '';
-  feeRecords.forEach(r => {
-    list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.month)} · Rs ${r.amount} · Due ${r.dueDate || '—'}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><select class="dark-select" style="width:auto; margin-bottom:0; padding:0.35rem 0.6rem; font-size:0.78rem;" onchange="updateFeeStatus('${r.id}',this.value, ${r.amount}, '${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="btn-danger" onclick="deleteFee('${r.id}', ${r.amount}, '${r.status}')">🗑</button></div></div>`;
-  });
-}
-
-function feeContribution(status, amount) {
-  if (status === 'Paid') return Number(amount || 0);
-  if (status === 'Partial') return Number(amount || 0) / 2;
-  return 0;
-}
-
-window.updateFeeStatus = async (id, newStatus, amount, oldStatus) => {
-  await updateDoc(doc(db,'fees',id), { status: newStatus });
-  // Update cached totalPaid
-  try {
-    const delta = feeContribution(newStatus, amount) - feeContribution(oldStatus, amount);
-    if (delta !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(delta) });
-  } catch(e) { try { await setDoc(doc(db,'meta','counters'), { totalPaid: 0 }, { merge: true }); } catch(_){} }
-  loadAdminFees(true);
-};
-
-window.deleteFee = async (id, amount, status) => {
-  if (!confirm('Delete this fee record?')) return;
-  await deleteDoc(doc(db,'fees',id));
-  try {
-    const delta = -feeContribution(status, amount);
-    if (delta !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(delta) });
   } catch(e) {}
-  loadAdminFees(true);
-};
+}
 
-// Override addFee to also bump cached total
-const _originalAddFee = window.addFee;
 window.addFee = async () => {
-  const sel = pickerSelections.fee;
-  const month = document.getElementById('fee-month').value.trim();
-  const amount = document.getElementById('fee-amount').value;
+  const studentId = document.getElementById('fee-student').value;
+  const amount = parseInt(document.getElementById('fee-amount').value);
   const dueDate = document.getElementById('fee-due').value;
-  const status = document.getElementById('fee-status').value;
-  if (!sel) { showAlert('fee-alert','Please select a student.'); return; }
-  if (!month||!amount||!status) { showAlert('fee-alert','Fill required fields.'); return; }
-  try {
-    await addDoc(collection(db,'fees'), {
-      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
-      month, amount: Number(amount), dueDate, status, createdAt: serverTimestamp()
-    });
-    // Bump cached total
-    try {
-      const delta = feeContribution(status, amount);
-      if (delta > 0) {
-        const metaRef = doc(db,'meta','counters');
-        const metaSnap = await getDoc(metaRef);
-        if (metaSnap.exists()) await updateDoc(metaRef, { totalPaid: increment(delta) });
-        else await setDoc(metaRef, { totalPaid: delta }, { merge: true });
-      }
-    } catch(e) {}
-    showAlert('fee-alert','✅ Fee added!','success');
-    document.getElementById('fee-month').value = '';
-    document.getElementById('fee-amount').value = '';
-    document.getElementById('fee-due').value = '';
-    loadAdminFees(true);
-  } catch(e) { showAlert('fee-alert','Save failed: ' + e.message); }
+  if (!studentId || !amount || !dueDate) { alert('Please fill all fields'); return; }
+  await addDoc(collection(db,'fees'), { studentId, amount, dueDate, status:'unpaid', createdAt: serverTimestamp() });
+  alert('✅ Fee record added!');
+  document.getElementById('fee-amount').value = '';
+  document.getElementById('fee-due').value = '';
+  loadFeeRecords();
 };
 
-// ══ NOTICES ══
+async function loadFeeRecords() {
+  const list = document.getElementById('fee-records-list');
+  try {
+    const q = query(collection(db,'fees'), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    let totalCollected = 0;
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No fee records yet</div>';
+      document.getElementById('stat-fees').textContent = '0';
+      return;
+    }
+    list.innerHTML = '';
+    const studentsSnap = await getDocs(collection(db,'students'));
+    const studentsMap = {};
+    studentsSnap.forEach(d => studentsMap[d.id] = d.data());
+    
+    snap.forEach(d => {
+      const f = d.data();
+      const student = studentsMap[f.studentId] || {};
+      if (f.status === 'paid') totalCollected += f.amount || 0;
+      const statusColor = f.status==='paid'?'var(--success)':f.status==='partial'?'var(--warning)':'var(--danger)';
+      list.innerHTML += `
+        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+            <div style="flex:1; min-width:150px;">
+              <div style="color:white; font-weight:500; font-size:0.9rem;">${student.name || '—'}</div>
+              <div style="color:#8b949e; font-size:0.78rem;">Rs. ${f.amount} · Due: ${f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-GB') : '—'}</div>
+            </div>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <select style="background:#0d1117; border:1px solid #30363d; color:white; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.75rem;" onchange="updateFeeStatus('${d.id}', this.value)">
+                <option value="unpaid" ${f.status==='unpaid'?'selected':''}>Unpaid</option>
+                <option value="partial" ${f.status==='partial'?'selected':''}>Partial</option>
+                <option value="paid" ${f.status==='paid'?'selected':''}>Paid</option>
+              </select>
+              <button class="btn-danger" onclick="deleteRecord('fees','${d.id}')">🗑</button>
+            </div>
+          </div>
+        </div>`;
+    });
+    document.getElementById('stat-fees').textContent = totalCollected;
+  } catch(e) {}
+}
+
+window.updateFeeStatus = async (id, status) => {
+  await updateDoc(doc(db,'fees',id), { status });
+  loadFeeRecords();
+};
+
+window.deleteRecord = async (col, id) => {
+  if (!confirm('Delete this record?')) return;
+  await deleteDoc(doc(db,col,id));
+  if (col === 'attendance') loadAttendanceRecords();
+  if (col === 'fees') loadFeeRecords();
+  if (col === 'notices') loadAdminNotices();
+};
+
 window.postNotice = async () => {
   const title = document.getElementById('notice-title').value.trim();
-  const body = document.getElementById('notice-body').value.trim();
-  if (!title||!body) { alert('Fill title and message.'); return; }
-  await addDoc(collection(db,'notices'),{ title, body, createdAt: serverTimestamp() });
+  const body  = document.getElementById('notice-body').value.trim();
+  if (!title || !body) { alert('Please fill in title and message.'); return; }
+  await addDoc(collection(db,'notices'), { title, body, createdAt: serverTimestamp() });
   document.getElementById('notice-title').value = '';
-  document.getElementById('notice-body').value = '';
+  document.getElementById('notice-body').value  = '';
   loadAdminNotices();
-  alert('✅ Posted!');
+  alert('✅ Announcement posted!');
 };
 
 async function loadAdminNotices() {
   const list = document.getElementById('admin-notices-list');
   try {
-    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
+    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
     const snap = await getDocs(q);
     document.getElementById('stat-notices').textContent = snap.size;
-    if (snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No notices yet.</div>'; return; }
+    if (snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No notices posted yet.</div>'; return; }
     list.innerHTML = '';
     snap.forEach(d => {
       const n = d.data();
-      list.innerHTML += `<div class="dark-card" style="margin-bottom:0.6rem; padding:1rem 1.25rem;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;"><div style="color:white; font-weight:500; font-size:0.9rem;">${escapeHtml(n.title)}</div><button class="btn-danger" onclick="deleteNotice('${d.id}')">🗑</button></div><div style="color:#8b949e; font-size:0.82rem;">${escapeHtml(n.body)}</div></div>`;
+      list.innerHTML += `
+        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <div style="color:white; font-weight:500; font-size:0.9rem;">${n.title}</div>
+            <button class="btn-danger" onclick="deleteRecord('notices','${d.id}')">🗑</button>
+          </div>
+          <div style="color:#8b949e; font-size:0.82rem;">${n.body}</div>
+        </div>`;
     });
   } catch(e) {}
 }
 
-window.deleteNotice = async (id) => { await deleteDoc(doc(db,'notices',id)); loadAdminNotices(); };
-
-// ══ ADD STUDENT ══
 window.adminAddStudent = async () => {
-  const name = document.getElementById('add-name').value.trim();
-  const phone = document.getElementById('add-phone').value.trim();
-  const email = document.getElementById('add-email').value.trim();
-  const pass = document.getElementById('add-password').value;
+  const name   = document.getElementById('add-name').value.trim();
+  const phone  = document.getElementById('add-phone').value.trim();
+  const email  = document.getElementById('add-email').value.trim();
+  const pass   = document.getElementById('add-password').value;
+  const batch  = document.getElementById('add-batch').value;
   const course = document.getElementById('add-course').value;
-  const btn = document.getElementById('btn-add-student');
-  if (!name||!phone||!email||!pass||!course) { showAlert('add-alert','Fill all fields.'); return; }
-  if (pass.length < 6) { showAlert('add-alert','Password must be ≥6 chars.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Creating...'; btn.disabled = true;
+  const photoFile = document.getElementById('add-photo').files[0];
+  const btn    = document.getElementById('btn-add-student');
+
+  if (!name||!phone||!email||!pass||!batch||!course) { showAlert('add-alert','Please fill in all required fields.'); return; }
+  if (pass.length < 6) { showAlert('add-alert','Password must be at least 6 characters.'); return; }
+
+  btn.innerHTML = '<span class="loader"></span> Creating...';
+  btn.disabled  = true;
+
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const studentId = await generateStudentId();
-    const nameLower = name.toLowerCase();
-    await setDoc(doc(db,'students', cred.user.uid), {
-      name, nameLower, phone, email, course, studentId,
-      photo: pendingAddPhoto || '',
+    const data = { name, phone, email, batch, course, studentId, enrolledAt: serverTimestamp(), role: 'student' };
+    
+    if (photoFile) {
+      const storageRef = ref(storage, `students/${cred.user.uid}.jpg`);
+      await uploadBytes(storageRef, photoFile);
+      data.photoURL = await getDownloadURL(storageRef);
+    }
+    
+    await setDoc(doc(db,'students', cred.user.uid), data);
+    showAlert('add-alert', `✅ Student created! ID: ${studentId}`, 'success');
+    document.getElementById('add-name').value     = '';
+    document.getElementById('add-phone').value    = '';
+    document.getElementById('add-email').value    = '';
+    document.getElementById('add-password').value = '';
+    document.getElementById('add-batch').value    = '';
+    document.getElementById('add-course').value   = '';
+    document.getElementById('add-photo').value    = '';
+    loadBatches();
+    loadStudentDropdowns();
+  } catch(e) {
+    let msg = 'Failed to create student.';
+    if (e.code === 'auth/email-already-in-use') msg = 'This email already has an account.';
+    showAlert('add-alert', msg);
+  }
+
+  btn.innerHTML = 'Create Student Account';
+  btn.disabled  = false;
+};
+
+
+// ══ ADMINS MANAGEMENT ══
+window.addAdmin = async () => {
+  const email = document.getElementById('new-admin-email').value.trim().toLowerCase();
+  if (!email) { showAlert('admin-mgmt-alert','Enter an email.'); return; }
+  if (email === SUPER_ADMIN) { showAlert('admin-mgmt-alert','That is already the super admin.'); return; }
+  try {
+    await setDoc(doc(db,'admins',email), { email, grantedBy: currentUser.email, grantedAt: serverTimestamp() });
+    showAlert('admin-mgmt-alert', '✅ Admin access granted to ' + email, 'success');
+    document.getElementById('new-admin-email').value = '';
+    loadAdmins();
+  } catch(e) { showAlert('admin-mgmt-alert','Failed: '+e.message); }
+};
+
+async function loadAdmins() {
+  const list = document.getElementById('admins-list');
+  if (!list) return;
+  try {
+    const snap = await getDocs(collection(db,'admins'));
+    list.innerHTML = '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.85rem 1rem;margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between"><div><div style="color:white;font-size:.9rem;font-weight:500">' + escapeHtml(SUPER_ADMIN) + ' <span style="background:rgba(0,180,216,.15);color:var(--accent);border:1px solid var(--accent);font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.15rem .5rem;border-radius:4px">SUPER</span></div><div style="color:#8b949e;font-size:.75rem;margin-top:.15rem">Owner — cannot be removed</div></div></div>';
+    if (snap.empty) return;
+    snap.forEach(d => {
+      const a = d.data();
+      list.innerHTML += '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.85rem 1rem;margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap"><div><div style="color:white;font-size:.9rem;font-weight:500">' + escapeHtml(a.email) + '</div><div style="color:#8b949e;font-size:.75rem;margin-top:.15rem">Added by ' + escapeHtml(a.grantedBy||'') + '</div></div><button class="btn-danger" onclick="removeAdmin(' + "'" + escapeHtml(a.email) + "'" + ')">Remove</button></div>';
+    });
+  } catch(e) { list.innerHTML='<div class="empty-state" style="color:#8b949e">Error loading admins.</div>'; }
+}
+
+window.removeAdmin = async email => {
+  if (!confirm('Remove admin access for ' + email + '?')) return;
+  await deleteDoc(doc(db,'admins',email));
+  showAlert('admin-mgmt-alert', '✅ Removed admin: ' + email, 'success');
+  loadAdmins();
+};
+
+
+
+// ══ PHONE OTP ══
+window.sendOTP = async () => {
+  const name = document.getElementById('reg-name').value.trim();
+  const cc   = document.getElementById('reg-country').value;
+  const raw  = document.getElementById('reg-phone').value.trim();
+  const course = document.getElementById('reg-course').value;
+  const pass = document.getElementById('reg-password').value;
+  const btn  = document.getElementById('btn-send-otp');
+  if (!name||!raw||!course||!pass) { showAlert('login-alert','Fill all fields.'); return; }
+  if (pass.length < 6) { showAlert('login-alert','Password must be ≥6 chars.'); return; }
+  let phone = raw.replace(/\D/g,'');
+  if (phone.startsWith('0')) phone = phone.substring(1);
+  const fullPhone = cc + phone;
+  btn.innerHTML = '<span class="loader"></span> Sending...'; btn.disabled = true;
+  try {
+    if (!window._rcv) {
+      window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    }
+    window._confirmResult = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
+    document.getElementById('reg-step1').style.display = 'none';
+    document.getElementById('reg-step2').style.display = 'block';
+    document.getElementById('otp-phone-shown').textContent = 'Code sent to ' + fullPhone;
+    document.getElementById('otp0').focus();
+    window._pendingReg = { name, phone: fullPhone, course, pass };
+    startResendTimer();
+  } catch(e) {
+    let msg = 'Could not send OTP: ' + e.message;
+    if (e.code === 'auth/invalid-phone-number') msg = 'Invalid phone number. Enter without leading 0 (e.g. 761234567)';
+    if (e.code === 'auth/too-many-requests') msg = 'Too many attempts. Try again later.';
+    showAlert('login-alert', msg);
+    if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+  }
+  btn.innerHTML = 'Send OTP via SMS &rarr;'; btn.disabled = false;
+};
+
+window.verifyOTP = async () => {
+  const code = [0,1,2,3,4,5].map(i => document.getElementById('otp'+i).value).join('');
+  const btn = document.getElementById('btn-verify-otp');
+  if (code.length !== 6) { showAlert('login-alert','Enter all 6 digits.'); return; }
+  if (!window._confirmResult) { showAlert('login-alert','Request OTP first.'); return; }
+  btn.innerHTML = '<span class="loader"></span> Verifying...'; btn.disabled = true;
+  try {
+    const result = await window._confirmResult.confirm(code);
+    const reg = window._pendingReg;
+    const studentId = await generateStudentId();
+    await setDoc(doc(db,'students',result.user.uid), {
+      name: reg.name, nameLower: reg.name.toLowerCase(),
+      phone: reg.phone, email: result.user.email || '',
+      course: reg.course, studentId, photo: '',
       enrolledAt: serverTimestamp(), role: 'student'
     });
-    showAlert('add-alert', `✅ Student created! ID: ${studentId}`,'success');
-    document.getElementById('add-name').value = '';
-    document.getElementById('add-phone').value = '';
-    document.getElementById('add-email').value = '';
-    document.getElementById('add-password').value = '';
-    document.getElementById('add-course').value = '';
-    pendingAddPhoto = null;
-    document.getElementById('add-photo-label').innerHTML = '<span class="upload-icon">📷</span><input type="file" id="add-photo-input" accept="image/*" onchange="previewAddPhoto(event)">';
-    loadBatches();
+    showAlert('login-alert', '\u2705 Account created! Your ID: ' + studentId, 'success');
+    [0,1,2,3,4,5].forEach(i => { document.getElementById('otp'+i).value = ''; });
+    clearInterval(window._resendTimer);
   } catch(e) {
-    let msg = 'Failed: ' + e.message;
-    if (e.code === 'auth/email-already-in-use') msg = 'Email already registered.';
-    showAlert('add-alert',msg);
+    let msg = 'Invalid OTP. Try again.';
+    if (e.code === 'auth/code-expired') msg = 'OTP expired. Please resend.';
+    if (e.code === 'auth/invalid-verification-code') msg = 'Wrong code. Check and try again.';
+    showAlert('login-alert', msg);
   }
-  btn.innerHTML = 'Create Student Account'; btn.disabled = false;
+  btn.innerHTML = 'Verify &amp; Create Account'; btn.disabled = false;
 };
+
+window.backToOTPStep1 = () => {
+  document.getElementById('reg-step2').style.display = 'none';
+  document.getElementById('reg-step1').style.display = 'block';
+  clearInterval(window._resendTimer);
+  if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+};
+
+window.resendOTP = async () => {
+  if (!window._pendingReg) return;
+  document.getElementById('resend-btn').style.display = 'none';
+  try {
+    if (window._rcv) { try { window._rcv.clear(); } catch(_){} }
+    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    window._confirmResult = await signInWithPhoneNumber(auth, window._pendingReg.phone, window._rcv);
+    startResendTimer();
+  } catch(e) { showAlert('login-alert','Could not resend: '+e.message); }
+};
+
+function startResendTimer() {
+  clearInterval(window._resendTimer);
+  let t = 30;
+  document.getElementById('resend-count').textContent = t;
+  document.getElementById('resend-timer').style.display = 'block';
+  document.getElementById('resend-btn').style.display = 'none';
+  window._resendTimer = setInterval(() => {
+    t--;
+    document.getElementById('resend-count').textContent = t;
+    if (t <= 0) {
+      clearInterval(window._resendTimer);
+      document.getElementById('resend-timer').style.display = 'none';
+      document.getElementById('resend-btn').style.display = 'block';
+    }
+  }, 1000);
+}
+
+window.otpMove = i => {
+  const val = document.getElementById('otp'+i).value;
+  if (val && i < 5) document.getElementById('otp'+(i+1)).focus();
+  if ([0,1,2,3,4,5].every(j => document.getElementById('otp'+j).value)) verifyOTP();
+};
+window.otpBack = (e, i) => {
+  if (e.key === 'Backspace' && !document.getElementById('otp'+i).value && i > 0)
+    document.getElementById('otp'+(i-1)).focus();
+};
+
 </script>
 
 <script>
 window.switchTab = (tab) => {
-  document.getElementById('tab-login').style.display = tab==='login' ? 'block' : 'none';
+  if (tab === 'register') {
+    document.getElementById('reg-step1').style.display = 'block';
+    document.getElementById('reg-step2').style.display = 'none';
+  }
+  document.getElementById('tab-login').style.display    = tab==='login'    ? 'block' : 'none';
   document.getElementById('tab-register').style.display = tab==='register' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='login'&&i===0) || (tab==='register'&&i===1)));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (tab==='login' && i===0)||(tab==='register' && i===1));
+  });
   document.getElementById('login-alert').className = 'alert';
 };
 
-window.stuNav = (sec, btn) => {
+window.studentNav = (section, btn) => {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.sub-screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('stu-'+sec).classList.add('active');
+  ['home','id','attendance','fees','password'].forEach(s => {
+    document.getElementById('student-tab-'+s).style.display = s===section ? 'block' : 'none';
+  });
 };
 
 window.adminTab = (tab, btn) => {
@@ -1448,7 +1706,6 @@ window.adminTab = (tab, btn) => {
   btn.classList.add('active');
   document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   document.getElementById('section-'+tab).classList.add('active');
-  if (tab === 'batches' && typeof showBatchesView === 'function') showBatchesView();
 };
 </script>
 
