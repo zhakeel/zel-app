@@ -8,23 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ocean:      #0a6e9f;
-  --ocean-dark: #064e73;
-  --ocean-deep: #03324a;
-  --accent:     #00b4d8;
-  --sky:        #e8f4fb;
-  --white:      #ffffff;
-  --ink:        #0d1f2d;
-  --muted:      #5a7d94;
-  --border:     rgba(10,110,159,0.2);
-  --success:    #16a34a;
-  --danger:     #dc2626;
-  --warning:    #d97706;
+  --ocean:#0a6e9f; --ocean-dark:#064e73; --ocean-deep:#03324a;
+  --accent:#00b4d8; --sky:#e8f4fb; --white:#ffffff;
+  --ink:#0d1f2d; --muted:#5a7d94; --border:rgba(10,110,159,0.2);
+  --success:#16a34a; --danger:#dc2626; --warning:#d97706;
 }
-
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body { font-family:'DM Sans',sans-serif; background:var(--sky); color:var(--ink); overflow-x:hidden; }
-
 .screen { display:none; min-height:100vh; }
 .screen.active { display:flex; }
 
@@ -164,6 +154,8 @@ textarea.dark-input { min-height:80px; resize:vertical; }
 .btn-admin:disabled { opacity:0.5; cursor:not-allowed; }
 .btn-danger { background:var(--danger); color:white; border:none; border-radius:6px; padding:0.3rem 0.7rem; font-size:0.72rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:opacity 0.2s; }
 .btn-danger:hover { opacity:0.8; }
+.btn-secondary-dark { background:#30363d; color:white; border:none; border-radius:6px; padding:0.5rem 1rem; font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
+.btn-secondary-dark:hover { background:#3f4651; }
 
 .batch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem; }
 .batch-card { background:#161b22; border:1px solid #30363d; border-radius:14px; padding:1.25rem; cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; }
@@ -171,15 +163,12 @@ textarea.dark-input { min-height:80px; resize:vertical; }
 .batch-card:hover { border-color:var(--accent); transform:translateY(-2px); }
 .batch-card:hover::before { opacity:1; }
 .batch-card .icon { font-size:1.8rem; margin-bottom:0.6rem; }
-.batch-card .name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:white; font-weight:500; margin-bottom:0.4rem; line-height:1.2; }
+.batch-card .name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:white; font-weight:500; margin-bottom:0.4rem; line-height:1.3; }
 .batch-card .count { font-size:0.78rem; color:#8b949e; }
 .batch-card .count strong { color:var(--accent); font-weight:600; }
 
 .back-link { display:inline-flex; align-items:center; gap:0.4rem; color:var(--accent); cursor:pointer; font-size:0.85rem; margin-bottom:1rem; padding:0.4rem 0; background:none; border:none; font-family:'DM Sans',sans-serif; }
 .back-link:hover { text-decoration:underline; }
-
-.search-bar { width:100%; background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:0.65rem 1rem; color:white; font-size:0.85rem; outline:none; margin-bottom:1rem; }
-.search-bar:focus { border-color:var(--accent); }
 
 .student-row { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:0.85rem 1rem; margin-bottom:0.55rem; display:flex; align-items:center; gap:0.85rem; cursor:pointer; transition:all 0.2s; }
 .student-row:hover { border-color:var(--accent); background:#1c2128; }
@@ -226,6 +215,25 @@ textarea.dark-input { min-height:80px; resize:vertical; }
 .photo-upload-dark .upload-icon { color:#8b949e; }
 .photo-upload input { display:none; }
 
+/* Searchable picker */
+.picker-wrap { position:relative; margin-bottom:0.7rem; }
+.picker-results { position:absolute; top:100%; left:0; right:0; background:#0d1117; border:1px solid #30363d; border-radius:8px; max-height:240px; overflow-y:auto; z-index:10; margin-top:4px; display:none; }
+.picker-results.open { display:block; }
+.picker-result { padding:0.65rem 0.85rem; cursor:pointer; border-bottom:1px solid #1c2128; transition:background 0.15s; }
+.picker-result:hover, .picker-result.active { background:#1c2128; }
+.picker-result:last-child { border-bottom:none; }
+.picker-result .pr-id { font-size:0.7rem; color:var(--accent); font-weight:600; letter-spacing:0.05em; }
+.picker-result .pr-name { font-size:0.85rem; color:white; margin-top:0.15rem; }
+.picker-result .pr-batch { font-size:0.72rem; color:#8b949e; margin-top:0.1rem; }
+.picker-empty { padding:0.85rem; text-align:center; color:#8b949e; font-size:0.8rem; }
+
+/* Selected student chip */
+.picker-chip { display:flex; align-items:center; justify-content:space-between; background:rgba(0,180,216,0.1); border:1px solid var(--accent); border-radius:8px; padding:0.55rem 0.85rem; margin-bottom:0.7rem; }
+.picker-chip .chip-info { color:white; font-size:0.85rem; }
+.picker-chip .chip-info strong { color:var(--accent); margin-right:0.4rem; }
+.picker-chip .chip-clear { background:none; border:none; color:#8b949e; cursor:pointer; font-size:1rem; padding:0 0.3rem; }
+.picker-chip .chip-clear:hover { color:white; }
+
 .loader { display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:0.4rem; }
 
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -266,7 +274,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
       <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
       <div class="form-group"><label>Phone</label><input type="tel" id="reg-phone" placeholder="0761864245"></div>
       <div class="form-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@gmail.com"></div>
-      <div class="form-group"><label>Course / Batch</label><select id="reg-course">
+      <div class="form-group"><label>Batch</label><select id="reg-course">
         <option value="">Select batch...</option>
         <option>Batch 20</option>
         <option>Batch 21</option>
@@ -319,7 +327,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
         <div class="id-card">
           <div class="id-card-header">
             <h3>🪪 Student ID</h3>
-            <span class="id-badge" id="dash-student-id">ZEL-Batch20-001</span>
+            <span class="id-badge" id="dash-student-id">ZEL-0000</span>
           </div>
           <div class="id-photo-row">
             <div class="id-photo" id="id-photo">S</div>
@@ -404,7 +412,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
     <div class="admin-content">
       <div class="admin-stats">
         <div class="stat-box"><div class="num" id="stat-total">0</div><div class="lbl">Students</div></div>
-        <div class="stat-box"><div class="num" id="stat-batches">5</div><div class="lbl">Batches</div></div>
+        <div class="stat-box"><div class="num" id="stat-batches">0</div><div class="lbl">Batches</div></div>
         <div class="stat-box"><div class="num" id="stat-fees">Rs 0</div><div class="lbl">Total Paid</div></div>
         <div class="stat-box"><div class="num" id="stat-notices">0</div><div class="lbl">Notices</div></div>
       </div>
@@ -423,15 +431,15 @@ textarea.dark-input { min-height:80px; resize:vertical; }
             <h3 style="color:white; font-family:'Cormorant Garamond',serif; font-size:1.3rem;">All Batches</h3>
             <button class="btn-admin" onclick="loadBatches()">🔄 Refresh</button>
           </div>
-          <div class="batch-grid" id="batch-grid"></div>
+          <div class="batch-grid" id="batch-grid"><div class="empty-state" style="color:#8b949e;">Loading...</div></div>
         </div>
 
         <div id="batch-students-view" style="display:none;">
           <button class="back-link" onclick="showBatchesView()">← Back to Batches</button>
           <h3 style="color:white; font-family:'Cormorant Garamond',serif; font-size:1.3rem; margin-bottom:1rem;" id="batch-title">Batch</h3>
-          <input type="text" class="search-bar" id="batch-search" placeholder="🔍 Search by name or student ID..." oninput="filterBatchStudents()">
+          <input type="text" class="dark-input" id="batch-search" placeholder="🔍 Search by name or ID..." oninput="filterBatchStudents()">
           <div id="batch-students-list"></div>
-          <button class="btn-admin" id="batch-load-more" style="display:none; width:100%; margin-top:0.75rem; padding:0.7rem;" onclick="loadMoreBatchStudents()">Load More Students</button>
+          <button class="btn-secondary-dark" id="batch-load-more" onclick="loadMoreBatchStudents()" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
         </div>
 
         <div id="student-detail-view" style="display:none;">
@@ -444,11 +452,14 @@ textarea.dark-input { min-height:80px; resize:vertical; }
         <div class="dark-card">
           <h3>📋 Mark Attendance</h3>
           <div id="att-alert" class="alert"></div>
-          <select class="dark-select" id="att-batch-filter" onchange="loadStudentsForBatchDropdown(this.value, 'att-student')">
-            <option value="">First, select a batch...</option>
-            <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
-          </select>
-          <select class="dark-select" id="att-student"><option value="">Select student...</option></select>
+
+          <!-- Searchable student picker -->
+          <div id="att-picker-wrap" class="picker-wrap">
+            <input type="text" class="dark-input" id="att-picker-input" placeholder="🔍 Search student by ID or name..." oninput="searchPicker('att', this.value)" onfocus="this.nextElementSibling.classList.add('open')">
+            <div class="picker-results" id="att-picker-results"></div>
+          </div>
+          <div id="att-selected-chip" style="display:none;"></div>
+
           <input type="date" class="dark-input" id="att-date">
           <select class="dark-select" id="att-status">
             <option value="">Select status...</option>
@@ -460,13 +471,12 @@ textarea.dark-input { min-height:80px; resize:vertical; }
         </div>
 
         <div class="dark-card">
-          <h3>View Records</h3>
-          <select class="dark-select" id="att-view-batch" onchange="loadAttendanceRecords()">
-            <option value="">Select batch...</option>
-            <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
-          </select>
-          <input type="month" class="dark-input" id="att-filter-month" onchange="loadAttendanceRecords()">
-          <div id="att-records-list"><div class="empty-state" style="color:#8b949e;">Pick a batch to view records</div></div>
+          <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+            <input type="month" class="dark-input" id="att-filter-month" style="flex:1; margin-bottom:0;">
+            <button class="btn-admin" onclick="loadAttendanceRecords(true)">Filter</button>
+          </div>
+          <div id="att-records-list"><div class="empty-state" style="color:#8b949e;">Pick a month to view records</div></div>
+          <button class="btn-secondary-dark" id="att-load-more" onclick="loadAttendanceRecords(false)" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
         </div>
       </div>
 
@@ -474,11 +484,13 @@ textarea.dark-input { min-height:80px; resize:vertical; }
         <div class="dark-card">
           <h3>💳 Add Fee Entry</h3>
           <div id="fee-alert" class="alert"></div>
-          <select class="dark-select" id="fee-batch-filter" onchange="loadStudentsForBatchDropdown(this.value, 'fee-student')">
-            <option value="">First, select a batch...</option>
-            <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
-          </select>
-          <select class="dark-select" id="fee-student"><option value="">Select student...</option></select>
+
+          <div id="fee-picker-wrap" class="picker-wrap">
+            <input type="text" class="dark-input" id="fee-picker-input" placeholder="🔍 Search student by ID or name..." oninput="searchPicker('fee', this.value)" onfocus="this.nextElementSibling.classList.add('open')">
+            <div class="picker-results" id="fee-picker-results"></div>
+          </div>
+          <div id="fee-selected-chip" style="display:none;"></div>
+
           <input type="text" class="dark-input" id="fee-month" placeholder="Month (e.g. May 2026)">
           <input type="number" class="dark-input" id="fee-amount" placeholder="Amount (Rs)">
           <input type="date" class="dark-input" id="fee-due">
@@ -491,12 +503,9 @@ textarea.dark-input { min-height:80px; resize:vertical; }
         </div>
 
         <div class="dark-card">
-          <h3>View Fee Records</h3>
-          <select class="dark-select" id="fee-view-batch" onchange="loadAdminFees()">
-            <option value="">Select batch...</option>
-            <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
-          </select>
-          <div id="fees-list"><div class="empty-state" style="color:#8b949e;">Pick a batch to view fees</div></div>
+          <h3>All Fee Records</h3>
+          <div id="fees-list"><div class="empty-state" style="color:#8b949e;">Loading...</div></div>
+          <button class="btn-secondary-dark" id="fee-load-more" onclick="loadAdminFees(false)" style="display:none; width:100%; margin-top:0.5rem;">Load More</button>
         </div>
       </div>
 
@@ -539,7 +548,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
   </div>
 </div>
 
-<!-- MODALS -->
+<!-- STUDENT PHOTO MODAL -->
 <div class="modal-overlay" id="modal-photo">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-photo')">✕</button>
@@ -549,11 +558,12 @@ textarea.dark-input { min-height:80px; resize:vertical; }
       <span class="upload-icon">📷</span>
       <input type="file" id="upload-photo-input" accept="image/*" onchange="previewStudentPhoto(event)">
     </label>
-    <div style="text-align:center; font-size:0.78rem; color:var(--muted); margin-bottom:1rem;">Tap to choose a photo (auto-resized)</div>
+    <div style="text-align:center; font-size:0.78rem; color:var(--muted); margin-bottom:1rem;">Tap to choose a photo</div>
     <button class="btn-main" onclick="saveStudentPhoto()" id="btn-save-photo">Save Photo</button>
   </div>
 </div>
 
+<!-- ADMIN: STUDENT PHOTO UPLOAD MODAL -->
 <div class="modal-overlay" id="modal-admin-photo">
   <div class="modal dark">
     <button class="modal-close" onclick="closeModal('modal-admin-photo')">✕</button>
@@ -563,7 +573,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
       <span class="upload-icon">📷</span>
       <input type="file" id="admin-photo-input" accept="image/*" onchange="previewAdminEditPhoto(event)">
     </label>
-    <div style="text-align:center; font-size:0.78rem; color:#8b949e; margin-bottom:1rem;">Tap to choose photo (auto-resized)</div>
+    <div style="text-align:center; font-size:0.78rem; color:#8b949e; margin-bottom:1rem;">Tap to choose photo</div>
     <button class="btn-admin" onclick="saveAdminEditPhoto()" id="btn-admin-save-photo" style="width:100%; padding:0.75rem;">Save Photo</button>
   </div>
 </div>
@@ -571,7 +581,7 @@ textarea.dark-input { min-height:80px; resize:vertical; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, where, limit, startAfter, runTransaction, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, where, serverTimestamp, limit, startAfter, getCountFromServer, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
@@ -587,8 +597,9 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 const ADMIN_EMAIL = "zhakeel.mhd@gmail.com";
 
+// All known batches (used to render the grid even before any students exist)
 const BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 30;  // pagination size for lists
 
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + id).classList.add('active'); }
 function showAlert(elId, msg, type='error', persist=false) {
@@ -600,23 +611,26 @@ function showAlert(elId, msg, type='error', persist=false) {
 function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 window.escapeHtml = escapeHtml;
 
-// ── ATOMIC ID GENERATOR ──
-// Uses a transaction to safely increment a per-batch counter even with thousands of concurrent registrations.
-async function generateStudentId(batch) {
-  const counterId = batch.replace(/\s+/g,'').toLowerCase(); // "Batch 20" → "batch20"
-  const counterRef = doc(db, 'counters', counterId);
-  const newNum = await runTransaction(db, async (tx) => {
-    const snap = await tx.get(counterRef);
-    const current = snap.exists() ? (snap.data().count || 0) : 0;
-    const next = current + 1;
-    tx.set(counterRef, { count: next, batch }, { merge: true });
-    return next;
-  });
-  const batchTag = batch.replace(/\s+/g,''); // "Batch 20" → "Batch20"
-  return `ZEL-${batchTag}-${String(newNum).padStart(3,'0')}`;
+// ── Generate next student ID using counter doc (scales to thousands) ──
+async function generateStudentId() {
+  const year = new Date().getFullYear();
+  const counterRef = doc(db, 'meta', 'counters');
+  const counterSnap = await getDoc(counterRef);
+  let next = 1;
+  if (counterSnap.exists()) {
+    const data = counterSnap.data();
+    next = (data.studentCount || 0) + 1;
+    await updateDoc(counterRef, { studentCount: increment(1) });
+  } else {
+    // Initialize counter — count existing students once
+    const allSnap = await getDocs(collection(db,'students'));
+    next = allSnap.size + 1;
+    await setDoc(counterRef, { studentCount: next });
+  }
+  return `ZEL-${year}-${String(next).padStart(3,'0')}`;
 }
 
-// ── PHOTO RESIZER ──
+// ── Image resizer ──
 function resizeImage(file, maxDim=400, quality=0.7) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -643,6 +657,7 @@ function resizeImage(file, maxDim=400, quality=0.7) {
   });
 }
 
+// ── Global state ──
 let currentUser = null;
 let currentUserData = null;
 let pendingPhoto = null;
@@ -650,17 +665,20 @@ let pendingAddPhoto = null;
 let pendingAdminEditPhoto = null;
 let editingStudentUid = null;
 
-// Pagination state
-let batchStudentsCache = []; // current loaded students
-let batchStudentsLastDoc = null;
-let currentBatchView = null;
+// Pagination cursors
+let attCursor = null, feeCursor = null;
+let batchCursor = null, currentBatch = null, batchAllLoaded = [];
+
+// Picker selections
+let pickerSelections = { att: null, fee: null };
+let pickerSearchTimers = { att: null, fee: null };
 
 onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   if (user) {
     if (user.email === ADMIN_EMAIL) {
       showScreen('admin');
-      loadBatches(); loadAdminNotices();
+      loadBatches(); loadAdminNotices(); loadAdminFees(true);
     } else {
       try {
         const snap = await getDoc(doc(db,'students',user.uid));
@@ -703,9 +721,10 @@ window.doRegister = async () => {
   btn.innerHTML='<span class="loader"></span> Creating...'; btn.disabled=true;
   try {
     const cred = await createUserWithEmailAndPassword(auth,email,pass);
-    const studentId = await generateStudentId(course);
+    const studentId = await generateStudentId();
+    const nameLower = name.toLowerCase();
     await setDoc(doc(db,'students',cred.user.uid),{
-      name, phone, email, course, studentId,
+      name, nameLower, phone, email, course, studentId,
       photo:'', enrolledAt: serverTimestamp(), role:'student'
     });
     showAlert('login-alert',`Account created! ID: ${studentId}`,'success');
@@ -725,7 +744,7 @@ async function loadStudentData() {
   const firstName = d.name?.split(' ')[0] || 'Student';
   const initial = firstName[0]?.toUpperCase() || 'S';
   document.getElementById('dash-welcome').textContent = `Welcome, ${firstName}! 👋`;
-  document.getElementById('dash-student-id').textContent = d.studentId || '—';
+  document.getElementById('dash-student-id').textContent = d.studentId || 'ZEL-0000';
   document.getElementById('id-name-big').textContent = d.name || '—';
   document.getElementById('id-course-small').textContent = d.course || '—';
   document.getElementById('id-name').textContent = d.name || '—';
@@ -766,8 +785,7 @@ async function loadStudentAttendance() {
   if (!currentUser) return;
   const list = document.getElementById('stu-att-list');
   try {
-    // Get most recent 100 records — enough for the visual grid + percentage calculation
-    const q = query(collection(db,'attendance'), where('studentUid','==',currentUser.uid), orderBy('date','desc'), limit(100));
+    const q = query(collection(db,'attendance'), where('studentUid','==',currentUser.uid));
     const snap = await getDocs(q);
     let total=0, present=0, late=0;
     const records = [];
@@ -778,10 +796,11 @@ async function loadStudentAttendance() {
       if (r.status === 'present') present++;
       if (r.status === 'late') late++;
     });
+    records.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
     const rate = total === 0 ? 0 : Math.round(((present + late*0.5) / total) * 100);
     document.getElementById('att-percent').textContent = rate + '%';
     document.getElementById('att-bar').style.width = rate + '%';
-    document.getElementById('att-summary').textContent = `${present} present · ${late} late · ${total - present - late} absent (last ${total} records)`;
+    document.getElementById('att-summary').textContent = `${present} present · ${late} late · ${total - present - late} absent (${total} total)`;
     if (!records.length) { list.innerHTML = '<div class="empty-state">No attendance records yet</div>'; return; }
     list.innerHTML = '<div class="attendance-grid">';
     records.slice(0, 28).forEach(r => {
@@ -789,19 +808,14 @@ async function loadStudentAttendance() {
       list.innerHTML += `<div class="att-cell ${r.status}" title="${r.date} - ${r.status}">${day}</div>`;
     });
     list.innerHTML += '</div>';
-  } catch(e) {
-    if (e.message?.includes('index')) {
-      list.innerHTML = '<div class="empty-state">⚠ Firestore index required. Check console for setup link.</div>';
-      console.error('Create the index Firebase suggests:', e.message);
-    } else list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`;
-  }
+  } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
 }
 
 async function loadStudentFees() {
   if (!currentUser) return;
   const list = document.getElementById('stu-fee-list');
   try {
-    const q = query(collection(db,'fees'), where('studentUid','==',currentUser.uid), limit(100));
+    const q = query(collection(db,'fees'), where('studentUid','==',currentUser.uid));
     const snap = await getDocs(q);
     let total=0, paid=0;
     const records = [];
@@ -821,7 +835,7 @@ async function loadStudentFees() {
     records.forEach(r => {
       list.innerHTML += `<div class="fee-row"><div class="fee-row-info"><div class="month">${escapeHtml(r.month || '—')}</div><div class="amt">Rs ${r.amount || 0} · Due ${r.dueDate || '—'}</div></div><span class="fee-status ${r.status}">${r.status}</span></div>`;
     });
-  } catch(e) { console.error(e); }
+  } catch(e) {}
 }
 
 window.changePassword = async () => {
@@ -837,7 +851,7 @@ window.changePassword = async () => {
     const cred = EmailAuthProvider.credential(currentUser.email, cur);
     await reauthenticateWithCredential(currentUser, cred);
     await updatePassword(currentUser, neu);
-    showAlert('pw-alert','✅ Password updated successfully!','success');
+    showAlert('pw-alert','✅ Password updated!','success');
     document.getElementById('pw-current').value='';
     document.getElementById('pw-new').value='';
     document.getElementById('pw-confirm').value='';
@@ -939,25 +953,25 @@ window.saveAdminEditPhoto = async () => {
   btn.innerHTML = 'Save Photo'; btn.disabled = false;
 };
 
-// ══ BATCHES — uses counters, not slow getDocs(all students) ══
+// ══ BATCHES — uses count queries (efficient at scale) ══
 window.loadBatches = async () => {
   const grid = document.getElementById('batch-grid');
-  grid.innerHTML = '';
-  const counterPromises = BATCHES.map(b => getDoc(doc(db, 'counters', b.replace(/\s+/g,'').toLowerCase())));
-  const snaps = await Promise.all(counterPromises);
-  let totalStudents = 0;
-  BATCHES.forEach((batch, i) => {
-    const count = snaps[i].exists() ? (snaps[i].data().count || 0) : 0;
-    totalStudents += count;
-    grid.innerHTML += `
-      <div class="batch-card" onclick="openBatch('${batch}')">
-        <div class="icon">📘</div>
-        <div class="name">${batch}</div>
-        <div class="count"><strong>${count}</strong> student${count===1?'':'s'}</div>
-      </div>`;
-  });
-  document.getElementById('stat-total').textContent = totalStudents;
-  document.getElementById('stat-batches').textContent = BATCHES.length;
+  grid.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
+  try {
+    // Total student count
+    const totalSnap = await getCountFromServer(collection(db,'students'));
+    const totalCount = totalSnap.data().count;
+    document.getElementById('stat-total').textContent = totalCount;
+    document.getElementById('stat-batches').textContent = BATCHES.length;
+
+    // Per-batch counts (one count query per batch — way cheaper than reading all docs)
+    grid.innerHTML = '';
+    for (const batch of BATCHES) {
+      const batchSnap = await getCountFromServer(query(collection(db,'students'), where('course','==',batch)));
+      const count = batchSnap.data().count;
+      grid.innerHTML += `<div class="batch-card" onclick='openBatch(${JSON.stringify(batch).replace(/'/g,"&#39;")})'><div class="icon">📚</div><div class="name">${escapeHtml(batch)}</div><div class="count"><strong>${count}</strong> student${count===1?'':'s'}</div></div>`;
+    }
+  } catch(e) { grid.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`; }
 };
 
 window.showBatchesView = () => {
@@ -966,58 +980,50 @@ window.showBatchesView = () => {
   document.getElementById('student-detail-view').style.display = 'none';
 };
 
-// ══ Paginated batch student loading ══
 window.openBatch = async (batch) => {
-  currentBatchView = batch;
-  batchStudentsCache = [];
-  batchStudentsLastDoc = null;
+  currentBatch = batch;
+  batchCursor = null;
+  batchAllLoaded = [];
   document.getElementById('batches-view').style.display = 'none';
   document.getElementById('batch-students-view').style.display = 'block';
   document.getElementById('student-detail-view').style.display = 'none';
   document.getElementById('batch-title').textContent = batch;
   document.getElementById('batch-search').value = '';
   document.getElementById('batch-students-list').innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  document.getElementById('batch-load-more').style.display = 'none';
-  await fetchBatchStudentsPage();
+  await loadMoreBatchStudents();
 };
 
-async function fetchBatchStudentsPage() {
+window.loadMoreBatchStudents = async () => {
   const list = document.getElementById('batch-students-list');
-  const loadMoreBtn = document.getElementById('batch-load-more');
+  const moreBtn = document.getElementById('batch-load-more');
   try {
-    let q;
-    if (batchStudentsLastDoc) {
-      q = query(collection(db,'students'), where('course','==',currentBatchView), orderBy('studentId'), startAfter(batchStudentsLastDoc), limit(PAGE_SIZE));
-    } else {
-      q = query(collection(db,'students'), where('course','==',currentBatchView), orderBy('studentId'), limit(PAGE_SIZE));
-    }
+    let q = query(collection(db,'students'), where('course','==',currentBatch), orderBy('name'), limit(PAGE_SIZE));
+    if (batchCursor) q = query(collection(db,'students'), where('course','==',currentBatch), orderBy('name'), startAfter(batchCursor), limit(PAGE_SIZE));
     const snap = await getDocs(q);
-    if (!batchStudentsCache.length && snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch yet.</div>'; return; }
-    snap.forEach(d => batchStudentsCache.push({ ...d.data(), id: d.id }));
-    batchStudentsLastDoc = snap.docs[snap.docs.length - 1];
-    loadMoreBtn.style.display = (snap.size === PAGE_SIZE) ? 'block' : 'none';
+    if (snap.empty && batchAllLoaded.length === 0) {
+      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch.</div>';
+      moreBtn.style.display = 'none';
+      return;
+    }
+    if (batchAllLoaded.length === 0) list.innerHTML = '';
+    snap.forEach(d => {
+      const s = d.data();
+      batchAllLoaded.push({ ...s, id: d.id });
+    });
+    batchCursor = snap.docs[snap.docs.length - 1];
+    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
     renderBatchStudents();
-  } catch(e) {
-    if (e.message?.includes('index')) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">⚠ Index needed. Check browser console for setup link.</div>';
-      console.error('Firestore index needed:', e.message);
-    } else list.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`;
-  }
-}
+  } catch(e) { list.innerHTML = `<div class="empty-state" style="color:#8b949e;">Error: ${e.message}</div>`; }
+};
 
-window.loadMoreBatchStudents = () => fetchBatchStudentsPage();
-
-window.filterBatchStudents = () => renderBatchStudents();
-
-function renderBatchStudents() {
+function renderBatchStudents(filter = '') {
   const list = document.getElementById('batch-students-list');
-  const searchTerm = (document.getElementById('batch-search').value || '').toLowerCase().trim();
-  const filtered = !searchTerm ? batchStudentsCache : batchStudentsCache.filter(s =>
-    (s.name || '').toLowerCase().includes(searchTerm) ||
-    (s.studentId || '').toLowerCase().includes(searchTerm) ||
-    (s.email || '').toLowerCase().includes(searchTerm)
-  );
-  if (!filtered.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students match your search.</div>'; return; }
+  const filtered = filter
+    ? batchAllLoaded.filter(s =>
+        (s.name||'').toLowerCase().includes(filter) ||
+        (s.studentId||'').toLowerCase().includes(filter))
+    : batchAllLoaded;
+  if (!filtered.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No matches.</div>'; return; }
   list.innerHTML = '';
   filtered.forEach(s => {
     const initial = (s.name?.[0] || 'S').toUpperCase();
@@ -1025,6 +1031,11 @@ function renderBatchStudents() {
     list.innerHTML += `<div class="student-row" onclick="openStudentDetail('${s.id}')"><div class="s-photo">${photoEl}</div><div class="s-info"><div class="s-id">${escapeHtml(s.studentId || 'N/A')}</div><div class="s-name">${escapeHtml(s.name || '—')}</div><div class="s-meta">${escapeHtml(s.email || '')} · ${escapeHtml(s.phone || '')}</div></div><div class="s-arrow">›</div></div>`;
   });
 }
+
+window.filterBatchStudents = () => {
+  const f = document.getElementById('batch-search').value.toLowerCase().trim();
+  renderBatchStudents(f);
+};
 
 window.backToBatchStudents = () => {
   document.getElementById('student-detail-view').style.display = 'none';
@@ -1061,161 +1072,296 @@ window.openStudentDetail = async (uid) => {
     </div>
     <div class="action-grid">
       <button class="action-btn" onclick="openAdminEditPhoto('${uid}')">📷 Edit Photo</button>
-      <button class="action-btn" onclick="quickAction('attendance','${uid}','${s.course}')">📋 Attendance</button>
-      <button class="action-btn" onclick="quickAction('fees','${uid}','${s.course}')">💳 Fees</button>
+      <button class="action-btn" onclick="quickAction('attendance','${uid}','${escapeHtml(s.studentId||'')}','${escapeHtml(s.name||'')}')">📋 Attendance</button>
+      <button class="action-btn" onclick="quickAction('fees','${uid}','${escapeHtml(s.studentId||'')}','${escapeHtml(s.name||'')}')">💳 Fees</button>
     </div>
-    <button class="btn-danger" style="width:100%; padding:0.75rem;" onclick="deleteStudent('${uid}','${s.course}')">🗑 Remove Student</button>
+    <button class="btn-danger" style="width:100%; padding:0.75rem;" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>
   `;
 };
 
-window.quickAction = async (action, uid, batch) => {
+window.quickAction = (action, uid, studentId, name) => {
   document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   if (action === 'attendance') {
     document.querySelectorAll('.admin-tab')[1].classList.add('active');
     document.getElementById('section-attendance').classList.add('active');
-    document.getElementById('att-batch-filter').value = batch;
-    await loadStudentsForBatchDropdown(batch, 'att-student');
-    document.getElementById('att-student').value = uid;
+    selectPicker('att', uid, studentId, name);
   } else {
     document.querySelectorAll('.admin-tab')[2].classList.add('active');
     document.getElementById('section-fees').classList.add('active');
-    document.getElementById('fee-batch-filter').value = batch;
-    await loadStudentsForBatchDropdown(batch, 'fee-student');
-    document.getElementById('fee-student').value = uid;
+    selectPicker('fee', uid, studentId, name);
   }
 };
 
-window.deleteStudent = async (uid, batch) => {
-  if (!confirm('Remove this student? (Auth account remains — delete it manually from Firebase Auth)')) return;
+window.deleteStudent = async (uid) => {
+  if (!confirm('Remove this student from the database? (Their auth account remains — delete it manually from Firebase Auth)')) return;
   await deleteDoc(doc(db,'students',uid));
-  // Note: counter is NOT decremented. New IDs always increment forward to preserve uniqueness.
+  // Decrement counter
+  try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(e) {}
   showBatchesView();
   loadBatches();
 };
 
-// Load batch-filtered student dropdown (only the batch's students, not all)
-window.loadStudentsForBatchDropdown = async (batch, dropdownId) => {
-  const dd = document.getElementById(dropdownId);
-  if (!batch) { dd.innerHTML = '<option value="">First select batch...</option>'; return; }
-  dd.innerHTML = '<option value="">Loading...</option>';
-  const q = query(collection(db,'students'), where('course','==',batch), orderBy('studentId'), limit(500));
-  const snap = await getDocs(q);
-  const opts = ['<option value="">Select student...</option>'];
-  snap.forEach(d => {
-    const s = d.data();
-    opts.push(`<option value="${d.id}">${escapeHtml(s.studentId || '')} - ${escapeHtml(s.name || '')}</option>`);
-  });
-  dd.innerHTML = opts.join('');
+// ══ SEARCHABLE STUDENT PICKER (queries Firestore by ID prefix) ══
+window.searchPicker = async (kind, term) => {
+  const resultsEl = document.getElementById(`${kind}-picker-results`);
+  resultsEl.classList.add('open');
+  term = term.trim();
+  if (!term) {
+    resultsEl.innerHTML = '<div class="picker-empty">Type to search by ID or name...</div>';
+    return;
+  }
+
+  // Debounce
+  clearTimeout(pickerSearchTimers[kind]);
+  pickerSearchTimers[kind] = setTimeout(async () => {
+    resultsEl.innerHTML = '<div class="picker-empty">Searching...</div>';
+    try {
+      const upper = term.toUpperCase();
+      const lower = term.toLowerCase();
+      const results = new Map();
+
+      // Search by studentId prefix
+      try {
+        const q1 = query(
+          collection(db,'students'),
+          where('studentId','>=', upper),
+          where('studentId','<=', upper + '\uf8ff'),
+          limit(8)
+        );
+        const s1 = await getDocs(q1);
+        s1.forEach(d => results.set(d.id, { ...d.data(), id: d.id }));
+      } catch(e) {}
+
+      // Search by name (lowercase) prefix
+      try {
+        const q2 = query(
+          collection(db,'students'),
+          where('nameLower','>=', lower),
+          where('nameLower','<=', lower + '\uf8ff'),
+          limit(8)
+        );
+        const s2 = await getDocs(q2);
+        s2.forEach(d => results.set(d.id, { ...d.data(), id: d.id }));
+      } catch(e) {}
+
+      const arr = Array.from(results.values()).slice(0, 12);
+      if (!arr.length) {
+        resultsEl.innerHTML = '<div class="picker-empty">No matches.</div>';
+        return;
+      }
+      resultsEl.innerHTML = '';
+      arr.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'picker-result';
+        div.innerHTML = `<div class="pr-id">${escapeHtml(s.studentId || '')}</div><div class="pr-name">${escapeHtml(s.name || '')}</div><div class="pr-batch">${escapeHtml(s.course || '')}</div>`;
+        div.onclick = () => selectPicker(kind, s.id, s.studentId, s.name);
+        resultsEl.appendChild(div);
+      });
+    } catch(e) {
+      resultsEl.innerHTML = `<div class="picker-empty">Error: ${e.message}</div>`;
+    }
+  }, 250);
 };
+
+function selectPicker(kind, uid, studentId, name) {
+  pickerSelections[kind] = { uid, studentId, name };
+  const wrap = document.getElementById(`${kind}-picker-wrap`);
+  const chip = document.getElementById(`${kind}-selected-chip`);
+  wrap.style.display = 'none';
+  chip.style.display = 'block';
+  chip.innerHTML = `<div class="picker-chip"><div class="chip-info"><strong>${escapeHtml(studentId)}</strong>${escapeHtml(name)}</div><button class="chip-clear" onclick="clearPicker('${kind}')">✕</button></div>`;
+  document.getElementById(`${kind}-picker-results`).classList.remove('open');
+}
+window.selectPicker = selectPicker;
+
+window.clearPicker = (kind) => {
+  pickerSelections[kind] = null;
+  document.getElementById(`${kind}-picker-wrap`).style.display = 'block';
+  document.getElementById(`${kind}-selected-chip`).style.display = 'none';
+  document.getElementById(`${kind}-picker-input`).value = '';
+};
+
+// Click outside to close pickers
+document.addEventListener('click', (e) => {
+  ['att','fee'].forEach(k => {
+    const wrap = document.getElementById(`${k}-picker-wrap`);
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById(`${k}-picker-results`).classList.remove('open');
+    }
+  });
+});
 
 // ══ ATTENDANCE ══
 window.markAttendance = async () => {
-  const stu = document.getElementById('att-student').value;
+  const sel = pickerSelections.att;
   const date = document.getElementById('att-date').value;
   const status = document.getElementById('att-status').value;
-  if (!stu||!date||!status) { showAlert('att-alert','Fill all fields.'); return; }
+  if (!sel) { showAlert('att-alert','Please select a student.'); return; }
+  if (!date||!status) { showAlert('att-alert','Fill all fields.'); return; }
   try {
-    const sSnap = await getDoc(doc(db,'students',stu));
-    const sData = sSnap.data();
     await addDoc(collection(db,'attendance'), {
-      studentUid: stu, studentName: sData.name, studentId: sData.studentId,
-      course: sData.course,
+      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
       date, status, createdAt: serverTimestamp()
     });
     showAlert('att-alert','✅ Attendance saved!','success');
     document.getElementById('att-status').value = '';
-    loadAttendanceRecords();
+    loadAttendanceRecords(true);
   } catch(e) { showAlert('att-alert','Save failed: ' + e.message); }
 };
 
-window.loadAttendanceRecords = async () => {
-  const batch = document.getElementById('att-view-batch').value;
+let attRecords = [];
+window.loadAttendanceRecords = async (reset=true) => {
   const month = document.getElementById('att-filter-month').value;
-  const list = document.getElementById('att-records-list');
-  if (!batch) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Pick a batch first.</div>'; return; }
-  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  try {
-    const q = query(collection(db,'attendance'), where('course','==',batch), orderBy('date','desc'), limit(200));
-    const snap = await getDocs(q);
-    const records = [];
-    snap.forEach(d => {
-      const r = d.data();
-      if (!month || (r.date && r.date.startsWith(month))) records.push({ ...r, id: d.id });
-    });
-    if (!records.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No records found.</div>'; return; }
-    const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
-    list.innerHTML = '';
-    records.forEach(r => {
-      list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.date)}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><span style="background:${colors[r.status]}; color:white; padding:0.25rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:600; text-transform:capitalize;">${r.status}</span><button class="btn-danger" onclick="deleteAttendance('${r.id}')">🗑</button></div></div>`;
-    });
-  } catch(e) {
-    if (e.message?.includes('index')) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">⚠ Index needed. Check console for setup link.</div>';
-      console.error('Firestore index needed:', e.message);
-    } else list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`;
+  if (!month) {
+    document.getElementById('att-records-list').innerHTML = '<div class="empty-state" style="color:#8b949e;">Pick a month to view records</div>';
+    document.getElementById('att-load-more').style.display = 'none';
+    return;
   }
+  const list = document.getElementById('att-records-list');
+  const moreBtn = document.getElementById('att-load-more');
+  if (reset) { attCursor = null; attRecords = []; list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>'; }
+  try {
+    let q = query(collection(db,'attendance'), where('date','>=',month+'-01'), where('date','<=',month+'-31'), orderBy('date','desc'), limit(PAGE_SIZE));
+    if (attCursor) q = query(collection(db,'attendance'), where('date','>=',month+'-01'), where('date','<=',month+'-31'), orderBy('date','desc'), startAfter(attCursor), limit(PAGE_SIZE));
+    const snap = await getDocs(q);
+    if (snap.empty && !attRecords.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No records found.</div>'; moreBtn.style.display = 'none'; return; }
+    snap.forEach(d => attRecords.push({ ...d.data(), id: d.id }));
+    attCursor = snap.docs[snap.docs.length - 1];
+    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
+    renderAttendanceRecords();
+  } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
 };
+
+function renderAttendanceRecords() {
+  const list = document.getElementById('att-records-list');
+  const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
+  list.innerHTML = '';
+  attRecords.forEach(r => {
+    list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.date)}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><span style="background:${colors[r.status]}; color:white; padding:0.25rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:600; text-transform:capitalize;">${r.status}</span><button class="btn-danger" onclick="deleteAttendance('${r.id}')">🗑</button></div></div>`;
+  });
+}
 
 window.deleteAttendance = async (id) => {
   if (!confirm('Delete this attendance record?')) return;
   await deleteDoc(doc(db,'attendance',id));
-  loadAttendanceRecords();
+  loadAttendanceRecords(true);
 };
 
 // ══ FEES ══
 window.addFee = async () => {
-  const stu = document.getElementById('fee-student').value;
+  const sel = pickerSelections.fee;
   const month = document.getElementById('fee-month').value.trim();
   const amount = document.getElementById('fee-amount').value;
   const dueDate = document.getElementById('fee-due').value;
   const status = document.getElementById('fee-status').value;
-  if (!stu||!month||!amount||!status) { showAlert('fee-alert','Fill required fields.'); return; }
+  if (!sel) { showAlert('fee-alert','Please select a student.'); return; }
+  if (!month||!amount||!status) { showAlert('fee-alert','Fill required fields.'); return; }
   try {
-    const sSnap = await getDoc(doc(db,'students',stu));
-    const sData = sSnap.data();
     await addDoc(collection(db,'fees'), {
-      studentUid: stu, studentName: sData.name, studentId: sData.studentId,
-      course: sData.course,
+      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
       month, amount: Number(amount), dueDate, status, createdAt: serverTimestamp()
     });
     showAlert('fee-alert','✅ Fee added!','success');
     document.getElementById('fee-month').value = '';
     document.getElementById('fee-amount').value = '';
     document.getElementById('fee-due').value = '';
-    loadAdminFees();
+    loadAdminFees(true);
   } catch(e) { showAlert('fee-alert','Save failed: ' + e.message); }
 };
 
-window.loadAdminFees = async () => {
-  const batch = document.getElementById('fee-view-batch').value;
+let feeRecords = [];
+window.loadAdminFees = async (reset=true) => {
   const list = document.getElementById('fees-list');
-  if (!batch) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Pick a batch first.</div>'; return; }
-  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
+  const moreBtn = document.getElementById('fee-load-more');
+  if (reset) { feeCursor = null; feeRecords = []; list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>'; }
   try {
-    const q = query(collection(db,'fees'), where('course','==',batch), limit(500));
+    let q = query(collection(db,'fees'), orderBy('createdAt','desc'), limit(PAGE_SIZE));
+    if (feeCursor) q = query(collection(db,'fees'), orderBy('createdAt','desc'), startAfter(feeCursor), limit(PAGE_SIZE));
     const snap = await getDocs(q);
-    let total = 0;
-    const records = [];
-    snap.forEach(d => {
-      const r = d.data();
-      records.push({ ...r, id: d.id });
-      if (r.status === 'Paid') total += Number(r.amount || 0);
-      if (r.status === 'Partial') total += Number(r.amount || 0) / 2;
-    });
-    document.getElementById('stat-fees').textContent = 'Rs ' + total + ' (' + batch + ')';
-    if (!records.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No fees yet.</div>'; return; }
-    records.sort((a,b) => (b.month || '').localeCompare(a.month || ''));
-    list.innerHTML = '';
-    records.forEach(r => {
-      list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.month)} · Rs ${r.amount} · Due ${r.dueDate || '—'}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><select class="dark-select" style="width:auto; margin-bottom:0; padding:0.35rem 0.6rem; font-size:0.78rem;" onchange="updateFeeStatus('${r.id}',this.value)"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="btn-danger" onclick="deleteFee('${r.id}')">🗑</button></div></div>`;
-    });
+    if (snap.empty && !feeRecords.length) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No fees yet.</div>'; moreBtn.style.display = 'none'; }
+    snap.forEach(d => feeRecords.push({ ...d.data(), id: d.id }));
+    feeCursor = snap.docs[snap.docs.length - 1];
+    moreBtn.style.display = snap.size === PAGE_SIZE ? 'block' : 'none';
+    renderFeeRecords();
+
+    // Update Total Paid stat from cached aggregate (if available)
+    try {
+      const metaSnap = await getDoc(doc(db,'meta','counters'));
+      const totalPaid = metaSnap.exists() ? (metaSnap.data().totalPaid || 0) : 0;
+      document.getElementById('stat-fees').textContent = 'Rs ' + totalPaid;
+    } catch(e) {}
   } catch(e) { list.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`; }
 };
 
-window.updateFeeStatus = async (id, status) => { await updateDoc(doc(db,'fees',id), { status }); loadAdminFees(); };
-window.deleteFee = async (id) => { if (!confirm('Delete this fee record?')) return; await deleteDoc(doc(db,'fees',id)); loadAdminFees(); };
+function renderFeeRecords() {
+  const list = document.getElementById('fees-list');
+  list.innerHTML = '';
+  feeRecords.forEach(r => {
+    list.innerHTML += `<div class="fee-row" style="background:#0d1117; border-color:#30363d;"><div class="fee-row-info"><div class="month" style="color:white;">${escapeHtml(r.studentId || '')} — ${escapeHtml(r.studentName || '')}</div><div class="amt" style="color:#8b949e;">${escapeHtml(r.month)} · Rs ${r.amount} · Due ${r.dueDate || '—'}</div></div><div style="display:flex; align-items:center; gap:0.5rem;"><select class="dark-select" style="width:auto; margin-bottom:0; padding:0.35rem 0.6rem; font-size:0.78rem;" onchange="updateFeeStatus('${r.id}',this.value, ${r.amount}, '${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="btn-danger" onclick="deleteFee('${r.id}', ${r.amount}, '${r.status}')">🗑</button></div></div>`;
+  });
+}
 
+function feeContribution(status, amount) {
+  if (status === 'Paid') return Number(amount || 0);
+  if (status === 'Partial') return Number(amount || 0) / 2;
+  return 0;
+}
+
+window.updateFeeStatus = async (id, newStatus, amount, oldStatus) => {
+  await updateDoc(doc(db,'fees',id), { status: newStatus });
+  // Update cached totalPaid
+  try {
+    const delta = feeContribution(newStatus, amount) - feeContribution(oldStatus, amount);
+    if (delta !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(delta) });
+  } catch(e) { try { await setDoc(doc(db,'meta','counters'), { totalPaid: 0 }, { merge: true }); } catch(_){} }
+  loadAdminFees(true);
+};
+
+window.deleteFee = async (id, amount, status) => {
+  if (!confirm('Delete this fee record?')) return;
+  await deleteDoc(doc(db,'fees',id));
+  try {
+    const delta = -feeContribution(status, amount);
+    if (delta !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(delta) });
+  } catch(e) {}
+  loadAdminFees(true);
+};
+
+// Override addFee to also bump cached total
+const _originalAddFee = window.addFee;
+window.addFee = async () => {
+  const sel = pickerSelections.fee;
+  const month = document.getElementById('fee-month').value.trim();
+  const amount = document.getElementById('fee-amount').value;
+  const dueDate = document.getElementById('fee-due').value;
+  const status = document.getElementById('fee-status').value;
+  if (!sel) { showAlert('fee-alert','Please select a student.'); return; }
+  if (!month||!amount||!status) { showAlert('fee-alert','Fill required fields.'); return; }
+  try {
+    await addDoc(collection(db,'fees'), {
+      studentUid: sel.uid, studentName: sel.name, studentId: sel.studentId,
+      month, amount: Number(amount), dueDate, status, createdAt: serverTimestamp()
+    });
+    // Bump cached total
+    try {
+      const delta = feeContribution(status, amount);
+      if (delta > 0) {
+        const metaRef = doc(db,'meta','counters');
+        const metaSnap = await getDoc(metaRef);
+        if (metaSnap.exists()) await updateDoc(metaRef, { totalPaid: increment(delta) });
+        else await setDoc(metaRef, { totalPaid: delta }, { merge: true });
+      }
+    } catch(e) {}
+    showAlert('fee-alert','✅ Fee added!','success');
+    document.getElementById('fee-month').value = '';
+    document.getElementById('fee-amount').value = '';
+    document.getElementById('fee-due').value = '';
+    loadAdminFees(true);
+  } catch(e) { showAlert('fee-alert','Save failed: ' + e.message); }
+};
+
+// ══ NOTICES ══
 window.postNotice = async () => {
   const title = document.getElementById('notice-title').value.trim();
   const body = document.getElementById('notice-body').value.trim();
@@ -1244,6 +1390,7 @@ async function loadAdminNotices() {
 
 window.deleteNotice = async (id) => { await deleteDoc(doc(db,'notices',id)); loadAdminNotices(); };
 
+// ══ ADD STUDENT ══
 window.adminAddStudent = async () => {
   const name = document.getElementById('add-name').value.trim();
   const phone = document.getElementById('add-phone').value.trim();
@@ -1256,9 +1403,10 @@ window.adminAddStudent = async () => {
   btn.innerHTML = '<span class="loader"></span> Creating...'; btn.disabled = true;
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const studentId = await generateStudentId(course);
+    const studentId = await generateStudentId();
+    const nameLower = name.toLowerCase();
     await setDoc(doc(db,'students', cred.user.uid), {
-      name, phone, email, course, studentId,
+      name, nameLower, phone, email, course, studentId,
       photo: pendingAddPhoto || '',
       enrolledAt: serverTimestamp(), role: 'student'
     });
