@@ -1584,9 +1584,16 @@ window.sendOTP = async () => {
   const fullPhone = cc + phone;
   btn.innerHTML = '<span class="loader"></span> Sending...'; btn.disabled = true;
   try {
-    if (!window._rcv) {
-      window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    // Always destroy and recreate reCAPTCHA to avoid "already rendered" error
+    if (window._rcv) {
+      try { window._rcv.clear(); } catch(_) {}
+      window._rcv = null;
     }
+    // Reset the container element completely
+    const container = document.getElementById('recaptcha-container');
+    container.innerHTML = '';
+    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    await window._rcv.render();
     window._confirmResult = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
     document.getElementById('reg-step1').style.display = 'none';
     document.getElementById('reg-step2').style.display = 'block';
@@ -1637,14 +1644,19 @@ window.backToOTPStep1 = () => {
   document.getElementById('reg-step1').style.display = 'block';
   clearInterval(window._resendTimer);
   if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+  const container = document.getElementById('recaptcha-container');
+  if (container) container.innerHTML = '';
 };
 
 window.resendOTP = async () => {
   if (!window._pendingReg) return;
   document.getElementById('resend-btn').style.display = 'none';
   try {
-    if (window._rcv) { try { window._rcv.clear(); } catch(_){} }
+    if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+    const container = document.getElementById('recaptcha-container');
+    container.innerHTML = '';
     window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    await window._rcv.render();
     window._confirmResult = await signInWithPhoneNumber(auth, window._pendingReg.phone, window._rcv);
     startResendTimer();
   } catch(e) { showAlert('login-alert','Could not resend: '+e.message); }
