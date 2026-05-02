@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="theme-color" content="#064e73">
 <title>ZEL — Zone for English Learners</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --ocean:#0a6e9f;--ocean-dark:#064e73;--ocean-deep:#03324a;
@@ -14,12 +14,10 @@
   --success:#16a34a;--danger:#dc2626;--warn:#d97706;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--ink);overflow-x:hidden}
-
-/* ── SCREENS ── */
+html,body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 .screen{display:none;min-height:100vh}.screen.active{display:flex}
 
-/* ── LOGIN ── */
+/* LOGIN */
 #scr-login{flex-direction:column;align-items:center;justify-content:center;
   background:linear-gradient(145deg,var(--ocean-deep),var(--ocean-dark) 55%,var(--ocean));
   padding:2rem 1.5rem;position:relative;overflow:hidden}
@@ -28,114 +26,117 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--ink
 .login-card{background:rgba(255,255,255,.97);border-radius:20px;padding:2.5rem 2rem;
   width:100%;max-width:400px;box-shadow:0 30px 80px rgba(0,0,0,.35);
   position:relative;z-index:2;animation:slideUp .5s ease both}
-.brand-logo{text-align:center;margin-bottom:1.75rem}
-.brand-logo .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);
+.brand{text-align:center;margin-bottom:1.75rem}
+.brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);
   display:inline-block;margin-right:.4rem;vertical-align:middle}
-.brand-logo h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;
+.brand h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;
   color:var(--ocean-dark);display:inline}
-.brand-logo p{font-size:.75rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:.3rem}
-.tab-row{display:flex;background:var(--sky);border-radius:10px;padding:4px;margin-bottom:1.75rem;gap:4px}
-.tab-btn{flex:1;padding:.6rem;border:none;border-radius:7px;background:transparent;
+.brand p{font-size:.74rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:.3rem}
+.tabs{display:flex;background:var(--sky);border-radius:10px;padding:4px;margin-bottom:1.5rem;gap:4px}
+.tabs button{flex:1;padding:.6rem;border:none;border-radius:7px;background:transparent;
   font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s}
-.tab-btn.active{background:#fff;color:var(--ocean-dark);box-shadow:0 2px 8px rgba(10,110,159,.15)}
-.fgroup{margin-bottom:1rem}
-.fgroup label{display:block;font-size:.73rem;font-weight:600;color:var(--muted);
+.tabs button.active{background:#fff;color:var(--ocean-dark);box-shadow:0 2px 8px rgba(10,110,159,.15)}
+
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);
   letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem}
-.fgroup input,.fgroup select{width:100%;background:var(--sky);border:1.5px solid var(--border);
+.fg input,.fg select{width:100%;background:var(--sky);border:1.5px solid var(--border);
   border-radius:10px;padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;
   color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
-.fgroup input:focus,.fgroup select:focus{border-color:var(--ocean);
-  box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
-.btn-main{width:100%;background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));color:#fff;
-  border:none;border-radius:50px;padding:.85rem;font-family:'DM Sans',sans-serif;font-size:.88rem;
+.fg input:focus,.fg select:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
+
+/* phone row - FIXED with explicit widths */
+.ph-row{display:flex;gap:.5rem;width:100%}
+.ph-cc{width:110px!important;min-width:110px;max-width:110px;flex-shrink:0;
+  background:var(--sky);border:1.5px solid var(--border);border-radius:10px;
+  padding:.75rem .4rem;font-family:'DM Sans',sans-serif;font-size:.82rem;
+  color:var(--ink);outline:none;cursor:pointer;text-align:center;
+  -webkit-appearance:none;appearance:none}
+.ph-cc:focus{border-color:var(--ocean)}
+.ph-num{flex:1;min-width:0;background:var(--sky);border:1.5px solid var(--border);
+  border-radius:10px;padding:.75rem 1rem;font-family:'DM Sans',sans-serif;
+  font-size:.9rem;color:var(--ink);outline:none;transition:border-color .2s}
+.ph-num:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
+
+/* OTP */
+.otp-info{text-align:center;margin-bottom:1.25rem}
+.otp-info strong{display:block;font-size:.95rem;color:var(--ocean-dark);font-weight:600;margin-bottom:.25rem}
+.otp-info span{font-size:.78rem;color:var(--muted)}
+.otp-row{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.25rem}
+.otp-box{width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;
+  background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;
+  color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+.otp-box:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
+.resend{text-align:center;margin-top:.6rem;font-size:.78rem;color:var(--muted)}
+.resend a{color:var(--ocean);cursor:pointer;text-decoration:none}
+.resend a:hover{text-decoration:underline}
+
+/* photo circle */
+.pc{width:90px;height:90px;border-radius:50%;background:var(--sky);
+  border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;margin:0 auto .5rem;overflow:hidden;transition:all .2s;font-size:1.8rem}
+.pc:hover{border-color:var(--ocean)}
+.pc img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.pc.dark{background:#0d1117;border-color:#30363d}
+.pc.dark:hover{border-color:var(--accent)}
+.pc.lg{width:110px;height:110px;font-size:2rem}
+
+/* buttons */
+.btn{width:100%;background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));color:#fff;
+  border:none;border-radius:50px;padding:.85rem;font-family:'DM Sans',sans-serif;font-size:.86rem;
   font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;
   transition:opacity .2s,transform .2s;box-shadow:0 4px 20px rgba(10,110,159,.3)}
-.btn-main:hover{opacity:.9;transform:translateY(-1px)}
-.btn-main:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.btn-outline{width:100%;background:transparent;color:var(--ocean-dark);
-  border:1.5px solid var(--border);border-radius:50px;padding:.72rem;
-  font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;margin-top:.5rem;transition:all .2s}
-.btn-outline:hover{border-color:var(--ocean);background:var(--sky)}
+.btn:hover{opacity:.9;transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-ol{width:100%;background:transparent;color:var(--ocean-dark);border:1.5px solid var(--border);
+  border-radius:50px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.85rem;
+  cursor:pointer;margin-top:.5rem;transition:all .2s}
+.btn-ol:hover{border-color:var(--ocean);background:var(--sky)}
+
 .alert{padding:.75rem 1rem;border-radius:8px;font-size:.82rem;margin-bottom:1rem;
   display:none;word-break:break-word;line-height:1.5}
 .alert.err{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;display:block}
 .alert.ok{background:#f0fdf4;border:1px solid #86efac;color:#15803d;display:block}
 .alert.info{background:#eff6ff;border:1px solid #93c5fd;color:#1e40af;display:block}
 
-/* OTP */
-.otp-wrap{display:none}.otp-wrap.show{display:block}
-.otp-info{text-align:center;margin-bottom:1.25rem}
-.otp-info strong{display:block;font-size:.95rem;color:var(--ocean-dark);font-weight:600;margin-bottom:.25rem}
-.otp-info span{font-size:.78rem;color:var(--muted)}
-.otp-boxes{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.25rem}
-.otp-box{width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;
-  background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;
-  color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s}
-.otp-box:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
-.resend-row{text-align:center;margin-top:.6rem;font-size:.78rem;color:var(--muted)}
-.resend-link{color:var(--ocean);cursor:pointer;display:none}
-.resend-link:hover{text-decoration:underline}
-
-/* phone row */
-.ph-row{display:flex;gap:.5rem;width:100%}
-.ph-cc{width:110px;min-width:110px;max-width:110px;flex-shrink:0;background:var(--sky);border:1.5px solid var(--border);
-  border-radius:10px;padding:.75rem .4rem;font-family:'DM Sans',sans-serif;
-  font-size:.82rem;color:var(--ink);outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;cursor:pointer;text-align:center}
-.ph-cc:focus{border-color:var(--ocean)}
-.ph-num{flex:1;min-width:0;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;
-  padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);
-  outline:none;transition:border-color .2s}
-.ph-num:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
-
-/* photo circle */
-.photo-circle{width:90px;height:90px;border-radius:50%;background:var(--sky);
-  border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;margin:0 auto .5rem;overflow:hidden;transition:border-color .2s;position:relative}
-.photo-circle:hover{border-color:var(--ocean)}
-.photo-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.photo-circle-dark{background:#0d1117;border-color:#30363d}
-.photo-circle-dark:hover{border-color:var(--accent)}
-
-/* ── TOPBAR ── */
+/* TOPBARS */
 .topbar{background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark));color:#fff;
   padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:50;box-shadow:0 4px 20px rgba(3,50,74,.3)}
-.topbar-brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;
+.tb-brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;
   display:flex;align-items:center;gap:.4rem}
-.topbar-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.top-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
-.avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);
+.tb-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.tb-right{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.av{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);
   border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;
   font-size:.9rem;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.btn-top{border:1px solid rgba(255,255,255,.25);color:#fff;padding:.38rem .85rem;
-  border-radius:50px;font-size:.72rem;font-family:'DM Sans',sans-serif;cursor:pointer;
-  transition:background .2s;white-space:nowrap}
-.btn-top.ghost{background:rgba(255,255,255,.1)}
-.btn-top.ghost:hover{background:rgba(255,255,255,.2)}
-.btn-top.accent{background:rgba(0,180,216,.2);border-color:var(--accent);color:var(--accent);font-weight:600}
-.btn-top.accent:hover{background:rgba(0,180,216,.3)}
+.av img{width:100%;height:100%;object-fit:cover}
+.tb-btn{border:1px solid rgba(255,255,255,.25);color:#fff;padding:.36rem .8rem;
+  border-radius:50px;font-size:.7rem;font-family:'DM Sans',sans-serif;cursor:pointer;
+  transition:all .2s;white-space:nowrap}
+.tb-btn.ghost{background:rgba(255,255,255,.1)}
+.tb-btn.ghost:hover{background:rgba(255,255,255,.2)}
+.tb-btn.acc{background:rgba(0,180,216,.2);border-color:var(--accent);color:var(--accent);font-weight:600}
+.tb-btn.acc:hover{background:rgba(0,180,216,.3)}
 
-/* ── STUDENT DASH ── */
+/* DASH */
 #scr-dash{flex-direction:column;background:var(--sky)}
-.dash-body{padding:1.5rem;max-width:600px;margin:0 auto;width:100%;padding-bottom:88px}
-.welcome-card{background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
-  border-radius:16px;padding:1.5rem;color:#fff;margin-bottom:1.5rem;position:relative;overflow:hidden}
-.welcome-card::after{content:'ZEL';position:absolute;right:-8px;top:-8px;
+.dash{padding:1.5rem;max-width:600px;margin:0 auto;width:100%;padding-bottom:90px}
+.welcome{background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
+  border-radius:16px;padding:1.4rem;color:#fff;margin-bottom:1.4rem;position:relative;overflow:hidden}
+.welcome::after{content:'ZEL';position:absolute;right:-8px;top:-8px;
   font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;
   color:rgba(255,255,255,.06);line-height:1;pointer-events:none}
-.welcome-card h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;margin-bottom:.35rem}
-.welcome-card p{font-size:.82rem;opacity:.85;line-height:1.6}
-.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ocean-dark);
-  margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-.card{background:#fff;border-radius:14px;padding:1.25rem;margin-bottom:1rem;
+.welcome h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;margin-bottom:.35rem}
+.welcome p{font-size:.82rem;opacity:.85;line-height:1.6}
+.title{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--ocean-dark);
+  margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem}
+.card{background:#fff;border-radius:14px;padding:1.2rem;margin-bottom:1rem;
   border:1px solid var(--border);box-shadow:0 2px 12px rgba(10,110,159,.06)}
-.card.accent-top{position:relative;overflow:hidden}
-.card.accent-top::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+.card.acc-top{position:relative;overflow:hidden}
+.card.acc-top::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
   background:linear-gradient(90deg,var(--ocean-dark),var(--accent))}
-
-/* ID card */
-.id-photo-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.2rem;
+.id-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.2rem;
   padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
 .id-photo{width:88px;height:108px;border-radius:8px;
   background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
@@ -143,209 +144,209 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--ink
   justify-content:center;color:#fff;font-family:'Cormorant Garamond',serif;
   font-size:2.5rem;flex-shrink:0}
 .id-photo img{width:100%;height:100%;object-fit:cover}
-.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
-.id-grid.full-col{grid-column:1/-1}
-.id-field label{display:block;font-size:.67rem;text-transform:uppercase;
-  letter-spacing:.1em;color:var(--muted);margin-bottom:.2rem}
-.id-field span{font-size:.88rem;font-weight:500;color:var(--ink);word-break:break-word}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.id-field label{display:block;font-size:.66rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:.18rem}
+.id-field span{font-size:.86rem;font-weight:500;color:var(--ink);word-break:break-word}
+.id-field.full{grid-column:1/-1}
 .id-badge{background:var(--sky);border:1px solid var(--border);border-radius:50px;
-  padding:.28rem .85rem;font-size:.74rem;font-weight:700;color:var(--ocean);letter-spacing:.08em}
+  padding:.26rem .8rem;font-size:.72rem;font-weight:700;color:var(--ocean);letter-spacing:.08em}
 
-/* notices */
-.notice-item{background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;
+.notice{background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.65rem;
   border:1px solid var(--border);border-left:3px solid var(--ocean)}
-.notice-date{font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
-.notice-title{font-size:.9rem;font-weight:600;color:var(--ink)}
-.notice-body{font-size:.8rem;color:var(--muted);margin-top:.3rem;line-height:1.6}
+.notice .dt{font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
+.notice .ti{font-size:.88rem;font-weight:600;color:var(--ink)}
+.notice .bd{font-size:.8rem;color:var(--muted);margin-top:.3rem;line-height:1.6}
+.empty{text-align:center;padding:2rem;color:var(--muted);font-size:.83rem}
 
-/* attendance */
-.pct-bar-wrap{margin-top:.6rem}
 .pct-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--ocean-dark);line-height:1}
 .pct-bar{height:10px;background:var(--sky);border-radius:6px;overflow:hidden;margin-top:.5rem}
 .pct-fill{height:100%;background:linear-gradient(90deg,var(--ocean),var(--accent));transition:width .6s}
-.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:.9rem}
+.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:.85rem}
 .att-cell{aspect-ratio:1;border-radius:5px;background:var(--sky);display:flex;
   align-items:center;justify-content:center;font-size:.65rem;color:var(--muted)}
 .att-cell.present{background:var(--success);color:#fff}
 .att-cell.absent{background:var(--danger);color:#fff}
 .att-cell.late{background:var(--warn);color:#fff}
 
-/* fees */
 .fee-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1rem}
-.fee-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.9rem;text-align:center}
-.fee-box .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
-.fee-box .amt{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:500}
+.fee-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.85rem;text-align:center}
+.fee-box .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
+.fee-box .amt{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500}
 .fee-box.t .amt{color:var(--ocean-dark)}.fee-box.p .amt{color:var(--success)}.fee-box.d .amt{color:var(--danger)}
 .fee-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;
   margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}
 .fee-row .mon{font-weight:500;font-size:.88rem;color:var(--ink)}
 .fee-row .sub{font-size:.76rem;color:var(--muted);margin-top:.1rem}
-.status-pill{padding:.22rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;letter-spacing:.04em}
-.status-pill.Paid{background:#d1fae5;color:#065f46}
-.status-pill.Partial{background:#fef3c7;color:#92400e}
-.status-pill.Unpaid{background:#fee2e2;color:#991b1b}
+.pill{padding:.22rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;letter-spacing:.04em}
+.pill.Paid{background:#d1fae5;color:#065f46}
+.pill.Partial{background:#fef3c7;color:#92400e}
+.pill.Unpaid{background:#fee2e2;color:#991b1b}
 
-/* bottom nav */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
   display:flex;z-index:50;box-shadow:0 -4px 20px rgba(10,110,159,.08)}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:.6rem .3rem;
+.bnav button{flex:1;display:flex;flex-direction:column;align-items:center;padding:.6rem .3rem;
   background:none;border:none;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;
-  font-size:.58rem;gap:.18rem;transition:color .2s}
-.bnav-btn .ic{font-size:1.15rem}
-.bnav-btn.active{color:var(--ocean)}
-.sub-screen{display:none}.sub-screen.active{display:block;animation:fadeIn .3s ease both}
+  font-size:.58rem;gap:.2rem;transition:color .2s}
+.bnav button .ic{font-size:1.18rem}
+.bnav button.active{color:var(--ocean)}
+.sub{display:none}.sub.active{display:block;animation:fade .25s ease both}
 
-/* ── ADMIN ── */
+/* ADMIN */
 #scr-admin{flex-direction:column;background:#0d1117}
-.adm-topbar{background:#161b22;border-bottom:1px solid #30363d;padding:.95rem 1.25rem;
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.adm-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;
+.adm-tb{background:#161b22;border-bottom:1px solid #30363d;padding:.95rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:.5rem}
+.adm-bn{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;
   display:flex;align-items:center;gap:.5rem}
-.adm-badge{background:var(--accent);color:#0d1117;font-size:.63rem;font-weight:700;
+.adm-bg{background:var(--accent);color:#0d1117;font-size:.62rem;font-weight:700;
   letter-spacing:.1em;padding:.18rem .48rem;border-radius:4px;text-transform:uppercase}
-.adm-body{padding:1.25rem 1rem;max-width:1000px;margin:0 auto;width:100%}
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.4rem}
-.stat-box{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.9rem .7rem;text-align:center}
-.stat-box .n{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--accent);font-weight:300;line-height:1;margin-bottom:.2rem}
-.stat-box .l{font-size:.63rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em}
-.adm-tabs{display:flex;border-bottom:1px solid #30363d;margin-bottom:1.2rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.adm-tab{background:none;border:none;border-bottom:2px solid transparent;color:#8b949e;
-  font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.52rem .85rem;cursor:pointer;
+.adm-body{padding:1.25rem 1rem;max-width:1100px;margin:0 auto;width:100%}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.4rem}
+.stat{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.9rem .65rem;text-align:center}
+.stat .n{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--accent);font-weight:300;line-height:1;margin-bottom:.2rem}
+.stat .l{font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em}
+
+.adm-tabs{display:flex;border-bottom:1px solid #30363d;margin-bottom:1.2rem;
+  overflow-x:auto;-webkit-overflow-scrolling:touch}
+.adm-tabs button{background:none;border:none;border-bottom:2px solid transparent;color:#8b949e;
+  font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.55rem .85rem;cursor:pointer;
   transition:all .2s;margin-bottom:-1px;white-space:nowrap}
-.adm-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.adm-sec{display:none}.adm-sec.active{display:block;animation:fadeIn .3s ease both}
-.dark-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.2rem;margin-bottom:1rem}
-.dark-card h3{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:1rem}
+.adm-tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+.sec{display:none}.sec.active{display:block;animation:fade .25s ease both}
+
+.dc{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.2rem;margin-bottom:1rem}
+.dc h3{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:1rem}
 .di,.ds{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;
-  padding:.68rem .95rem;color:#fff;font-family:'DM Sans',sans-serif;font-size:.87rem;
-  outline:none;margin-bottom:.65rem;transition:border-color .2s}
+  padding:.68rem .9rem;color:#fff;font-family:'DM Sans',sans-serif;font-size:.86rem;
+  outline:none;margin-bottom:.6rem;transition:border-color .2s}
 .di:focus,.ds:focus{border-color:var(--accent)}
 textarea.di{min-height:78px;resize:vertical}
-.btn-acc{background:var(--accent);color:#0d1117;border:none;border-radius:8px;
-  padding:.52rem .95rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;
+.b-acc{background:var(--accent);color:#0d1117;border:none;border-radius:8px;
+  padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;
   cursor:pointer;transition:opacity .2s;letter-spacing:.04em}
-.btn-acc:hover{opacity:.85}.btn-acc:disabled{opacity:.5;cursor:not-allowed}
-.btn-del{background:var(--danger);color:#fff;border:none;border-radius:6px;
-  padding:.28rem .65rem;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s}
-.btn-del:hover{opacity:.8}
-.btn-sec{background:#30363d;color:#fff;border:none;border-radius:6px;
+.b-acc:hover{opacity:.85}.b-acc:disabled{opacity:.5;cursor:not-allowed}
+.b-del{background:var(--danger);color:#fff;border:none;border-radius:6px;
+  padding:.28rem .65rem;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.b-del:hover{opacity:.85}
+.b-sec{background:#30363d;color:#fff;border:none;border-radius:6px;
   padding:.45rem .9rem;font-size:.76rem;cursor:pointer;font-family:'DM Sans',sans-serif}
-.btn-sec:hover{background:#3f4651}
+.b-sec:hover{background:#3f4651}
 
-/* batch grid */
-.batch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.7rem}
-.batch-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.2rem;
+.b-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.7rem}
+.b-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.15rem;
   cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.batch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+.b-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
   background:var(--accent);opacity:0;transition:opacity .2s}
-.batch-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.batch-card:hover::before{opacity:1}
-.batch-card .bi{font-size:1.75rem;margin-bottom:.55rem}
-.batch-card .bn{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:#fff;
-  font-weight:500;margin-bottom:.35rem}
-.batch-card .bc{font-size:.76rem;color:#8b949e}
-.batch-card .bc strong{color:var(--accent);font-weight:600}
-.back-btn{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent);
+.b-card:hover{border-color:var(--accent);transform:translateY(-2px)}.b-card:hover::before{opacity:1}
+.b-card .ic{font-size:1.7rem;margin-bottom:.5rem}
+.b-card .nm{font-family:'Cormorant Garamond',serif;font-size:1.22rem;color:#fff;font-weight:500;margin-bottom:.3rem}
+.b-card .ct{font-size:.74rem;color:#8b949e}
+.b-card .ct strong{color:var(--accent);font-weight:600}
+
+.back{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent);
   cursor:pointer;font-size:.84rem;margin-bottom:.9rem;padding:.3rem 0;
   background:none;border:none;font-family:'DM Sans',sans-serif}
-.back-btn:hover{text-decoration:underline}
-.stu-row{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.82rem .95rem;
+.back:hover{text-decoration:underline}
+.s-row{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.8rem .95rem;
   margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:all .2s}
-.stu-row:hover{border-color:var(--accent);background:#1c2128}
-.stu-av{width:42px;height:42px;border-radius:50%;
+.s-row:hover{border-color:var(--accent);background:#1c2128}
+.s-av{width:40px;height:40px;border-radius:50%;
   background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
   display:flex;align-items:center;justify-content:center;color:#fff;
-  font-weight:600;font-size:.95rem;overflow:hidden;flex-shrink:0}
-.stu-av img{width:100%;height:100%;object-fit:cover}
-.stu-id{font-size:.69rem;color:var(--accent);font-weight:700;letter-spacing:.08em}
-.stu-name{font-size:.9rem;color:#fff;font-weight:500;margin-top:.1rem}
-.stu-meta{font-size:.73rem;color:#8b949e;margin-top:.1rem;word-break:break-word}
+  font-weight:600;font-size:.92rem;overflow:hidden;flex-shrink:0}
+.s-av img{width:100%;height:100%;object-fit:cover}
+.s-id{font-size:.68rem;color:var(--accent);font-weight:700;letter-spacing:.08em}
+.s-name{font-size:.88rem;color:#fff;font-weight:500;margin-top:.1rem}
+.s-meta{font-size:.72rem;color:#8b949e;margin-top:.1rem;word-break:break-word}
 .arr{color:#8b949e;font-size:1.2rem}
 
-/* student detail card (admin) */
-.det-card{background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark));
-  border-radius:18px;padding:1.8rem 1.4rem;color:#fff;position:relative;overflow:hidden;
+.det{background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark));
+  border-radius:18px;padding:1.7rem 1.4rem;color:#fff;position:relative;overflow:hidden;
   margin-bottom:1.2rem;border:1px solid #30363d}
-.det-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;
+.det::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;
   background:linear-gradient(90deg,var(--accent),var(--ocean))}
-.det-card::after{content:'ZEL';position:absolute;right:-8px;bottom:-25px;
+.det::after{content:'ZEL';position:absolute;right:-8px;bottom:-25px;
   font-family:'Cormorant Garamond',serif;font-size:6.5rem;font-weight:300;
-  color:rgba(255,255,255,.05);line-height:1}
-.det-photo-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.4rem;position:relative;z-index:2}
-.det-photo{width:95px;height:115px;border-radius:10px;background:rgba(255,255,255,.12);
+  color:rgba(255,255,255,.05);line-height:1;pointer-events:none}
+.d-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.4rem;position:relative;z-index:2}
+.d-photo{width:92px;height:112px;border-radius:10px;background:rgba(255,255,255,.12);
   border:3px solid var(--accent);overflow:hidden;display:flex;align-items:center;
   justify-content:center;color:#fff;font-family:'Cormorant Garamond',serif;font-size:2.4rem;flex-shrink:0}
-.det-photo img{width:100%;height:100%;object-fit:cover}
-.det-name{font-family:'Cormorant Garamond',serif;font-size:1.45rem;margin-bottom:.35rem}
-.det-id{font-size:.76rem;color:var(--accent);font-weight:700;letter-spacing:.1em;
-  background:rgba(0,180,216,.15);padding:.22rem .65rem;border-radius:50px;display:inline-block}
-.det-fields{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;position:relative;z-index:2}
-.det-field label{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;
+.d-photo img{width:100%;height:100%;object-fit:cover}
+.d-name{font-family:'Cormorant Garamond',serif;font-size:1.42rem;margin-bottom:.3rem}
+.d-id{font-size:.74rem;color:var(--accent);font-weight:700;letter-spacing:.1em;
+  background:rgba(0,180,216,.15);padding:.2rem .65rem;border-radius:50px;display:inline-block}
+.d-fields{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;position:relative;z-index:2}
+.d-field label{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
   color:rgba(255,255,255,.5);margin-bottom:.18rem;display:block}
-.det-field span{font-size:.88rem;word-break:break-word}
-.act-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.55rem;margin-bottom:.9rem}
-.act-btn{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.8rem .4rem;
-  color:#fff;font-family:'DM Sans',sans-serif;font-size:.76rem;cursor:pointer;transition:all .2s;
+.d-field span{font-size:.86rem;word-break:break-word}
+.d-field.full{grid-column:1/-1}
+.acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.55rem;margin-bottom:.85rem}
+.act{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.78rem .35rem;
+  color:#fff;font-family:'DM Sans',sans-serif;font-size:.74rem;cursor:pointer;transition:all .2s;
   display:flex;align-items:center;justify-content:center;gap:.3rem;text-align:center}
-.act-btn:hover{border-color:var(--accent);background:#1c2128}
+.act:hover{border-color:var(--accent);background:#1c2128}
 
 /* picker */
-.picker-wrap{position:relative;margin-bottom:.65rem}
-.picker-res{position:absolute;top:100%;left:0;right:0;background:#0d1117;
-  border:1px solid #30363d;border-radius:8px;max-height:220px;overflow-y:auto;
+.pkr{position:relative;margin-bottom:.6rem}
+.pkr-res{position:absolute;top:100%;left:0;right:0;background:#0d1117;
+  border:1px solid #30363d;border-radius:8px;max-height:230px;overflow-y:auto;
   z-index:20;margin-top:3px;display:none}
-.picker-res.open{display:block}
-.picker-item{padding:.62rem .82rem;cursor:pointer;border-bottom:1px solid #1c2128;transition:background .15s}
-.picker-item:hover{background:#1c2128}.picker-item:last-child{border-bottom:none}
-.picker-item .pid{font-size:.68rem;color:var(--accent);font-weight:700;letter-spacing:.05em}
-.picker-item .pname{font-size:.84rem;color:#fff;margin-top:.12rem}
-.picker-item .pbatch{font-size:.7rem;color:#8b949e;margin-top:.08rem}
-.picker-empty{padding:.82rem;text-align:center;color:#8b949e;font-size:.8rem}
+.pkr-res.open{display:block}
+.pkr-it{padding:.62rem .82rem;cursor:pointer;border-bottom:1px solid #1c2128;transition:background .15s}
+.pkr-it:hover{background:#1c2128}.pkr-it:last-child{border-bottom:none}
+.pkr-it .pid{font-size:.68rem;color:var(--accent);font-weight:700;letter-spacing:.05em}
+.pkr-it .pnm{font-size:.84rem;color:#fff;margin-top:.12rem}
+.pkr-it .pba{font-size:.7rem;color:#8b949e;margin-top:.08rem}
+.pkr-em{padding:.82rem;text-align:center;color:#8b949e;font-size:.8rem}
 .chip{display:flex;align-items:center;justify-content:space-between;
   background:rgba(0,180,216,.12);border:1px solid var(--accent);border-radius:8px;
-  padding:.52rem .82rem;margin-bottom:.65rem}
+  padding:.52rem .82rem;margin-bottom:.6rem}
 .chip span{color:#fff;font-size:.84rem}
 .chip strong{color:var(--accent);margin-right:.38rem}
 .chip button{background:none;border:none;color:#8b949e;cursor:pointer;font-size:.95rem;padding:0 .25rem}
 .chip button:hover{color:#fff}
 
-/* modals */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;
-  display:none;align-items:center;justify-content:center;padding:1rem}
-.overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:1.7rem;width:100%;
-  max-width:420px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease both}
-.modal.dark{background:#161b22;border:1px solid #30363d}
-.modal h3{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ocean-dark);margin-bottom:1.2rem}
-.modal.dark h3{color:#fff}
-.modal-x{float:right;background:none;border:none;cursor:pointer;font-size:1.25rem;
-  color:var(--muted);line-height:1}
-.modal.dark .modal-x{color:#8b949e}
-
-/* admin row (admins list) */
-.adm-row{background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.8rem .95rem;
+/* admin row */
+.a-row{background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.78rem .92rem;
   margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}
-.adm-email{color:#fff;font-size:.88rem;font-weight:500}
-.adm-sub{color:#8b949e;font-size:.73rem;margin-top:.12rem}
-.super-tag{background:rgba(0,180,216,.15);color:var(--accent);border:1px solid var(--accent);
-  font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:.14rem .45rem;
+.a-row .em{color:#fff;font-size:.86rem;font-weight:500}
+.a-row .sb{color:#8b949e;font-size:.72rem;margin-top:.1rem}
+.s-tag{background:rgba(0,180,216,.15);color:var(--accent);border:1px solid var(--accent);
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.13rem .42rem;
   border-radius:4px;margin-left:.4rem;text-transform:uppercase}
 
-.loader{display:inline-block;width:17px;height:17px;border:2px solid rgba(255,255,255,.3);
+/* batch row in manage */
+.bm-row{display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem 0;border-bottom:1px solid #30363d}
+.bm-row:last-child{border-bottom:none}
+.bm-row span{color:#fff;font-size:.84rem}
+
+/* modals */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:999;
+  display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px)}
+.ovl.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.65rem;width:100%;
+  max-width:420px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease both}
+.modal.dark{background:#161b22;border:1px solid #30363d}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ocean-dark);margin-bottom:1.1rem}
+.modal.dark h3{color:#fff}
+.x{float:right;background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--muted);line-height:1}
+.modal.dark .x{color:#8b949e}
+
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
   border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
   vertical-align:middle;margin-right:.35rem}
 
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 
 @media(max-width:580px){
-  .stat-row{grid-template-columns:1fr 1fr}
-  .id-grid{grid-template-columns:1fr}
-  .det-fields{grid-template-columns:1fr}
-  .fee-sum{grid-template-columns:1fr}
-  .det-photo-row{flex-direction:column;align-items:flex-start}
-  .act-row{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .id-grid,.d-fields,.fee-sum{grid-template-columns:1fr}
+  .d-row{flex-direction:column;align-items:flex-start}
+  .acts{grid-template-columns:1fr}
   .otp-box{width:42px;height:50px;font-size:1.2rem}
 }
 </style>
@@ -355,39 +356,37 @@ textarea.di{min-height:78px;resize:vertical}
 <!-- ══ LOGIN ══ -->
 <div class="screen active" id="scr-login">
  <div class="login-card">
-  <div class="brand-logo">
+  <div class="brand">
    <span class="dot"></span><h1>ZEL</h1>
    <p>Zone for English Learners</p>
   </div>
   <div id="la" class="alert"></div>
-  <div class="tab-row">
-   <button class="tab-btn active" onclick="loginTab('in')">Sign In</button>
-   <button class="tab-btn" onclick="loginTab('reg')">Register</button>
+  <div class="tabs">
+   <button class="active" id="t-in" onclick="loginTab('in')">Sign In</button>
+   <button id="t-rg" onclick="loginTab('rg')">Register</button>
   </div>
 
   <!-- SIGN IN -->
-  <div id="tab-in">
-   <div class="fgroup"><label>Email Address</label><input type="email" id="li-email" placeholder="your@email.com"></div>
-   <div class="fgroup"><label>Password</label><input type="password" id="li-pass" placeholder="••••••••"></div>
-   <button class="btn-main" id="btn-li" onclick="doLogin()">Sign In</button>
+  <div id="pg-in">
+   <div class="fg"><label>Email Address</label><input type="email" id="li-em" placeholder="your@email.com" autocomplete="email"></div>
+   <div class="fg"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" autocomplete="current-password"></div>
+   <button class="btn" id="bt-li" onclick="doLogin()">Sign In</button>
   </div>
 
-  <!-- REGISTER Step 1 -->
-  <div id="tab-reg" style="display:none">
-   <div id="reg1">
+  <!-- REGISTER STEP 1 -->
+  <div id="pg-rg" style="display:none">
+   <div id="rg-1">
     <!-- Photo -->
     <div style="text-align:center;margin-bottom:.85rem">
-     <div class="photo-circle" id="reg-photo-circle" onclick="document.getElementById('reg-photo-file').click()">
-      <span style="font-size:1.8rem">📷</span>
-     </div>
-     <input type="file" id="reg-photo-file" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
+     <div class="pc" id="rg-pc" onclick="document.getElementById('rg-pf').click()">📷</div>
+     <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fgroup"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
-    <div class="fgroup">
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
+    <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
-      <select class="ph-cc" id="reg-cc">
+      <select class="ph-cc" id="rg-cc">
        <option value="+94">🇱🇰 +94</option>
        <option value="+91">🇮🇳 +91</option>
        <option value="+92">🇵🇰 +92</option>
@@ -399,40 +398,37 @@ textarea.di{min-height:78px;resize:vertical}
        <option value="+1">🇺🇸 +1</option>
        <option value="+44">🇬🇧 +44</option>
       </select>
-      <input class="ph-num" type="tel" id="reg-phone" placeholder="761234567">
+      <input class="ph-num" type="tel" id="rg-ph" placeholder="761234567" autocomplete="tel">
      </div>
     </div>
-    <div class="fgroup"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@email.com"></div>
-    <div class="fgroup"><label>Batch</label>
-     <select id="reg-batch">
+    <div class="fg"><label>Email Address</label><input type="email" id="rg-em" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="fg"><label>Batch</label>
+     <select id="rg-ba">
       <option value="">Loading batches...</option>
      </select>
     </div>
-    <div class="fgroup"><label>Password (min. 6 chars)</label><input type="password" id="reg-pass" placeholder="Create a password"></div>
+    <div class="fg"><label>Password (min. 6 chars)</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
     <div id="recaptcha-container"></div>
-    <button class="btn-main" id="btn-otp" onclick="sendOTP()">Send OTP via SMS →</button>
+    <button class="btn" id="bt-otp" onclick="sendOTP()">Send OTP via SMS →</button>
    </div>
 
-   <!-- Register Step 2: OTP -->
-   <div id="reg2" style="display:none">
+   <!-- REGISTER STEP 2: OTP -->
+   <div id="rg-2" style="display:none">
     <div class="otp-info">
-     <strong id="otp-phone-txt">Code sent!</strong>
+     <strong id="otp-ph">Code sent!</strong>
      <span>Enter the 6-digit SMS code below</span>
     </div>
-    <div class="otp-boxes">
-     <input class="otp-box" type="tel" maxlength="1" id="o0" oninput="otpIn(0)" onkeydown="otpBk(event,0)">
+    <div class="otp-row">
+     <input class="otp-box" type="tel" maxlength="1" id="o0" oninput="otpIn(0)" onkeydown="otpBk(event,0)" autocomplete="one-time-code">
      <input class="otp-box" type="tel" maxlength="1" id="o1" oninput="otpIn(1)" onkeydown="otpBk(event,1)">
      <input class="otp-box" type="tel" maxlength="1" id="o2" oninput="otpIn(2)" onkeydown="otpBk(event,2)">
      <input class="otp-box" type="tel" maxlength="1" id="o3" oninput="otpIn(3)" onkeydown="otpBk(event,3)">
      <input class="otp-box" type="tel" maxlength="1" id="o4" oninput="otpIn(4)" onkeydown="otpBk(event,4)">
      <input class="otp-box" type="tel" maxlength="1" id="o5" oninput="otpIn(5)" onkeydown="otpBk(event,5)">
     </div>
-    <button class="btn-main" id="btn-verify" onclick="verifyOTP()">Verify &amp; Create Account</button>
-    <button class="btn-outline" onclick="backToReg1()">← Change Details</button>
-    <div class="resend-row">
-     <span id="resend-timer">Resend in <b id="resend-n">30</b>s</span>
-     <span class="resend-link" id="resend-link" onclick="resendOTP()">↺ Resend OTP</span>
-    </div>
+    <button class="btn" id="bt-vf" onclick="verifyOTP()">Verify &amp; Create Account</button>
+    <button class="btn-ol" onclick="backToReg1()">← Change Details</button>
+    <div class="resend"><span id="rs-tm">Resend in <b id="rs-n">30</b>s</span><a id="rs-a" style="display:none" onclick="resendOTP()">↺ Resend OTP</a></div>
    </div>
   </div>
  </div>
@@ -442,287 +438,292 @@ textarea.di{min-height:78px;resize:vertical}
 <div class="screen" id="scr-dash">
  <div style="width:100%">
   <div class="topbar">
-   <div class="topbar-brand"><span class="dot"></span> ZEL</div>
-   <div class="top-right">
-    <div class="avatar" id="d-av">S</div>
-    <button class="btn-top ghost" onclick="doLogout()">Logout</button>
+   <div class="tb-brand"><span class="dot"></span> ZEL</div>
+   <div class="tb-right">
+    <div class="av" id="d-av">S</div>
+    <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
    </div>
   </div>
-  <div class="dash-body">
+  <div class="dash">
 
    <!-- HOME -->
-   <div class="sub-screen active" id="ss-home">
-    <div class="welcome-card">
+   <div class="sub active" id="ss-home">
+    <div class="welcome">
      <h2 id="d-welcome">Welcome back! 👋</h2>
      <p>Keep up the great work — your English journey is progressing well!</p>
     </div>
-    <div class="sec-title">📊 Quick Info</div>
+    <div class="title">📊 Quick Info</div>
     <div class="card" style="margin-bottom:1rem">
      <div style="display:flex;gap:1rem;flex-wrap:wrap">
       <div style="flex:1;min-width:110px">
-       <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">My Batch</div>
-       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-batch">—</div>
+       <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">My Batch</div>
+       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-ba">—</div>
       </div>
       <div style="flex:1;min-width:110px">
-       <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">Student ID</div>
+       <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">Student ID</div>
        <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-sid">—</div>
       </div>
      </div>
     </div>
-    <div class="sec-title">📢 Announcements</div>
-    <div id="d-notices"><div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">📭 No announcements yet</div></div>
+    <div class="title">📢 Announcements</div>
+    <div id="d-not"><div class="empty">📭 No announcements yet</div></div>
    </div>
 
-   <!-- ID CARD -->
-   <div class="sub-screen" id="ss-id">
-    <div class="card accent-top" style="margin-top:.25rem">
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
-      <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ocean-dark)">🪪 Student ID</span>
+   <!-- ID -->
+   <div class="sub" id="ss-id">
+    <div class="card acc-top" style="margin-top:.25rem">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark)">🪪 Student ID</span>
       <span class="id-badge" id="d-sid2">ZEL-0000</span>
      </div>
-     <div class="id-photo-row">
-      <div class="id-photo" id="d-photo">S</div>
+     <div class="id-row">
+      <div class="id-photo" id="d-ph">S</div>
       <div>
-       <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ocean-dark);margin-bottom:.25rem" id="d-name-big">—</div>
-       <div style="font-size:.84rem;color:var(--muted)" id="d-batch2">—</div>
+       <div style="font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ocean-dark);margin-bottom:.22rem" id="d-nm-big">—</div>
+       <div style="font-size:.82rem;color:var(--muted)" id="d-ba2">—</div>
       </div>
      </div>
      <div class="id-grid">
-      <div class="id-field"><label>Full Name</label><span id="d-name">—</span></div>
+      <div class="id-field"><label>Full Name</label><span id="d-nm">—</span></div>
       <div class="id-field"><label>Phone</label><span id="d-phone">—</span></div>
-      <div class="id-field" style="grid-column:1/-1"><label>Email</label><span id="d-email">—</span></div>
+      <div class="id-field full"><label>Email</label><span id="d-em">—</span></div>
       <div class="id-field"><label>Status</label><span style="color:var(--success);font-weight:600">✅ Active</span></div>
-      <div class="id-field"><label>Enrolled</label><span id="d-enrolled">—</span></div>
+      <div class="id-field"><label>Enrolled</label><span id="d-en">—</span></div>
      </div>
     </div>
-    <button class="btn-main" style="width:auto;padding:.6rem 1.5rem;font-size:.78rem" onclick="openPhotoModal(null)">📷 Update Photo</button>
+    <button class="btn" style="width:auto;padding:.55rem 1.4rem;font-size:.76rem" onclick="openPhotoModal(null)">📷 Update Photo</button>
    </div>
 
-   <!-- ATTENDANCE -->
-   <div class="sub-screen" id="ss-att">
-    <div class="sec-title">📋 My Attendance</div>
+   <!-- ATT -->
+   <div class="sub" id="ss-att">
+    <div class="title">📋 My Attendance</div>
     <div class="card">
-     <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem">Attendance Rate</div>
-     <div class="pct-bar-wrap">
-      <div class="pct-num" id="d-att-pct">0%</div>
-      <div style="font-size:.76rem;color:var(--muted);margin-top:.25rem" id="d-att-sum">No records yet</div>
-      <div class="pct-bar"><div class="pct-fill" id="d-att-bar" style="width:0%"></div></div>
-     </div>
+     <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem">Attendance Rate</div>
+     <div class="pct-num" id="d-att-pct">0%</div>
+     <div style="font-size:.74rem;color:var(--muted);margin-top:.2rem" id="d-att-sm">No records yet</div>
+     <div class="pct-bar"><div class="pct-fill" id="d-att-bar" style="width:0%"></div></div>
     </div>
     <div class="card">
-     <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.7rem">Recent History</div>
-     <div style="display:flex;gap:.65rem;font-size:.68rem;color:var(--muted);margin-bottom:.5rem">
-      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--success);border-radius:2px;display:inline-block"></span>Present</span>
-      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--danger);border-radius:2px;display:inline-block"></span>Absent</span>
-      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--warn);border-radius:2px;display:inline-block"></span>Late</span>
+     <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.65rem">Recent History</div>
+     <div style="display:flex;gap:.6rem;font-size:.66rem;color:var(--muted);margin-bottom:.4rem">
+      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--success);border-radius:2px;display:inline-block"></span>Present</span>
+      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--danger);border-radius:2px;display:inline-block"></span>Absent</span>
+      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--warn);border-radius:2px;display:inline-block"></span>Late</span>
      </div>
-     <div id="d-att-grid"><div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.84rem">No records yet</div></div>
+     <div id="d-att-grid"><div class="empty">No records yet</div></div>
     </div>
    </div>
 
    <!-- FEES -->
-   <div class="sub-screen" id="ss-fees">
-    <div class="sec-title">💳 My Fees</div>
+   <div class="sub" id="ss-fees">
+    <div class="title">💳 My Fees</div>
     <div class="fee-sum">
-     <div class="fee-box t"><div class="lbl">Total</div><div class="amt" id="d-fee-t">Rs 0</div></div>
-     <div class="fee-box p"><div class="lbl">Paid</div><div class="amt" id="d-fee-p">Rs 0</div></div>
-     <div class="fee-box d"><div class="lbl">Due</div><div class="amt" id="d-fee-d">Rs 0</div></div>
+     <div class="fee-box t"><div class="lbl">Total</div><div class="amt" id="d-ft">Rs 0</div></div>
+     <div class="fee-box p"><div class="lbl">Paid</div><div class="amt" id="d-fp">Rs 0</div></div>
+     <div class="fee-box d"><div class="lbl">Due</div><div class="amt" id="d-fd">Rs 0</div></div>
     </div>
-    <div id="d-fee-list"><div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">💳 No fee records yet</div></div>
+    <div id="d-fl"><div class="empty">💳 No fee records yet</div></div>
    </div>
 
    <!-- SETTINGS -->
-   <div class="sub-screen" id="ss-set">
-    <div class="sec-title">⚙️ Settings</div>
-    <div class="card accent-top">
-     <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ocean-dark);margin-bottom:1rem">🔐 Change Password</div>
-     <div id="pw-alert" class="alert"></div>
-     <div class="fgroup"><label>Current Password</label><input type="password" id="pw-cur"></div>
-     <div class="fgroup"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 6 chars"></div>
-     <div class="fgroup"><label>Confirm New Password</label><input type="password" id="pw-con"></div>
-     <button class="btn-main" id="btn-pw" onclick="changePW()">Update Password</button>
+   <div class="sub" id="ss-set">
+    <div class="title">⚙️ Settings</div>
+    <div class="card acc-top">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark);margin-bottom:.85rem">🔐 Change Password</div>
+     <div id="pw-al" class="alert"></div>
+     <div class="fg"><label>Current Password</label><input type="password" id="pw-c"></div>
+     <div class="fg"><label>New Password</label><input type="password" id="pw-n" placeholder="Min. 6 chars"></div>
+     <div class="fg"><label>Confirm New Password</label><input type="password" id="pw-2"></div>
+     <button class="btn" id="bt-pw" onclick="changePW()">Update Password</button>
     </div>
-    <button class="btn-main" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3)">Sign Out</button>
+    <button class="btn" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3)">Sign Out</button>
    </div>
 
   </div>
  </div>
  <div class="bnav">
-  <button class="bnav-btn active" onclick="stuTab('home',this)"><span class="ic">🏠</span>Home</button>
-  <button class="bnav-btn" onclick="stuTab('id',this)"><span class="ic">🪪</span>ID</button>
-  <button class="bnav-btn" onclick="stuTab('att',this)"><span class="ic">📋</span>Attend</button>
-  <button class="bnav-btn" onclick="stuTab('fees',this)"><span class="ic">💳</span>Fees</button>
-  <button class="bnav-btn" onclick="stuTab('set',this)"><span class="ic">⚙️</span>Settings</button>
+  <button class="active" onclick="stuTab('home',this)"><span class="ic">🏠</span>Home</button>
+  <button onclick="stuTab('id',this)"><span class="ic">🪪</span>ID</button>
+  <button onclick="stuTab('att',this)"><span class="ic">📋</span>Attend</button>
+  <button onclick="stuTab('fees',this)"><span class="ic">💳</span>Fees</button>
+  <button onclick="stuTab('set',this)"><span class="ic">⚙️</span>Settings</button>
  </div>
 </div>
 
 <!-- ══ ADMIN ══ -->
 <div class="screen" id="scr-admin">
  <div style="width:100%">
-  <div class="adm-topbar">
-   <div class="adm-brand">ZEL <span class="adm-badge">Admin</span></div>
-   <div class="top-right">
-    <span id="adm-email-lbl" style="color:#8b949e;font-size:.73rem"></span>
-    <button class="btn-top accent" id="btn-grant-admin" style="display:none" onclick="openGrantModal()">👑 Grant Admin</button>
-    <button class="btn-top ghost" onclick="doLogout()">Logout</button>
+  <div class="adm-tb">
+   <div class="adm-bn">ZEL <span class="adm-bg">Admin</span></div>
+   <div class="tb-right">
+    <span id="a-em" style="color:#8b949e;font-size:.72rem"></span>
+    <button class="tb-btn acc" id="b-grant" style="display:none" onclick="openGrantModal()">👑 Grant Admin</button>
+    <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
    </div>
   </div>
   <div class="adm-body">
-   <div class="stat-row">
-    <div class="stat-box"><div class="n" id="st-students">0</div><div class="l">Students</div></div>
-    <div class="stat-box"><div class="n" id="st-batches">0</div><div class="l">Batches</div></div>
-    <div class="stat-box"><div class="n" id="st-fees">Rs 0</div><div class="l">Total Paid</div></div>
-    <div class="stat-box"><div class="n" id="st-notices">0</div><div class="l">Notices</div></div>
+   <div class="stats">
+    <div class="stat"><div class="n" id="st-stu">0</div><div class="l">Students</div></div>
+    <div class="stat"><div class="n" id="st-ba">0</div><div class="l">Batches</div></div>
+    <div class="stat"><div class="n" id="st-fe">Rs 0</div><div class="l">Total Paid</div></div>
+    <div class="stat"><div class="n" id="st-no">0</div><div class="l">Notices</div></div>
    </div>
    <div class="adm-tabs">
-    <button class="adm-tab active" onclick="admTab('batches',this)">📚 Batches</button>
-    <button class="adm-tab" onclick="admTab('att',this)">📋 Attendance</button>
-    <button class="adm-tab" onclick="admTab('fees',this)">💳 Fees</button>
-    <button class="adm-tab" onclick="admTab('notices',this)">📢 Notices</button>
-    <button class="adm-tab" onclick="admTab('add',this)">➕ Add Student</button>
-    <button class="adm-tab" id="adm-tab-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
+    <button class="active" onclick="admTab('batches',this)">📚 Batches</button>
+    <button onclick="admTab('att',this)">📋 Attendance</button>
+    <button onclick="admTab('fees',this)">💳 Fees</button>
+    <button onclick="admTab('notices',this)">📢 Notices</button>
+    <button onclick="admTab('add',this)">➕ Add Student</button>
+    <button id="t-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
    </div>
 
    <!-- BATCHES -->
-   <div class="adm-sec active" id="as-batches">
-    <div id="bv-list">
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.28rem">All Batches</span>
-      <button class="btn-acc" onclick="loadBatches()">🔄 Refresh</button>
+   <div class="sec active" id="as-batches">
+    <div id="b-list">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+      <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem">All Batches</span>
+      <div style="display:flex;gap:.4rem">
+       <button class="b-acc" onclick="toggleBatchMgr()">📚 Manage Batches</button>
+       <button class="b-acc" onclick="loadBatches()">🔄 Refresh</button>
+      </div>
      </div>
-     <div class="batch-grid" id="batch-grid"><div style="color:#8b949e;text-align:center;padding:2rem">Loading...</div></div>
+
+     <!-- Batch Manager (toggleable) -->
+     <div class="dc" id="b-mgr" style="display:none">
+      <h3>📚 Manage Batches</h3>
+      <p style="color:#8b949e;font-size:.78rem;margin-bottom:.85rem;line-height:1.55">
+        Add new batches here. They appear automatically in the Register dropdown and Add Student form.
+        Removing a batch does not affect students already in it.
+      </p>
+      <div id="bm-al" class="alert"></div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
+       <input type="text" class="di" id="bm-name" placeholder="e.g. Batch 25" style="flex:1;margin-bottom:0">
+       <button class="b-acc" onclick="addBatch()" style="flex-shrink:0;padding:.5rem 1.1rem">＋ Add</button>
+      </div>
+      <div id="bm-list"><div style="color:#8b949e;font-size:.78rem">Loading...</div></div>
+     </div>
+
+     <div class="b-grid" id="b-grid"><div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div></div>
     </div>
-    <div id="bv-students" style="display:none">
-     <button class="back-btn" onclick="showBatchList()">← Back to Batches</button>
-     <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.28rem;margin-bottom:1rem" id="bv-title">Batch</div>
-     <input type="text" class="di" id="bv-search" placeholder="🔍 Search by name or ID..." oninput="filterStudents()">
-     <div id="bv-stu-list"></div>
-     <button class="btn-sec" id="bv-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStudents()">Load More</button>
+
+    <!-- Students of a batch -->
+    <div id="b-stus" style="display:none">
+     <button class="back" onclick="showBatchList()">← Back to Batches</button>
+     <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem;margin-bottom:.95rem" id="bs-title">Batch</div>
+     <input type="text" class="di" id="bs-search" placeholder="🔍 Search by name or ID..." oninput="filterStus()">
+     <div id="bs-list"></div>
+     <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
     </div>
-    <div id="bv-detail" style="display:none">
-     <button class="back-btn" onclick="backToStudentList()">← Back to Students</button>
-     <div id="bv-detail-content"></div>
+
+    <!-- Student detail -->
+    <div id="b-det" style="display:none">
+     <button class="back" onclick="backToStus()">← Back to Students</button>
+     <div id="b-det-c"></div>
     </div>
    </div>
 
    <!-- ATTENDANCE -->
-   <div class="adm-sec" id="as-att">
-    <div class="dark-card">
+   <div class="sec" id="as-att">
+    <div class="dc">
      <h3>📋 Mark Attendance</h3>
-     <div id="att-alert" class="alert"></div>
-     <div class="picker-wrap">
-      <input type="text" class="di" id="att-pick-inp" placeholder="🔍 Search student..." oninput="searchPicker('att',this.value)" onfocus="document.getElementById('att-pick-res').classList.add('open')">
-      <div class="picker-res" id="att-pick-res"></div>
+     <div id="at-al" class="alert"></div>
+     <div class="pkr">
+      <input type="text" class="di" id="at-pi" placeholder="🔍 Search student..." oninput="searchPicker('at',this.value)" onfocus="document.getElementById('at-pr').classList.add('open')">
+      <div class="pkr-res" id="at-pr"></div>
      </div>
-     <div id="att-chip" style="display:none"></div>
-     <input type="date" class="di" id="att-date">
-     <select class="ds" id="att-status">
+     <div id="at-ch" style="display:none"></div>
+     <input type="date" class="di" id="at-dt">
+     <select class="ds" id="at-st">
       <option value="">Select status...</option>
       <option value="present">✅ Present</option>
       <option value="absent">❌ Absent</option>
       <option value="late">⏰ Late</option>
      </select>
-     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="markAtt()">Save Attendance</button>
+     <button class="b-acc" style="width:100%;padding:.7rem" onclick="markAtt()">Save Attendance</button>
     </div>
-    <div class="dark-card">
-     <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
-      <input type="month" class="di" id="att-month" style="flex:1;margin-bottom:0">
-      <button class="btn-acc" onclick="loadAttRecords(true)">Filter</button>
+    <div class="dc">
+     <div style="display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap">
+      <input type="month" class="di" id="at-mo" style="flex:1;margin-bottom:0">
+      <button class="b-acc" onclick="loadAttRecs(true)">Filter</button>
      </div>
-     <div id="att-records"><div style="color:#8b949e;text-align:center;padding:1.5rem;font-size:.84rem">Pick a month to view records</div></div>
-     <button class="btn-sec" id="att-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadAttRecords(false)">Load More</button>
+     <div id="at-rec"><div class="empty" style="color:#8b949e">Pick a month to view records</div></div>
+     <button class="b-sec" id="at-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadAttRecs(false)">Load More</button>
     </div>
    </div>
 
    <!-- FEES -->
-   <div class="adm-sec" id="as-fees">
-    <div class="dark-card">
+   <div class="sec" id="as-fees">
+    <div class="dc">
      <h3>💳 Add Fee Entry</h3>
-     <div id="fee-alert" class="alert"></div>
-     <div class="picker-wrap">
-      <input type="text" class="di" id="fee-pick-inp" placeholder="🔍 Search student..." oninput="searchPicker('fee',this.value)" onfocus="document.getElementById('fee-pick-res').classList.add('open')">
-      <div class="picker-res" id="fee-pick-res"></div>
+     <div id="fe-al" class="alert"></div>
+     <div class="pkr">
+      <input type="text" class="di" id="fe-pi" placeholder="🔍 Search student..." oninput="searchPicker('fe',this.value)" onfocus="document.getElementById('fe-pr').classList.add('open')">
+      <div class="pkr-res" id="fe-pr"></div>
      </div>
-     <div id="fee-chip" style="display:none"></div>
-     <input type="text" class="di" id="fee-month" placeholder="Month (e.g. May 2026)">
-     <input type="number" class="di" id="fee-amount" placeholder="Amount (Rs)">
-     <input type="date" class="di" id="fee-due">
-     <select class="ds" id="fee-status">
+     <div id="fe-ch" style="display:none"></div>
+     <input type="text" class="di" id="fe-mo" placeholder="Month (e.g. May 2026)">
+     <input type="number" class="di" id="fe-am" placeholder="Amount (Rs)">
+     <input type="date" class="di" id="fe-du">
+     <select class="ds" id="fe-st">
       <option value="Unpaid">Unpaid</option>
       <option value="Partial">Partial</option>
       <option value="Paid">Paid</option>
      </select>
-     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="addFee()">Add Fee Entry</button>
+     <button class="b-acc" style="width:100%;padding:.7rem" onclick="addFee()">Add Fee Entry</button>
     </div>
-    <div class="dark-card">
+    <div class="dc">
      <h3>All Fee Records</h3>
-     <div id="fee-records"><div style="color:#8b949e;text-align:center;padding:1.5rem;font-size:.84rem">Loading...</div></div>
-     <button class="btn-sec" id="fee-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadFees(false)">Load More</button>
+     <div id="fe-rec"><div class="empty" style="color:#8b949e">Loading...</div></div>
+     <button class="b-sec" id="fe-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadFees(false)">Load More</button>
     </div>
    </div>
 
    <!-- NOTICES -->
-   <div class="adm-sec" id="as-notices">
-    <div class="dark-card">
+   <div class="sec" id="as-notices">
+    <div class="dc">
      <h3>📢 Post Announcement</h3>
-     <input type="text" class="di" id="not-title" placeholder="Notice title...">
-     <textarea class="di" id="not-body" placeholder="Write your announcement..."></textarea>
-     <button class="btn-acc" onclick="postNotice()">Post Announcement</button>
+     <input type="text" class="di" id="no-ti" placeholder="Notice title...">
+     <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
+     <button class="b-acc" onclick="postNotice()">Post Announcement</button>
     </div>
-    <div id="notices-list"><div style="color:#8b949e;text-align:center;padding:2rem;font-size:.84rem">No notices yet</div></div>
+    <div id="no-list"><div class="empty" style="color:#8b949e">No notices yet</div></div>
    </div>
 
    <!-- ADD STUDENT -->
-   <div class="adm-sec" id="as-add">
-    <!-- Batch Manager -->
-    <div class="dark-card" id="batch-mgr-card" style="display:none">
-     <h3>📚 Manage Batches</h3>
-     <p style="color:#8b949e;font-size:.8rem;margin-bottom:1rem;line-height:1.6">Add new batches here. They will appear in the Register dropdown automatically.</p>
-     <div id="batch-mgr-alert" class="alert"></div>
-     <div style="display:flex;gap:.5rem;margin-bottom:.65rem">
-      <input type="text" class="di" id="new-batch-name" placeholder="e.g. Batch 25" style="flex:1;margin-bottom:0">
-      <button class="btn-acc" onclick="addBatch()" style="flex-shrink:0">Add</button>
-     </div>
-     <div id="batches-manage-list"><div style="color:#8b949e;font-size:.8rem">Loading...</div></div>
-    </div>
-    <div class="dark-card">
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <h3 style="margin-bottom:0">➕ Add New Student</h3>
-      <button class="btn-acc" onclick="toggleBatchMgr()" style="font-size:.72rem;padding:.35rem .7rem">📚 Manage Batches</button>
-     </div>
-     <div id="add-alert" class="alert"></div>
+   <div class="sec" id="as-add">
+    <div class="dc">
+     <h3>➕ Add New Student</h3>
+     <div id="ad-al" class="alert"></div>
      <div style="text-align:center;margin-bottom:.85rem">
-      <div class="photo-circle photo-circle-dark" id="add-photo-circle" onclick="document.getElementById('add-photo-file').click()">
-       <span style="font-size:1.8rem">📷</span>
-      </div>
-      <input type="file" id="add-photo-file" accept="image/*" style="display:none" onchange="onAddPhoto(event)">
-      <div style="font-size:.7rem;color:#8b949e;margin-top:.3rem">Click to add photo</div>
+      <div class="pc dark" id="ad-pc" onclick="document.getElementById('ad-pf').click()">📷</div>
+      <input type="file" id="ad-pf" accept="image/*" style="display:none" onchange="onAddPhoto(event)">
+      <div style="font-size:.7rem;color:#8b949e">Click to add photo</div>
      </div>
-     <input type="text" class="di" id="add-name" placeholder="Full Name *">
-     <input type="tel" class="di" id="add-phone" placeholder="Phone (e.g. +94761234567) *">
-     <input type="email" class="di" id="add-email" placeholder="Email *">
-     <input type="password" class="di" id="add-pass" placeholder="Password (min. 6) *">
-     <select class="ds" id="add-batch">
+     <input type="text" class="di" id="ad-nm" placeholder="Full Name *">
+     <input type="tel" class="di" id="ad-ph" placeholder="Phone (e.g. +94761234567) *">
+     <input type="email" class="di" id="ad-em" placeholder="Email *">
+     <input type="password" class="di" id="ad-pw" placeholder="Password (min. 6) *">
+     <select class="ds" id="ad-ba">
       <option value="">Loading batches...</option>
      </select>
-     <button class="btn-acc" id="btn-add" onclick="adminAddStudent()" style="width:100%;padding:.72rem">Create Student Account</button>
+     <button class="b-acc" id="bt-add" onclick="adminAdd()" style="width:100%;padding:.7rem">Create Student Account</button>
     </div>
    </div>
 
    <!-- ADMINS -->
-   <div class="adm-sec" id="as-admins">
-    <div class="dark-card">
+   <div class="sec" id="as-admins">
+    <div class="dc">
      <h3>👑 Manage Admins</h3>
-     <div id="admins-alert" class="alert"></div>
-     <p style="color:#8b949e;font-size:.8rem;margin-bottom:1rem;line-height:1.65">
-      Grant admin access to someone by entering their email. They must first create an account via the Register tab. On their next login they will see the full admin panel.
+     <div id="am-al" class="alert"></div>
+     <p style="color:#8b949e;font-size:.78rem;margin-bottom:.95rem;line-height:1.6">
+      Grant admin access by entering an email. The person must first have an account in ZEL. They will see the admin panel on next login.
      </p>
-     <input type="email" class="di" id="adm-email-inp" placeholder="Enter email to grant admin access...">
-     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="grantAdmin()">✅ Grant Admin Access</button>
+     <input type="email" class="di" id="am-em" placeholder="Enter email to grant admin access...">
+     <button class="b-acc" style="width:100%;padding:.7rem" onclick="grantAdmin()">✅ Grant Admin Access</button>
     </div>
-    <div class="dark-card">
+    <div class="dc">
      <h3>Current Admins</h3>
-     <div id="admins-list2"><div style="color:#8b949e;font-size:.82rem">Loading...</div></div>
+     <div id="am-list"><div style="color:#8b949e;font-size:.8rem">Loading...</div></div>
     </div>
    </div>
 
@@ -730,31 +731,29 @@ textarea.di{min-height:78px;resize:vertical}
  </div>
 </div>
 
-<!-- PHOTO MODAL (student own photo) -->
-<div class="overlay" id="modal-photo">
+<!-- PHOTO MODAL -->
+<div class="ovl" id="m-photo">
  <div class="modal">
-  <button class="modal-x" onclick="closeModal('modal-photo')">✕</button>
+  <button class="x" onclick="closeModal('m-photo')">✕</button>
   <h3>📷 Update Photo</h3>
-  <div id="photo-modal-alert" class="alert"></div>
-  <div class="photo-circle" id="photo-modal-circle" style="width:110px;height:110px" onclick="document.getElementById('photo-modal-file').click()">
-   <span style="font-size:2rem" id="photo-modal-icon">📷</span>
-  </div>
-  <input type="file" id="photo-modal-file" accept="image/*" style="display:none" onchange="onModalPhoto(event)">
-  <div style="text-align:center;font-size:.76rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
-  <button class="btn-main" id="btn-save-photo" onclick="savePhoto()">Save Photo</button>
+  <div id="mp-al" class="alert"></div>
+  <div class="pc lg" id="mp-pc" onclick="document.getElementById('mp-pf').click()">📷</div>
+  <input type="file" id="mp-pf" accept="image/*" style="display:none" onchange="onModalPhoto(event)">
+  <div style="text-align:center;font-size:.74rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
+  <button class="btn" id="bt-mp" onclick="savePhoto()">Save Photo</button>
  </div>
 </div>
 
 <!-- GRANT ADMIN MODAL -->
-<div class="overlay" id="modal-grant">
+<div class="ovl" id="m-grant">
  <div class="modal dark" style="max-width:380px">
-  <button class="modal-x" onclick="closeModal('modal-grant')">✕</button>
+  <button class="x" onclick="closeModal('m-grant')">✕</button>
   <h3>👑 Grant Admin Access</h3>
-  <p style="color:#8b949e;font-size:.8rem;margin-bottom:1.2rem;line-height:1.65">Enter the email of a person who already has an account. They will see the admin panel on their next login.</p>
-  <div id="grant-alert" class="alert"></div>
-  <input type="email" class="di" id="grant-email" placeholder="Enter email address...">
-  <button class="btn-acc" id="btn-grant-do" style="width:100%;padding:.76rem" onclick="doGrantAdmin()">✅ Grant Access</button>
-  <div id="grant-admins-list" style="margin-top:1rem"></div>
+  <p style="color:#8b949e;font-size:.78rem;margin-bottom:1rem;line-height:1.6">Enter the email of someone who already has a ZEL account. They will see the admin panel on next login.</p>
+  <div id="g-al" class="alert"></div>
+  <input type="email" class="di" id="g-em" placeholder="Enter email address...">
+  <button class="b-acc" id="bt-g" style="width:100%;padding:.7rem" onclick="doGrant()">✅ Grant Access</button>
+  <div id="g-list" style="margin-top:1rem"></div>
  </div>
 </div>
 
@@ -773,8 +772,7 @@ import {
   limit, startAfter, getCountFromServer, increment
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Config ──
-const app  = initializeApp({
+const app = initializeApp({
   apiKey: "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
   authDomain: "zel-app-cfb38.firebaseapp.com",
   projectId: "zel-app-cfb38",
@@ -783,880 +781,1218 @@ const app  = initializeApp({
   appId: "1:178893517113:web:65cfce0b5cdd2a655d78e8"
 });
 const auth = getAuth(app);
-const db   = getFirestore(app);
+const db = getFirestore(app);
 
 const SUPER_ADMIN = "zhakeel.mhd@gmail.com";
-const BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
+const DEFAULT_BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
 const PAGE = 30;
 
 // ── Helpers ──
 const $ = id => document.getElementById(id);
 function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); $(id).classList.add('active'); }
-function showAlert(id,msg,type='err',keep=false){
-  const el=$(id); if(!el)return;
-  el.className='alert '+type; el.textContent=msg;
-  if(!keep) setTimeout(()=>{el.className='alert';},5000);
+function alertMsg(id, msg, type='err', keep=false){
+  const el = $(id); if(!el) return;
+  el.className = 'alert '+type;
+  el.textContent = msg;
+  if(!keep) setTimeout(()=>{ el.className='alert'; }, 5000);
 }
 function esc(s){ return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-window.esc=esc;
+window.esc = esc;
 
-// ── Image resizer ──
-function resizeImg(file,maxDim=400,q=0.75){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onerror=()=>rej(new Error('Cannot read file'));
-    r.onload=e=>{
-      const img=new Image();
-      img.onerror=()=>rej(new Error('Cannot load image'));
-      img.onload=()=>{
-        let{width:w,height:h}=img;
-        if(w>h&&w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}
-        else if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}
-        const cv=document.createElement('canvas');
-        cv.width=w;cv.height=h;
-        const ctx=cv.getContext('2d');
-        ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
-        ctx.drawImage(img,0,0,w,h);
-        res(cv.toDataURL('image/jpeg',q));
+function resizeImg(file, maxDim=400, q=0.75){
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onerror = () => reject(new Error('Cannot read file'));
+    r.onload = e => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Cannot load image'));
+      img.onload = () => {
+        let { width:w, height:h } = img;
+        if(w>h && w>maxDim){ h = Math.round(h*maxDim/w); w = maxDim; }
+        else if(h>maxDim){ w = Math.round(w*maxDim/h); h = maxDim; }
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(cv.toDataURL('image/jpeg', q));
       };
-      img.src=e.target.result;
+      img.src = e.target.result;
     };
     r.readAsDataURL(file);
   });
 }
 
-// ── Student ID generator ──
 async function nextStudentId(){
-  const year=new Date().getFullYear();
-  const ref=doc(db,'meta','counters');
-  const snap=await getDoc(ref);
-  let n=1;
-  if(snap.exists()){n=(snap.data().studentCount||0)+1;await updateDoc(ref,{studentCount:increment(1)});}
-  else{const all=await getDocs(collection(db,'students'));n=all.size+1;await setDoc(ref,{studentCount:n,totalPaid:0});}
+  const year = new Date().getFullYear();
+  const ref = doc(db, 'meta', 'counters');
+  const snap = await getDoc(ref);
+  let n = 1;
+  if(snap.exists()){
+    n = (snap.data().studentCount || 0) + 1;
+    await updateDoc(ref, { studentCount: increment(1) });
+  } else {
+    const all = await getDocs(collection(db, 'students'));
+    n = all.size + 1;
+    await setDoc(ref, { studentCount: n, totalPaid: 0 });
+  }
   return `ZEL-${year}-${String(n).padStart(3,'0')}`;
 }
 
-// ── State ──
-let CU=null, CUD=null; // currentUser, currentUserData
-let pendingPhoto=null, regPhoto=null, addPhoto=null;
-let photoTarget=null; // uid for photo modal
-let confirmRes=null, resendTimer=null;
-let attCursor=null, feeCursor=null, batchCursor=null;
-let currentBatch=null, batchLoaded=[];
-let pickers={att:null,fee:null}, pickerTimers={att:null,fee:null};
-let attRecs=[], feeRecs=[];
-let isSuperAdmin=false;
-
-// ── Admin check ──
 async function isAdmin(email){
-  if(!email)return false;
-  if(email===SUPER_ADMIN)return true;
-  try{const s=await getDoc(doc(db,'admins',email));return s.exists();}catch(e){return false;}
+  if(!email) return false;
+  if(email === SUPER_ADMIN) return true;
+  try {
+    const s = await getDoc(doc(db, 'admins', email));
+    return s.exists();
+  } catch(e){ return false; }
 }
 
-// ── Auth state ──
-// Load batch options for register form on page load
+// ── State ──
+let CU = null;       // current Firebase user
+let CUD = null;      // current user data from Firestore
+let pendingPhoto = null, regPhoto = null, addPhoto = null;
+let photoTarget = null;
+let confirmRes = null, resendTimer = null;
+let attCursor = null, feeCursor = null, batchCursor = null;
+let currentBatch = null, batchLoaded = [];
+let pickers = { at: null, fe: null };
+let pickerTimers = { at: null, fe: null };
+let attRecs = [], feeRecs = [];
+let isSuperAdmin = false;
+let allBatches = [...DEFAULT_BATCHES]; // current list of batches available
+
+// ══ BATCH OPTIONS ══ (loads from Firestore + populates dropdowns)
+async function loadBatchOptions(){
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    let list = [];
+    if(!snap.empty){
+      snap.forEach(d => list.push(d.data().name));
+    }
+    if(list.length === 0) list = [...DEFAULT_BATCHES];
+    allBatches = list;
+    // populate register dropdown
+    const r = $('rg-ba');
+    if(r){
+      r.innerHTML = '<option value="">Select batch...</option>' + list.map(b=>`<option>${esc(b)}</option>`).join('');
+    }
+    // populate add student dropdown
+    const a = $('ad-ba');
+    if(a){
+      a.innerHTML = '<option value="">Select Batch *</option>' + list.map(b=>`<option>${esc(b)}</option>`).join('');
+    }
+  } catch(e){
+    allBatches = [...DEFAULT_BATCHES];
+    const r = $('rg-ba');
+    if(r) r.innerHTML = '<option value="">Select batch...</option>' + DEFAULT_BATCHES.map(b=>`<option>${esc(b)}</option>`).join('');
+    const a = $('ad-ba');
+    if(a) a.innerHTML = '<option value="">Select Batch *</option>' + DEFAULT_BATCHES.map(b=>`<option>${esc(b)}</option>`).join('');
+  }
+}
+
+// Load batches on page load (so register form has options before login)
 loadBatchOptions();
 
-onAuthStateChanged(auth,async user=>{
-  CU=user;
-  if(!user){CUD=null;showScreen('scr-login');loadBatchOptions();return;}
-  const admin=await isAdmin(user.email);
+// ── Auth state ──
+onAuthStateChanged(auth, async user => {
+  CU = user;
+  if(!user){
+    CUD = null;
+    showScreen('scr-login');
+    loadBatchOptions(); // refresh in case
+    return;
+  }
+  const admin = await isAdmin(user.email);
   if(admin){
-    isSuperAdmin=(user.email===SUPER_ADMIN);
+    isSuperAdmin = (user.email === SUPER_ADMIN);
     showScreen('scr-admin');
-    $('adm-email-lbl').textContent=user.email;
-    $('btn-grant-admin').style.display=isSuperAdmin?'block':'none';
-    $('adm-tab-admins').style.display=isSuperAdmin?'block':'none';
-    loadBatches(); loadNotices(); loadFees(true); loadBatchOptions();
+    $('a-em').textContent = user.email;
+    $('b-grant').style.display = isSuperAdmin ? 'block' : 'none';
+    $('t-admins').style.display = isSuperAdmin ? 'block' : 'none';
+    await loadBatchOptions();
+    loadBatches();
+    loadNotices();
+    loadFees(true);
     if(isSuperAdmin) loadAdminsList();
   } else {
-    try{const s=await getDoc(doc(db,'students',user.uid));CUD=s.exists()?s.data():{};}catch(e){CUD={};}
+    // Load student data
+    try {
+      const s = await getDoc(doc(db, 'students', user.uid));
+      CUD = s.exists() ? s.data() : null;
+    } catch(e){ CUD = null; }
     showScreen('scr-dash');
-    renderStudentUI();
-    loadStudentNotices();
-    loadStudentAtt();
-    loadStudentFees();
+    if(CUD){
+      renderStudent();
+      loadStudentNotices();
+      loadStudentAtt();
+      loadStudentFees();
+    } else {
+      // Profile missing — show empty UI but at least the screen
+      $('d-welcome').textContent = 'Welcome! 👋';
+      alert('Your student profile was not found. Please contact admin.');
+    }
   }
 });
 
 // ══ AUTH ══
-window.doLogin=async()=>{
-  const email=$('li-email').value.trim(), pass=$('li-pass').value;
-  const btn=$('btn-li');
-  if(!email||!pass){showAlert('la','Please fill in all fields.');return;}
-  btn.innerHTML='<span class="loader"></span>Signing in...';btn.disabled=true;
-  try{await signInWithEmailAndPassword(auth,email,pass);}
-  catch(e){
-    let m='Login failed.';
-    if(e.code==='auth/user-not-found')m='No account found with this email.';
-    if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')m='Incorrect email or password.';
-    showAlert('la',m);btn.innerHTML='Sign In';btn.disabled=false;
+window.doLogin = async () => {
+  const email = $('li-em').value.trim();
+  const pass = $('li-pw').value;
+  const btn = $('bt-li');
+  if(!email || !pass){ alertMsg('la', 'Please fill in all fields.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Signing in...'; btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e){
+    let m = 'Login failed.';
+    if(e.code === 'auth/user-not-found') m = 'No account found with this email.';
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Incorrect email or password.';
+    if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait.';
+    alertMsg('la', m);
+  }
+  btn.innerHTML = 'Sign In'; btn.disabled = false;
+};
+
+window.doLogout = async () => {
+  await signOut(auth);
+};
+
+// ══ REGISTER PHOTO ══
+window.onRegPhoto = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const c = $('rg-pc');
+  c.innerHTML = '⏳';
+  try {
+    regPhoto = await resizeImg(f);
+    c.innerHTML = `<img src="${regPhoto}" alt="">`;
+    c.style.borderColor = 'var(--ocean)';
+    c.style.borderStyle = 'solid';
+  } catch(err){
+    c.innerHTML = '📷';
+    alert('Could not process image. Try a different photo.');
   }
 };
 
-window.doLogout=async()=>await signOut(auth);
+// ══ PHONE OTP ══
+window.sendOTP = async () => {
+  const name = $('rg-nm').value.trim();
+  const cc = $('rg-cc').value;
+  const raw = $('rg-ph').value.trim();
+  const email = $('rg-em').value.trim();
+  const batch = $('rg-ba').value;
+  const pass = $('rg-pw').value;
+  const btn = $('bt-otp');
 
-// ══ BATCH MANAGEMENT ══
-// Load batches from Firestore 'batches' collection
-async function loadBatchOptions(){
-  try{
-    const snap=await getDocs(query(collection(db,'batches'),orderBy('name','asc')));
-    let batches=[];
-    if(!snap.empty){snap.forEach(d=>batches.push(d.data().name));}
-    // Fallback defaults if no batches in DB yet
-    if(batches.length===0) batches=['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
-    // Populate register dropdown
-    const regSel=document.getElementById('reg-batch');
-    if(regSel){regSel.innerHTML='<option value="">Select batch...</option>'+batches.map(b=>`<option>${esc(b)}</option>`).join('');}
-    // Populate add student dropdown
-    const addSel=document.getElementById('add-batch');
-    if(addSel){addSel.innerHTML='<option value="">Select Batch *</option>'+batches.map(b=>`<option>${esc(b)}</option>`).join('');}
-    return batches;
-  }catch(e){
-    // Fallback
-    const fallback=['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
-    const regSel=document.getElementById('reg-batch');
-    if(regSel){regSel.innerHTML='<option value="">Select batch...</option>'+fallback.map(b=>`<option>${esc(b)}</option>`).join('');}
-    const addSel=document.getElementById('add-batch');
-    if(addSel){addSel.innerHTML='<option value="">Select Batch *</option>'+fallback.map(b=>`<option>${esc(b)}</option>`).join('');}
-    return fallback;
+  if(!name || !raw || !batch || !pass){
+    alertMsg('la', 'Please fill in all required fields (Name, Phone, Batch, Password).');
+    return;
   }
-}
-
-async function loadBatchesMgr(){
-  const el=document.getElementById('batches-manage-list');if(!el)return;
-  try{
-    const snap=await getDocs(query(collection(db,'batches'),orderBy('name','asc')));
-    if(snap.empty){el.innerHTML='<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No custom batches yet. Default batches (20–24) are always available.</div>';return;}
-    el.innerHTML='';
-    snap.forEach(d=>{
-      const b=d.data().name;
-      el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid #30363d"><span style="color:#fff;font-size:.84rem">${esc(b)}</span><button class="btn-del" onclick="deleteBatch('${d.id}','${esc(b)}')">🗑 Remove</button></div>`;
-    });
-  }catch(e){el.innerHTML=`<div style="color:var(--danger);font-size:.8rem">${e.message}</div>`;}
-}
-
-window.addBatch=async()=>{
-  const inp=document.getElementById('new-batch-name');
-  const name=(inp?inp.value.trim():'');
-  if(!name){showAlert('batch-mgr-alert','Enter a batch name.');return;}
-  try{
-    // Check if already exists
-    const existing=await getDocs(query(collection(db,'batches'),where('name','==',name)));
-    if(!existing.empty){showAlert('batch-mgr-alert','This batch already exists.','err');return;}
-    await addDoc(collection(db,'batches'),{name,createdAt:serverTimestamp()});
-    showAlert('batch-mgr-alert','✅ Batch "'+name+'" added!','ok');
-    inp.value='';
-    loadBatchesMgr();
-    loadBatchOptions();
-    loadBatches(); // refresh batch grid
-  }catch(e){showAlert('batch-mgr-alert','Failed: '+e.message);}
-};
-
-window.deleteBatch=async(id,name)=>{
-  if(!confirm('Remove batch "'+name+'"? Students already in this batch are not affected.'))return;
-  await deleteDoc(doc(db,'batches',id));
-  loadBatchesMgr();
-  loadBatchOptions();
-  loadBatches();
-};
-
-window.toggleBatchMgr=()=>{
-  const card=document.getElementById('batch-mgr-card');
-  if(!card)return;
-  if(card.style.display==='none'){
-    card.style.display='block';
-    loadBatchesMgr();
-    loadBatchOptions();
-  } else {
-    card.style.display='none';
+  if(pass.length < 6){
+    alertMsg('la', 'Password must be at least 6 characters.');
+    return;
   }
-};
+  if(email && !email.includes('@')){
+    alertMsg('la', 'Please enter a valid email or leave it empty.');
+    return;
+  }
 
-// ══ PHONE OTP REGISTER ══
-window.onRegPhoto=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  const circle=$('reg-photo-circle');
-  circle.innerHTML='<span style="font-size:1.5rem">⏳</span>';
-  try{
-    regPhoto=await resizeImg(f);
-    circle.innerHTML=`<img src="${regPhoto}" alt="">`;
-    circle.style.borderColor='var(--ocean)';
-  }catch(err){circle.innerHTML='<span style="font-size:1.8rem">📷</span>';console.error(err);}
-};
+  let phone = raw.replace(/\D/g, '');
+  if(phone.startsWith('0')) phone = phone.substring(1);
+  const fullPhone = cc + phone;
 
-window.sendOTP=async()=>{
-  const name=$('reg-name').value.trim();
-  const cc=$('reg-cc').value;
-  const raw=$('reg-phone').value.trim();
-  const email=$('reg-email').value.trim();
-  const batch=$('reg-batch').value;
-  const pass=$('reg-pass').value;
-  const btn=$('btn-otp');
-  if(!name||!raw||!batch||!pass){showAlert('la','Please fill in all required fields.');return;}
-  if(pass.length<6){showAlert('la','Password must be at least 6 characters.');return;}
-  let phone=raw.replace(/\D/g,'');
-  if(phone.startsWith('0'))phone=phone.substring(1);
-  const fullPhone=cc+phone;
-  btn.innerHTML='<span class="loader"></span>Sending...';btn.disabled=true;
-  try{
-    if(window._rcv){try{window._rcv.clear();}catch(x){}}
-    $('recaptcha-container').innerHTML='';
-    window._rcv=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible'});
+  btn.innerHTML = '<span class="spin"></span>Sending...'; btn.disabled = true;
+
+  try {
+    if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+    $('recaptcha-container').innerHTML = '';
+    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
     await window._rcv.render();
-    confirmRes=await signInWithPhoneNumber(auth,fullPhone,window._rcv);
-    window._regData={name,phone:fullPhone,email,batch,pass,photo:regPhoto||''};
-    $('otp-phone-txt').textContent='Code sent to '+fullPhone;
-    $('reg1').style.display='none';
-    $('reg2').style.display='block';
-    $('o0').focus();
+    confirmRes = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
+
+    window._rgData = { name, phone: fullPhone, email, batch, pass, photo: regPhoto || '' };
+    $('otp-ph').textContent = 'Code sent to ' + fullPhone;
+    $('rg-1').style.display = 'none';
+    $('rg-2').style.display = 'block';
+    setTimeout(()=>$('o0').focus(), 100);
     startResend();
-  }catch(e){
-    let m='Could not send OTP: '+e.message;
-    if(e.code==='auth/invalid-phone-number')m='Invalid phone number. Enter digits only, no leading 0 (e.g. 761234567).';
-    if(e.code==='auth/too-many-requests')m='Too many attempts. Please wait a few minutes.';
-    if(e.code==='auth/operation-not-allowed')m='SMS not enabled for this region. Contact admin.';
-    showAlert('la',m,'err',true);
-    if(window._rcv){try{window._rcv.clear();}catch(x){}window._rcv=null;}
+    alertMsg('la', 'OTP sent! Check your phone.', 'ok');
+  } catch(e){
+    let m = 'Could not send OTP: ' + e.message;
+    if(e.code === 'auth/invalid-phone-number') m = 'Invalid phone number. Enter digits only without leading 0 (e.g. 761234567).';
+    if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait a few minutes.';
+    if(e.code === 'auth/operation-not-allowed') m = 'SMS not enabled for this region. Contact admin.';
+    if(e.code === 'auth/captcha-check-failed') m = 'reCAPTCHA failed. Please refresh the page and try again.';
+    alertMsg('la', m, 'err', true);
+    if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
   }
-  btn.innerHTML='Send OTP via SMS →';btn.disabled=false;
+  btn.innerHTML = 'Send OTP via SMS →'; btn.disabled = false;
 };
 
-window.verifyOTP=async()=>{
-  const code=[0,1,2,3,4,5].map(i=>$('o'+i).value).join('');
-  const btn=$('btn-verify');
-  if(code.length!==6){showAlert('la','Enter all 6 digits.');return;}
-  if(!confirmRes){showAlert('la','Please request OTP first.');return;}
-  btn.innerHTML='<span class="loader"></span>Verifying...';btn.disabled=true;
-  try{
-    const result=await confirmRes.confirm(code);
-    const d=window._regData;
-    const sid=await nextStudentId();
-    await setDoc(doc(db,'students',result.user.uid),{
-      name:d.name, nameLower:d.name.toLowerCase(),
-      phone:d.phone, email:d.email,
-      course:d.batch, studentId:sid,
-      photo:d.photo||'',
-      enrolledAt:serverTimestamp(), role:'student'
+window.verifyOTP = async () => {
+  const code = [0,1,2,3,4,5].map(i=>$('o'+i).value).join('');
+  const btn = $('bt-vf');
+  if(code.length !== 6){ alertMsg('la', 'Please enter all 6 digits.'); return; }
+  if(!confirmRes){ alertMsg('la', 'Please request OTP first.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Verifying...'; btn.disabled = true;
+  try {
+    const result = await confirmRes.confirm(code);
+    const d = window._rgData;
+    const sid = await nextStudentId();
+    await setDoc(doc(db, 'students', result.user.uid), {
+      name: d.name,
+      nameLower: d.name.toLowerCase(),
+      phone: d.phone,
+      email: d.email || '',
+      course: d.batch,
+      studentId: sid,
+      photo: d.photo || '',
+      enrolledAt: serverTimestamp(),
+      role: 'student'
     });
-    showAlert('la',`✅ Account created! Your Student ID: ${sid}`,'ok');
+    alertMsg('la', `✅ Account created! Your Student ID: ${sid}`, 'ok', true);
     clearInterval(resendTimer);
-    setTimeout(()=>{loginTab('in');},2500);
-  }catch(e){
-    let m='Invalid OTP. Please try again.';
-    if(e.code==='auth/code-expired')m='OTP expired. Please resend.';
-    if(e.code==='auth/invalid-verification-code')m='Wrong code. Please check and try again.';
-    showAlert('la',m);
+    // Note: user is now signed in via phone — they'll auto-route to dashboard via onAuthStateChanged
+  } catch(e){
+    let m = 'Invalid OTP. Please try again.';
+    if(e.code === 'auth/code-expired') m = 'OTP expired. Please tap Resend.';
+    if(e.code === 'auth/invalid-verification-code') m = 'Wrong code. Please check and try again.';
+    alertMsg('la', m);
   }
-  btn.innerHTML='Verify &amp; Create Account';btn.disabled=false;
+  btn.innerHTML = 'Verify &amp; Create Account'; btn.disabled = false;
 };
 
-window.backToReg1=()=>{
-  $('reg2').style.display='none';
-  $('reg1').style.display='block';
+window.backToReg1 = () => {
+  $('rg-2').style.display = 'none';
+  $('rg-1').style.display = 'block';
   clearInterval(resendTimer);
-  if(window._rcv){try{window._rcv.clear();}catch(x){}window._rcv=null;}
-  $('recaptcha-container').innerHTML='';
+  if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
+  $('recaptcha-container').innerHTML = '';
+  for(let i=0;i<6;i++) $('o'+i).value='';
 };
 
-window.resendOTP=async()=>{
-  if(!window._regData)return;
-  $('resend-link').style.display='none';
-  try{
-    if(window._rcv){try{window._rcv.clear();}catch(x){}}
-    $('recaptcha-container').innerHTML='';
-    window._rcv=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible'});
+window.resendOTP = async () => {
+  if(!window._rgData) return;
+  $('rs-a').style.display = 'none';
+  try {
+    if(window._rcv){ try { window._rcv.clear(); } catch(_){} }
+    $('recaptcha-container').innerHTML = '';
+    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
     await window._rcv.render();
-    confirmRes=await signInWithPhoneNumber(auth,window._regData.phone,window._rcv);
+    confirmRes = await signInWithPhoneNumber(auth, window._rgData.phone, window._rcv);
     startResend();
-    showAlert('la','OTP resent!','ok');
-  }catch(e){showAlert('la','Could not resend: '+e.message);}
+    alertMsg('la', 'OTP resent!', 'ok');
+  } catch(e){
+    alertMsg('la', 'Could not resend: ' + e.message);
+  }
 };
 
 function startResend(){
   clearInterval(resendTimer);
-  let t=30;
-  $('resend-n').textContent=t;
-  $('resend-timer').style.display='inline';
-  $('resend-link').style.display='none';
-  resendTimer=setInterval(()=>{
-    t--;$('resend-n').textContent=t;
-    if(t<=0){clearInterval(resendTimer);$('resend-timer').style.display='none';$('resend-link').style.display='inline';}
-  },1000);
+  let t = 30;
+  $('rs-n').textContent = t;
+  $('rs-tm').style.display = 'inline';
+  $('rs-a').style.display = 'none';
+  resendTimer = setInterval(() => {
+    t--;
+    $('rs-n').textContent = t;
+    if(t <= 0){
+      clearInterval(resendTimer);
+      $('rs-tm').style.display = 'none';
+      $('rs-a').style.display = 'inline';
+    }
+  }, 1000);
 }
 
-window.otpIn=i=>{
-  const v=$('o'+i).value;
-  if(v&&i<5)$('o'+(i+1)).focus();
-  if([0,1,2,3,4,5].every(j=>$('o'+j).value))verifyOTP();
+window.otpIn = i => {
+  const v = $('o'+i).value;
+  if(v && i < 5) $('o'+(i+1)).focus();
+  if([0,1,2,3,4,5].every(j=>$('o'+j).value)) verifyOTP();
 };
-window.otpBk=(e,i)=>{if(e.key==='Backspace'&&!$('o'+i).value&&i>0)$('o'+(i-1)).focus();};
+window.otpBk = (e, i) => {
+  if(e.key === 'Backspace' && !$('o'+i).value && i > 0) $('o'+(i-1)).focus();
+};
 
 // ══ STUDENT UI ══
-function renderStudentUI(){
-  if(!CUD||!CU)return;
-  const d=CUD;
-  const first=(d.name||'Student').split(' ')[0];
-  const init=first[0]?.toUpperCase()||'S';
-  $('d-welcome').textContent=`Welcome, ${first}! 👋`;
-  $('d-batch').textContent=d.course||'—';
-  $('d-sid').textContent=d.studentId||'—';
-  $('d-sid2').textContent=d.studentId||'ZEL-0000';
-  $('d-name-big').textContent=d.name||'—';
-  $('d-batch2').textContent=d.course||'—';
-  $('d-name').textContent=d.name||'—';
-  $('d-phone').textContent=d.phone||'—';
-  $('d-email').textContent=d.email||'—';
-  if(d.enrolledAt?.toDate)
-    $('d-enrolled').textContent=d.enrolledAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  const src=d.photo||'';
-  const av=$('d-av'), ph=$('d-photo');
-  if(src){av.innerHTML=`<img src="${src}" alt="">`;ph.innerHTML=`<img src="${src}" alt="">`;}
-  else{av.textContent=init;ph.textContent=init;}
+function renderStudent(){
+  if(!CUD || !CU) return;
+  const d = CUD;
+  const first = (d.name || 'Student').split(' ')[0];
+  const init = (first[0] || 'S').toUpperCase();
+  $('d-welcome').textContent = `Welcome, ${first}! 👋`;
+  $('d-ba').textContent = d.course || '—';
+  $('d-sid').textContent = d.studentId || '—';
+  $('d-sid2').textContent = d.studentId || 'ZEL-0000';
+  $('d-nm-big').textContent = d.name || '—';
+  $('d-ba2').textContent = d.course || '—';
+  $('d-nm').textContent = d.name || '—';
+  $('d-phone').textContent = d.phone || '—';
+  $('d-em').textContent = d.email || '—';
+  if(d.enrolledAt && d.enrolledAt.toDate){
+    $('d-en').textContent = d.enrolledAt.toDate().toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+  } else {
+    $('d-en').textContent = 'Today';
+  }
+  const src = d.photo || '';
+  const av = $('d-av'), ph = $('d-ph');
+  if(src){
+    av.innerHTML = `<img src="${src}" alt="">`;
+    ph.innerHTML = `<img src="${src}" alt="">`;
+  } else {
+    av.textContent = init;
+    ph.textContent = init;
+  }
 }
 
 async function loadStudentNotices(){
-  const el=$('d-notices');
-  try{
-    const q=query(collection(db,'notices'),orderBy('createdAt','desc'),limit(20));
-    const snap=await getDocs(q);
-    if(snap.empty){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">📭 No announcements yet</div>';return;}
-    el.innerHTML='';
-    snap.forEach(d=>{
-      const n=d.data();
-      const dt=n.createdAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})||'';
-      el.innerHTML+=`<div class="notice-item"><div class="notice-date">${dt}</div><div class="notice-title">${esc(n.title)}</div><div class="notice-body">${esc(n.body)}</div></div>`;
+  const el = $('d-not');
+  try {
+    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
+    const snap = await getDocs(q);
+    if(snap.empty){
+      el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const n = d.data();
+      const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+      el.innerHTML += `<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div></div>`;
     });
-  }catch(e){el.innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+  } catch(e){
+    el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
+  }
 }
 
 async function loadStudentAtt(){
-  if(!CU)return;
-  try{
-    const q=query(collection(db,'attendance'),where('studentUid','==',CU.uid));
-    const snap=await getDocs(q);
-    let total=0,present=0,late=0;const recs=[];
-    snap.forEach(d=>{const r=d.data();recs.push(r);total++;if(r.status==='present')present++;if(r.status==='late')late++;});
+  if(!CU) return;
+  try {
+    const q = query(collection(db,'attendance'), where('studentUid','==', CU.uid));
+    const snap = await getDocs(q);
+    let total=0, present=0, late=0;
+    const recs = [];
+    snap.forEach(d => {
+      const r = d.data();
+      recs.push(r);
+      total++;
+      if(r.status === 'present') present++;
+      if(r.status === 'late') late++;
+    });
     recs.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    const pct=total===0?0:Math.round(((present+late*.5)/total)*100);
-    $('d-att-pct').textContent=pct+'%';
-    $('d-att-bar').style.width=pct+'%';
-    $('d-att-sum').textContent=`${present} present · ${late} late · ${total-present-late} absent (${total} total)`;
-    const grid=$('d-att-grid');
-    if(!recs.length){grid.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.84rem">No records yet</div>';return;}
-    grid.innerHTML='<div class="att-grid">';
-    recs.slice(0,28).forEach(r=>{const day=r.date?r.date.split('-')[2]:'?';grid.innerHTML+=`<div class="att-cell ${r.status}" title="${r.date}">${day}</div>`;});
-    grid.innerHTML+='</div>';
-  }catch(e){console.error(e);}
+    const pct = total === 0 ? 0 : Math.round(((present + late*0.5) / total) * 100);
+    $('d-att-pct').textContent = pct + '%';
+    $('d-att-bar').style.width = pct + '%';
+    $('d-att-sm').textContent = `${present} present · ${late} late · ${total-present-late} absent (${total} total)`;
+    const grid = $('d-att-grid');
+    if(!recs.length){
+      grid.innerHTML = '<div class="empty">No records yet</div>';
+      return;
+    }
+    let html = '<div class="att-grid">';
+    recs.slice(0,28).forEach(r => {
+      const day = r.date ? r.date.split('-')[2] : '?';
+      html += `<div class="att-cell ${r.status}" title="${esc(r.date)}">${day}</div>`;
+    });
+    grid.innerHTML = html + '</div>';
+  } catch(e){ console.error(e); }
 }
 
 async function loadStudentFees(){
-  if(!CU)return;
-  try{
-    const q=query(collection(db,'fees'),where('studentUid','==',CU.uid));
-    const snap=await getDocs(q);
-    let total=0,paid=0;const recs=[];
-    snap.forEach(d=>{const r=d.data();recs.push(r);total+=Number(r.amount||0);if(r.status==='Paid')paid+=Number(r.amount||0);if(r.status==='Partial')paid+=Number(r.amount||0)/2;});
+  if(!CU) return;
+  try {
+    const q = query(collection(db,'fees'), where('studentUid','==', CU.uid));
+    const snap = await getDocs(q);
+    let total = 0, paid = 0;
+    const recs = [];
+    snap.forEach(d => {
+      const r = d.data();
+      recs.push(r);
+      total += Number(r.amount || 0);
+      if(r.status === 'Paid') paid += Number(r.amount || 0);
+      if(r.status === 'Partial') paid += Number(r.amount || 0)/2;
+    });
     recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
-    $('d-fee-t').textContent='Rs '+total;
-    $('d-fee-p').textContent='Rs '+paid;
-    $('d-fee-d').textContent='Rs '+(total-paid);
-    const el=$('d-fee-list');
-    if(!recs.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">💳 No fee records yet</div>';return;}
-    el.innerHTML='';
-    recs.forEach(r=>{el.innerHTML+=`<div class="fee-row"><div><div class="mon">${esc(r.month||'—')}</div><div class="sub">Rs ${r.amount||0} · Due ${r.dueDate||'—'}</div></div><span class="status-pill ${r.status}">${r.status}</span></div>`;});
-  }catch(e){console.error(e);}
+    $('d-ft').textContent = 'Rs ' + total;
+    $('d-fp').textContent = 'Rs ' + paid;
+    $('d-fd').textContent = 'Rs ' + (total-paid);
+    const el = $('d-fl');
+    if(!recs.length){
+      el.innerHTML = '<div class="empty">💳 No fee records yet</div>';
+      return;
+    }
+    el.innerHTML = '';
+    recs.forEach(r => {
+      el.innerHTML += `<div class="fee-row"><div><div class="mon">${esc(r.month||'—')}</div><div class="sub">Rs ${r.amount||0} · Due ${esc(r.dueDate||'—')}</div></div><span class="pill ${r.status}">${r.status}</span></div>`;
+    });
+  } catch(e){ console.error(e); }
 }
 
-// ── Change password ──
-window.changePW=async()=>{
-  const cur=$('pw-cur').value,neu=$('pw-new').value,con=$('pw-con').value;
-  const btn=$('btn-pw');
-  if(!cur||!neu||!con){showAlert('pw-alert','Fill all fields.');return;}
-  if(neu.length<6){showAlert('pw-alert','New password must be ≥6 characters.');return;}
-  if(neu!==con){showAlert('pw-alert','New passwords do not match.');return;}
-  btn.innerHTML='<span class="loader"></span>Updating...';btn.disabled=true;
-  try{
-    await reauthenticateWithCredential(CU,EmailAuthProvider.credential(CU.email,cur));
-    await updatePassword(CU,neu);
-    showAlert('pw-alert','✅ Password updated successfully!','ok');
-    $('pw-cur').value='';$('pw-new').value='';$('pw-con').value='';
-  }catch(e){
-    let m='Failed to update password.';
-    if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')m='Current password is incorrect.';
-    showAlert('pw-alert',m);
+window.changePW = async () => {
+  const cur = $('pw-c').value;
+  const neu = $('pw-n').value;
+  const con = $('pw-2').value;
+  const btn = $('bt-pw');
+  if(!cur || !neu || !con){ alertMsg('pw-al', 'Please fill all fields.'); return; }
+  if(neu.length < 6){ alertMsg('pw-al', 'New password must be at least 6 characters.'); return; }
+  if(neu !== con){ alertMsg('pw-al', 'New passwords do not match.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Updating...'; btn.disabled = true;
+  try {
+    await reauthenticateWithCredential(CU, EmailAuthProvider.credential(CU.email, cur));
+    await updatePassword(CU, neu);
+    alertMsg('pw-al', '✅ Password updated successfully!', 'ok');
+    $('pw-c').value=''; $('pw-n').value=''; $('pw-2').value='';
+  } catch(e){
+    let m = 'Failed to update password.';
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Current password is incorrect.';
+    alertMsg('pw-al', m);
   }
-  btn.innerHTML='Update Password';btn.disabled=false;
+  btn.innerHTML = 'Update Password'; btn.disabled = false;
 };
 
 // ══ PHOTO MODAL ══
-window.openPhotoModal=(uid)=>{
-  photoTarget=uid||CU?.uid||null;
-  pendingPhoto=null;
-  $('photo-modal-circle').innerHTML='<span style="font-size:2rem" id="photo-modal-icon">📷</span>';
-  $('photo-modal-circle').style.borderColor='var(--border)';
-  $('photo-modal-alert').className='alert';
-  $('modal-photo').classList.add('open');
+window.openPhotoModal = uid => {
+  photoTarget = uid || (CU ? CU.uid : null);
+  pendingPhoto = null;
+  $('mp-pc').innerHTML = '📷';
+  $('mp-pc').style.borderColor = '';
+  $('mp-pc').style.borderStyle = '';
+  $('mp-al').className = 'alert';
+  $('m-photo').classList.add('open');
 };
 
-window.onModalPhoto=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  const circle=$('photo-modal-circle');
-  circle.innerHTML='<span style="font-size:2rem">⏳</span>';
-  showAlert('photo-modal-alert','Processing image...','info',true);
-  try{
-    pendingPhoto=await resizeImg(f);
-    circle.innerHTML=`<img src="${pendingPhoto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    circle.style.borderColor='var(--ocean)';
-    showAlert('photo-modal-alert','✅ Ready — tap Save Photo','ok');
-  }catch(err){
-    circle.innerHTML='<span style="font-size:2rem">📷</span>';
-    showAlert('photo-modal-alert','Could not process image. Try a smaller file.','err',true);
-    pendingPhoto=null;
+window.onModalPhoto = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const c = $('mp-pc');
+  c.innerHTML = '⏳';
+  alertMsg('mp-al', 'Processing image...', 'info', true);
+  try {
+    pendingPhoto = await resizeImg(f);
+    c.innerHTML = `<img src="${pendingPhoto}" alt="">`;
+    c.style.borderColor = 'var(--ocean)';
+    c.style.borderStyle = 'solid';
+    alertMsg('mp-al', '✅ Ready — tap Save Photo', 'ok');
+  } catch(err){
+    c.innerHTML = '📷';
+    alertMsg('mp-al', 'Could not process image. Try a smaller file.', 'err', true);
+    pendingPhoto = null;
   }
 };
 
-window.savePhoto=async()=>{
-  const btn=$('btn-save-photo');
-  if(!pendingPhoto){showAlert('photo-modal-alert','Please choose a photo first.');return;}
-  if(!photoTarget){showAlert('photo-modal-alert','No target selected.');return;}
-  btn.innerHTML='<span class="loader"></span>Saving...';btn.disabled=true;
-  try{
-    await updateDoc(doc(db,'students',photoTarget),{photo:pendingPhoto});
-    if(CU&&photoTarget===CU.uid&&CUD){CUD.photo=pendingPhoto;renderStudentUI();}
-    showAlert('photo-modal-alert','✅ Photo saved!','ok');
-    setTimeout(()=>{
-      closeModal('modal-photo');
-      if(photoTarget&&CU&&photoTarget!==CU.uid)openStudentDetail(photoTarget);
-    },700);
-  }catch(e){
-    let m='Save failed: '+e.message;
-    if(e.code==='permission-denied')m='Permission denied — check Firestore rules in Firebase Console.';
-    showAlert('photo-modal-alert',m,'err',true);
+window.savePhoto = async () => {
+  const btn = $('bt-mp');
+  if(!pendingPhoto){ alertMsg('mp-al', 'Please choose a photo first.'); return; }
+  if(!photoTarget){ alertMsg('mp-al', 'No target selected.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Saving...'; btn.disabled = true;
+  try {
+    await updateDoc(doc(db,'students', photoTarget), { photo: pendingPhoto });
+    if(CU && photoTarget === CU.uid && CUD){
+      CUD.photo = pendingPhoto;
+      renderStudent();
+    }
+    alertMsg('mp-al', '✅ Photo saved!', 'ok');
+    setTimeout(() => {
+      closeModal('m-photo');
+      if(photoTarget && CU && photoTarget !== CU.uid){
+        openStudentDetail(photoTarget);
+      }
+    }, 700);
+  } catch(e){
+    let m = 'Save failed: ' + e.message;
+    if(e.code === 'permission-denied') m = 'Permission denied — check Firestore rules.';
+    alertMsg('mp-al', m, 'err', true);
   }
-  btn.innerHTML='Save Photo';btn.disabled=false;
+  btn.innerHTML = 'Save Photo'; btn.disabled = false;
 };
 
-window.closeModal=id=>$(id).classList.remove('open');
+window.closeModal = id => $(id).classList.remove('open');
 
 // ══ ADMIN: BATCHES ══
-window.loadBatches=async()=>{
-  const grid=$('batch-grid');
-  grid.innerHTML='<div style="color:#8b949e;text-align:center;padding:2rem">Loading...</div>';
-  try{
-    const total=await getCountFromServer(collection(db,'students'));
-    $('st-students').textContent=total.data().count;
-    $('st-batches').textContent=BATCHES.length;
-    grid.innerHTML='';
-    for(const b of BATCHES){
-      const cnt=await getCountFromServer(query(collection(db,'students'),where('course','==',b)));
-      const n=cnt.data().count;
-      grid.innerHTML+=`<div class="batch-card" onclick='openBatch("${b}")'><div class="bi">📚</div><div class="bn">${esc(b)}</div><div class="bc"><strong>${n}</strong> student${n===1?'':'s'}</div></div>`;
+window.loadBatches = async () => {
+  await loadBatchOptions();
+  const grid = $('b-grid');
+  grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div>';
+  try {
+    const total = await getCountFromServer(collection(db,'students'));
+    $('st-stu').textContent = total.data().count;
+    $('st-ba').textContent = allBatches.length;
+    grid.innerHTML = '';
+    for(const b of allBatches){
+      let n = 0;
+      try {
+        const c = await getCountFromServer(query(collection(db,'students'), where('course','==', b)));
+        n = c.data().count;
+      } catch(e){ n = 0; }
+      grid.innerHTML += `<div class="b-card" onclick='openBatch(${JSON.stringify(b)})'><div class="ic">📚</div><div class="nm">${esc(b)}</div><div class="ct"><strong>${n}</strong> student${n===1?'':'s'}</div></div>`;
     }
-  }catch(e){grid.innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+    if(allBatches.length === 0){
+      grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">No batches yet. Click "📚 Manage Batches" to add one.</div>';
+    }
+  } catch(e){
+    grid.innerHTML = `<div class="empty" style="color:var(--danger);grid-column:1/-1">Error: ${esc(e.message)}</div>`;
+  }
 };
 
-window.openBatch=async b=>{
-  currentBatch=b;batchCursor=null;batchLoaded=[];
-  $('bv-list').style.display='none';
-  $('bv-students').style.display='block';
-  $('bv-detail').style.display='none';
-  $('bv-title').textContent=b;
-  $('bv-search').value='';
-  $('bv-stu-list').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';
-  await loadMoreStudents();
+window.openBatch = async b => {
+  currentBatch = b;
+  batchCursor = null;
+  batchLoaded = [];
+  $('b-list').style.display = 'none';
+  $('b-stus').style.display = 'block';
+  $('b-det').style.display = 'none';
+  $('bs-title').textContent = b;
+  $('bs-search').value = '';
+  $('bs-list').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  await loadMoreStus();
 };
 
-window.showBatchList=()=>{
-  $('bv-list').style.display='block';
-  $('bv-students').style.display='none';
-  $('bv-detail').style.display='none';
+window.showBatchList = () => {
+  $('b-list').style.display = 'block';
+  $('b-stus').style.display = 'none';
+  $('b-det').style.display = 'none';
 };
 
-window.loadMoreStudents=async()=>{
-  try{
-    let q=query(collection(db,'students'),where('course','==',currentBatch),orderBy('name'),limit(PAGE));
-    if(batchCursor)q=query(collection(db,'students'),where('course','==',currentBatch),orderBy('name'),startAfter(batchCursor),limit(PAGE));
-    const snap=await getDocs(q);
-    if(snap.empty&&batchLoaded.length===0){$('bv-stu-list').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No students in this batch yet.</div>';$('bv-more').style.display='none';return;}
-    if(batchLoaded.length===0)$('bv-stu-list').innerHTML='';
-    snap.forEach(d=>batchLoaded.push({...d.data(),id:d.id}));
-    batchCursor=snap.docs[snap.docs.length-1];
-    $('bv-more').style.display=snap.size===PAGE?'block':'none';
-    renderStudentRows();
-  }catch(e){$('bv-stu-list').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+window.loadMoreStus = async () => {
+  try {
+    let q;
+    if(batchCursor){
+      q = query(collection(db,'students'), where('course','==', currentBatch), orderBy('name'), startAfter(batchCursor), limit(PAGE));
+    } else {
+      q = query(collection(db,'students'), where('course','==', currentBatch), orderBy('name'), limit(PAGE));
+    }
+    const snap = await getDocs(q);
+    if(snap.empty && batchLoaded.length === 0){
+      $('bs-list').innerHTML = '<div class="empty" style="color:#8b949e">No students in this batch yet.</div>';
+      $('bs-more').style.display = 'none';
+      return;
+    }
+    if(batchLoaded.length === 0) $('bs-list').innerHTML = '';
+    snap.forEach(d => batchLoaded.push({...d.data(), id: d.id}));
+    if(snap.docs.length) batchCursor = snap.docs[snap.docs.length-1];
+    $('bs-more').style.display = snap.size === PAGE ? 'block' : 'none';
+    renderStuRows();
+  } catch(e){
+    $('bs-list').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
+  }
 };
 
-function renderStudentRows(filter=''){
-  const el=$('bv-stu-list');
-  const list=filter?batchLoaded.filter(s=>(s.name||'').toLowerCase().includes(filter)||(s.studentId||'').toLowerCase().includes(filter)):batchLoaded;
-  if(!list.length){el.innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No matches found.</div>';return;}
-  el.innerHTML='';
-  list.forEach(s=>{
-    const init=(s.name?.[0]||'S').toUpperCase();
-    const ph=s.photo?`<img src="${s.photo}" alt="">`:init;
-    el.innerHTML+=`<div class="stu-row" onclick="openStudentDetail('${s.id}')"><div class="stu-av">${ph}</div><div style="flex:1;min-width:0"><div class="stu-id">${esc(s.studentId||'N/A')}</div><div class="stu-name">${esc(s.name||'—')}</div><div class="stu-meta">${esc(s.phone||'')} · ${esc(s.email||'')}</div></div><div class="arr">›</div></div>`;
+function renderStuRows(filter=''){
+  const el = $('bs-list');
+  const list = filter
+    ? batchLoaded.filter(s => (s.name||'').toLowerCase().includes(filter) || (s.studentId||'').toLowerCase().includes(filter))
+    : batchLoaded;
+  if(!list.length){
+    el.innerHTML = '<div class="empty" style="color:#8b949e">No matches.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  list.forEach(s => {
+    const init = (s.name && s.name[0] || 'S').toUpperCase();
+    const ph = s.photo ? `<img src="${s.photo}" alt="">` : init;
+    el.innerHTML += `<div class="s-row" onclick="openStudentDetail('${s.id}')"><div class="s-av">${ph}</div><div style="flex:1;min-width:0"><div class="s-id">${esc(s.studentId||'N/A')}</div><div class="s-name">${esc(s.name||'—')}</div><div class="s-meta">${esc(s.phone||'')}${s.email?' · '+esc(s.email):''}</div></div><div class="arr">›</div></div>`;
   });
 }
 
-window.filterStudents=()=>{renderStudentRows($('bv-search').value.toLowerCase().trim());};
-
-window.backToStudentList=()=>{$('bv-detail').style.display='none';$('bv-students').style.display='block';};
-
-window.openStudentDetail=async uid=>{
-  $('bv-students').style.display='none';
-  $('bv-detail').style.display='block';
-  const el=$('bv-detail-content');
-  el.innerHTML='<div style="color:#8b949e;padding:2rem;text-align:center">Loading...</div>';
-  const snap=await getDoc(doc(db,'students',uid));
-  if(!snap.exists()){el.innerHTML='<div style="color:var(--danger);padding:1rem">Student not found.</div>';return;}
-  const s=snap.data();
-  const init=(s.name?.[0]||'S').toUpperCase();
-  const ph=s.photo?`<img src="${s.photo}" alt="">`:init;
-  const enr=s.enrolledAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})||'—';
-  el.innerHTML=`
-    <div class="det-card">
-      <div class="det-photo-row">
-        <div class="det-photo">${ph}</div>
-        <div>
-          <div class="det-name">${esc(s.name||'—')}</div>
-          <span class="det-id">${esc(s.studentId||'N/A')}</span>
-        </div>
-      </div>
-      <div class="det-fields">
-        <div class="det-field"><label>Batch</label><span>${esc(s.course||'—')}</span></div>
-        <div class="det-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
-        <div class="det-field" style="grid-column:1/-1"><label>Email</label><span>${esc(s.email||'—')}</span></div>
-        <div class="det-field"><label>Enrolled</label><span>${enr}</span></div>
-        <div class="det-field"><label>Status</label><span style="color:#86efac;font-weight:600">✅ Active</span></div>
-      </div>
-    </div>
-    <div class="act-row">
-      <button class="act-btn" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
-      <button class="act-btn" onclick="quickJump('att','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
-      <button class="act-btn" onclick="quickJump('fee','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">💳 Fees</button>
-    </div>
-    <button class="btn-del" style="width:100%;padding:.72rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
+window.filterStus = () => {
+  renderStuRows($('bs-search').value.toLowerCase().trim());
 };
 
-window.quickJump=(kind,uid,sid,name)=>{
-  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
-  if(kind==='att'){
-    document.querySelectorAll('.adm-tab')[1].classList.add('active');
+window.backToStus = () => {
+  $('b-det').style.display = 'none';
+  $('b-stus').style.display = 'block';
+};
+
+window.openStudentDetail = async uid => {
+  $('b-stus').style.display = 'none';
+  $('b-det').style.display = 'block';
+  const el = $('b-det-c');
+  el.innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  const snap = await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){
+    el.innerHTML = '<div class="empty" style="color:var(--danger)">Student not found.</div>';
+    return;
+  }
+  const s = snap.data();
+  const init = (s.name && s.name[0] || 'S').toUpperCase();
+  const ph = s.photo ? `<img src="${s.photo}" alt="">` : init;
+  const enr = s.enrolledAt && s.enrolledAt.toDate ? s.enrolledAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+  el.innerHTML = `
+    <div class="det">
+      <div class="d-row">
+        <div class="d-photo">${ph}</div>
+        <div>
+          <div class="d-name">${esc(s.name||'—')}</div>
+          <span class="d-id">${esc(s.studentId||'N/A')}</span>
+        </div>
+      </div>
+      <div class="d-fields">
+        <div class="d-field"><label>Batch</label><span>${esc(s.course||'—')}</span></div>
+        <div class="d-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
+        <div class="d-field full"><label>Email</label><span>${esc(s.email||'—')}</span></div>
+        <div class="d-field"><label>Enrolled</label><span>${enr}</span></div>
+        <div class="d-field"><label>Status</label><span style="color:#86efac;font-weight:600">✅ Active</span></div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="act" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
+      <button class="act" onclick="quickJump('at','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
+      <button class="act" onclick="quickJump('fe','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">💳 Fees</button>
+    </div>
+    <button class="b-del" style="width:100%;padding:.7rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
+};
+
+window.quickJump = (kind, uid, sid, name) => {
+  // Switch to the relevant tab
+  document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  if(kind === 'at'){
+    document.querySelectorAll('.adm-tabs button')[1].classList.add('active');
     $('as-att').classList.add('active');
-    selectPicker('att',uid,sid,name);
+    selectPicker('at', uid, sid, name);
   } else {
-    document.querySelectorAll('.adm-tab')[2].classList.add('active');
+    document.querySelectorAll('.adm-tabs button')[2].classList.add('active');
     $('as-fees').classList.add('active');
-    selectPicker('fee',uid,sid,name);
+    selectPicker('fe', uid, sid, name);
   }
 };
 
-window.deleteStudent=async uid=>{
-  if(!confirm('Remove this student from the database?'))return;
+window.deleteStudent = async uid => {
+  if(!confirm('Remove this student from the database?')) return;
   await deleteDoc(doc(db,'students',uid));
-  try{await updateDoc(doc(db,'meta','counters'),{studentCount:increment(-1)});}catch(x){}
-  showBatchList();loadBatches();
+  try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(e){}
+  showBatchList();
+  loadBatches();
 };
 
-// ══ PICKER ══
-window.searchPicker=async(kind,term)=>{
-  const res=$(`${kind}-pick-res`);
+// ══ MANAGE BATCHES ══
+window.toggleBatchMgr = () => {
+  const el = $('b-mgr');
+  if(el.style.display === 'none'){
+    el.style.display = 'block';
+    loadBatchesMgr();
+  } else {
+    el.style.display = 'none';
+  }
+};
+
+async function loadBatchesMgr(){
+  const el = $('bm-list');
+  if(!el) return;
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    if(snap.empty){
+      el.innerHTML = `<div style="color:#8b949e;font-size:.78rem;padding:.4rem 0">No custom batches yet. Default batches (${DEFAULT_BATCHES.join(', ')}) are shown automatically.</div>`;
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const b = d.data().name;
+      el.innerHTML += `<div class="bm-row"><span>${esc(b)}</span><button class="b-del" onclick="deleteBatch('${d.id}','${esc(b).replace(/'/g,"\\\\'")}')">🗑 Remove</button></div>`;
+    });
+  } catch(e){
+    el.innerHTML = `<div style="color:var(--danger);font-size:.78rem">${esc(e.message)}</div>`;
+  }
+}
+
+window.addBatch = async () => {
+  const inp = $('bm-name');
+  const name = inp ? inp.value.trim() : '';
+  if(!name){ alertMsg('bm-al', 'Please enter a batch name.'); return; }
+  try {
+    // Check duplicate
+    const existing = await getDocs(query(collection(db,'batches'), where('name','==', name)));
+    if(!existing.empty){
+      alertMsg('bm-al', 'This batch already exists.', 'err');
+      return;
+    }
+    if(allBatches.includes(name)){
+      alertMsg('bm-al', 'This batch already exists.', 'err');
+      return;
+    }
+    await addDoc(collection(db,'batches'), { name, createdAt: serverTimestamp() });
+    alertMsg('bm-al', `✅ Batch "${name}" added!`, 'ok');
+    inp.value = '';
+    await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
+  } catch(e){
+    alertMsg('bm-al', 'Failed: ' + e.message);
+  }
+};
+
+window.deleteBatch = async (id, name) => {
+  if(!confirm(`Remove batch "${name}"?\n\nStudents already in this batch will not be affected — only the option will disappear from new registrations.`)) return;
+  try {
+    await deleteDoc(doc(db,'batches', id));
+    await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
+  } catch(e){
+    alertMsg('bm-al', 'Failed: ' + e.message);
+  }
+};
+
+// ══ PICKER (att/fee student picker) ══
+window.searchPicker = async (kind, term) => {
+  const res = $(`${kind}-pr`);
   res.classList.add('open');
-  term=term.trim();
-  if(!term){res.innerHTML='<div class="picker-empty">Type to search by name or ID...</div>';return;}
+  term = term.trim();
+  if(!term){
+    res.innerHTML = '<div class="pkr-em">Type to search by name or ID...</div>';
+    return;
+  }
   clearTimeout(pickerTimers[kind]);
-  pickerTimers[kind]=setTimeout(async()=>{
-    res.innerHTML='<div class="picker-empty">Searching...</div>';
-    try{
-      const up=term.toUpperCase(),lo=term.toLowerCase();
-      const map=new Map();
-      try{const q=query(collection(db,'students'),where('studentId','>=',up),where('studentId','<=',up+'\uf8ff'),limit(8));(await getDocs(q)).forEach(d=>map.set(d.id,{...d.data(),id:d.id}));}catch(x){}
-      try{const q=query(collection(db,'students'),where('nameLower','>=',lo),where('nameLower','<=',lo+'\uf8ff'),limit(8));(await getDocs(q)).forEach(d=>map.set(d.id,{...d.data(),id:d.id}));}catch(x){}
-      const arr=[...map.values()].slice(0,12);
-      if(!arr.length){res.innerHTML='<div class="picker-empty">No students found.</div>';return;}
-      res.innerHTML='';
-      arr.forEach(s=>{
-        const div=document.createElement('div');
-        div.className='picker-item';
-        div.innerHTML=`<div class="pid">${esc(s.studentId||'')}</div><div class="pname">${esc(s.name||'')}</div><div class="pbatch">${esc(s.course||'')}</div>`;
-        div.onclick=()=>selectPicker(kind,s.id,s.studentId,s.name);
+  pickerTimers[kind] = setTimeout(async () => {
+    res.innerHTML = '<div class="pkr-em">Searching...</div>';
+    try {
+      const up = term.toUpperCase(), lo = term.toLowerCase();
+      const map = new Map();
+      try {
+        const q1 = query(collection(db,'students'), where('studentId','>=', up), where('studentId','<=', up+'\uf8ff'), limit(8));
+        (await getDocs(q1)).forEach(d => map.set(d.id, {...d.data(), id:d.id}));
+      } catch(_){}
+      try {
+        const q2 = query(collection(db,'students'), where('nameLower','>=', lo), where('nameLower','<=', lo+'\uf8ff'), limit(8));
+        (await getDocs(q2)).forEach(d => map.set(d.id, {...d.data(), id:d.id}));
+      } catch(_){}
+      const arr = [...map.values()].slice(0,12);
+      if(!arr.length){
+        res.innerHTML = '<div class="pkr-em">No students found.</div>';
+        return;
+      }
+      res.innerHTML = '';
+      arr.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'pkr-it';
+        div.innerHTML = `<div class="pid">${esc(s.studentId||'')}</div><div class="pnm">${esc(s.name||'')}</div><div class="pba">${esc(s.course||'')}</div>`;
+        div.onclick = () => selectPicker(kind, s.id, s.studentId, s.name);
         res.appendChild(div);
       });
-    }catch(e){res.innerHTML=`<div class="picker-empty">Error: ${e.message}</div>`;}
-  },250);
+    } catch(e){
+      res.innerHTML = `<div class="pkr-em">Error: ${esc(e.message)}</div>`;
+    }
+  }, 250);
 };
 
-function selectPicker(kind,uid,sid,name){
-  pickers[kind]={uid,sid,name};
-  $(`${kind}-pick-inp`).parentElement.style.display='none';
-  const chip=$(`${kind}-chip`);
-  chip.style.display='block';
-  chip.innerHTML=`<div class="chip"><span><strong>${esc(sid)}</strong>${esc(name)}</span><button onclick="clearPicker('${kind}')">✕</button></div>`;
-  $(`${kind}-pick-res`).classList.remove('open');
+function selectPicker(kind, uid, sid, name){
+  pickers[kind] = { uid, sid, name };
+  $(`${kind}-pi`).parentElement.style.display = 'none';
+  const chip = $(`${kind}-ch`);
+  chip.style.display = 'block';
+  chip.innerHTML = `<div class="chip"><span><strong>${esc(sid||'')}</strong>${esc(name||'')}</span><button onclick="clearPicker('${kind}')">✕</button></div>`;
+  $(`${kind}-pr`).classList.remove('open');
 }
-window.selectPicker=selectPicker;
+window.selectPicker = selectPicker;
 
-window.clearPicker=kind=>{
-  pickers[kind]=null;
-  $(`${kind}-pick-inp`).parentElement.style.display='block';
-  $(`${kind}-chip`).style.display='none';
-  $(`${kind}-pick-inp`).value='';
+window.clearPicker = kind => {
+  pickers[kind] = null;
+  $(`${kind}-pi`).parentElement.style.display = 'block';
+  $(`${kind}-ch`).style.display = 'none';
+  $(`${kind}-pi`).value = '';
 };
 
-document.addEventListener('click',e=>{
-  ['att','fee'].forEach(k=>{const w=$(`${k}-pick-inp`)?.parentElement;if(w&&!w.contains(e.target))$(`${k}-pick-res`)?.classList.remove('open');});
+document.addEventListener('click', e => {
+  ['at','fe'].forEach(k => {
+    const w = $(`${k}-pi`) ? $(`${k}-pi`).parentElement : null;
+    if(w && !w.contains(e.target)) $(`${k}-pr`)?.classList.remove('open');
+  });
 });
 
 // ══ ATTENDANCE ══
-window.markAtt=async()=>{
-  const sel=pickers.att, date=$('att-date').value, status=$('att-status').value;
-  if(!sel){showAlert('att-alert','Please select a student.');return;}
-  if(!date||!status){showAlert('att-alert','Please fill all fields.');return;}
-  try{
-    await addDoc(collection(db,'attendance'),{studentUid:sel.uid,studentName:sel.name,studentId:sel.sid,date,status,createdAt:serverTimestamp()});
-    showAlert('att-alert','✅ Attendance saved!','ok');
-    $('att-status').value='';
-    loadAttRecords(true);
-  }catch(e){showAlert('att-alert','Save failed: '+e.message);}
+window.markAtt = async () => {
+  const sel = pickers.at;
+  const date = $('at-dt').value;
+  const status = $('at-st').value;
+  if(!sel){ alertMsg('at-al', 'Please select a student.'); return; }
+  if(!date || !status){ alertMsg('at-al', 'Please fill all fields.'); return; }
+  try {
+    await addDoc(collection(db,'attendance'), {
+      studentUid: sel.uid, studentName: sel.name, studentId: sel.sid,
+      date, status, createdAt: serverTimestamp()
+    });
+    alertMsg('at-al', '✅ Attendance saved!', 'ok');
+    $('at-st').value = '';
+    loadAttRecs(true);
+  } catch(e){
+    alertMsg('at-al', 'Save failed: ' + e.message);
+  }
 };
 
-window.loadAttRecords=async(reset=true)=>{
-  const month=$('att-month').value;
-  if(!month){$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">Pick a month to view records</div>';$('att-more').style.display='none';return;}
-  if(reset){attCursor=null;attRecs=[];$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';}
-  try{
-    let q=query(collection(db,'attendance'),where('date','>=',month+'-01'),where('date','<=',month+'-31'),orderBy('date','desc'),limit(PAGE));
-    if(attCursor)q=query(collection(db,'attendance'),where('date','>=',month+'-01'),where('date','<=',month+'-31'),orderBy('date','desc'),startAfter(attCursor),limit(PAGE));
-    const snap=await getDocs(q);
-    if(snap.empty&&!attRecs.length){$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No records found for this month.</div>';$('att-more').style.display='none';return;}
-    snap.forEach(d=>attRecs.push({...d.data(),id:d.id}));
-    attCursor=snap.docs[snap.docs.length-1];
-    $('att-more').style.display=snap.size===PAGE?'block':'none';
-    const colors={present:'#16a34a',absent:'#dc2626',late:'#d97706'};
-    $('att-records').innerHTML='';
-    attRecs.forEach(r=>{$('att-records').innerHTML+=`<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]};color:#fff;padding:.22rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="btn-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`;});
-  }catch(e){$('att-records').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+window.loadAttRecs = async (reset=true) => {
+  const month = $('at-mo').value;
+  if(!month){
+    $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">Pick a month to view records</div>';
+    $('at-more').style.display = 'none';
+    return;
+  }
+  if(reset){
+    attCursor = null;
+    attRecs = [];
+    $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  }
+  try {
+    let q;
+    if(attCursor){
+      q = query(collection(db,'attendance'), where('date','>=', month+'-01'), where('date','<=', month+'-31'), orderBy('date','desc'), startAfter(attCursor), limit(PAGE));
+    } else {
+      q = query(collection(db,'attendance'), where('date','>=', month+'-01'), where('date','<=', month+'-31'), orderBy('date','desc'), limit(PAGE));
+    }
+    const snap = await getDocs(q);
+    if(snap.empty && !attRecs.length){
+      $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">No records found.</div>';
+      $('at-more').style.display = 'none';
+      return;
+    }
+    snap.forEach(d => attRecs.push({...d.data(), id:d.id}));
+    if(snap.docs.length) attCursor = snap.docs[snap.docs.length-1];
+    $('at-more').style.display = snap.size === PAGE ? 'block' : 'none';
+    const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
+    $('at-rec').innerHTML = '';
+    attRecs.forEach(r => {
+      $('at-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]||'#888'};color:#fff;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="b-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`;
+    });
+  } catch(e){
+    $('at-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
+  }
 };
 
-window.delAtt=async id=>{if(!confirm('Delete?'))return;await deleteDoc(doc(db,'attendance',id));loadAttRecords(true);};
+window.delAtt = async id => {
+  if(!confirm('Delete this attendance record?')) return;
+  await deleteDoc(doc(db,'attendance', id));
+  loadAttRecs(true);
+};
 
 // ══ FEES ══
-function feeCont(status,amount){if(status==='Paid')return Number(amount||0);if(status==='Partial')return Number(amount||0)/2;return 0;}
+function feeContrib(status, amount){
+  if(status === 'Paid') return Number(amount||0);
+  if(status === 'Partial') return Number(amount||0)/2;
+  return 0;
+}
 
-window.addFee=async()=>{
-  const sel=pickers.fee,month=$('fee-month').value.trim(),amount=$('fee-amount').value,due=$('fee-due').value,status=$('fee-status').value;
-  if(!sel){showAlert('fee-alert','Please select a student.');return;}
-  if(!month||!amount){showAlert('fee-alert','Please fill required fields.');return;}
-  try{
-    await addDoc(collection(db,'fees'),{studentUid:sel.uid,studentName:sel.name,studentId:sel.sid,month,amount:Number(amount),dueDate:due,status,createdAt:serverTimestamp()});
-    const delta=feeCont(status,amount);
-    if(delta>0){try{const r=doc(db,'meta','counters');const s=await getDoc(r);if(s.exists())await updateDoc(r,{totalPaid:increment(delta)});else await setDoc(r,{totalPaid:delta},{merge:true});}catch(x){}}
-    showAlert('fee-alert','✅ Fee added!','ok');
-    $('fee-month').value='';$('fee-amount').value='';$('fee-due').value='';
+window.addFee = async () => {
+  const sel = pickers.fe;
+  const month = $('fe-mo').value.trim();
+  const amount = $('fe-am').value;
+  const due = $('fe-du').value;
+  const status = $('fe-st').value;
+  if(!sel){ alertMsg('fe-al', 'Please select a student.'); return; }
+  if(!month || !amount){ alertMsg('fe-al', 'Please fill required fields (Month, Amount).'); return; }
+  try {
+    await addDoc(collection(db,'fees'), {
+      studentUid: sel.uid, studentName: sel.name, studentId: sel.sid,
+      month, amount: Number(amount), dueDate: due, status,
+      createdAt: serverTimestamp()
+    });
+    const delta = feeContrib(status, amount);
+    if(delta > 0){
+      try {
+        const r = doc(db,'meta','counters');
+        const s = await getDoc(r);
+        if(s.exists()) await updateDoc(r, { totalPaid: increment(delta) });
+        else await setDoc(r, { totalPaid: delta }, { merge:true });
+      } catch(_){}
+    }
+    alertMsg('fe-al', '✅ Fee entry added!', 'ok');
+    $('fe-mo').value=''; $('fe-am').value=''; $('fe-du').value='';
     loadFees(true);
-  }catch(e){showAlert('fee-alert','Save failed: '+e.message);}
+  } catch(e){
+    alertMsg('fe-al', 'Save failed: ' + e.message);
+  }
 };
 
-window.loadFees=async(reset=true)=>{
-  if(reset){feeCursor=null;feeRecs=[];$('fee-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';}
-  try{
-    let q=query(collection(db,'fees'),orderBy('createdAt','desc'),limit(PAGE));
-    if(feeCursor)q=query(collection(db,'fees'),orderBy('createdAt','desc'),startAfter(feeCursor),limit(PAGE));
-    const snap=await getDocs(q);
-    if(snap.empty&&!feeRecs.length){$('fee-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No fee records yet.</div>';$('fee-more').style.display='none';}
-    snap.forEach(d=>feeRecs.push({...d.data(),id:d.id}));
-    if(snap.docs.length)feeCursor=snap.docs[snap.docs.length-1];
-    $('fee-more').style.display=snap.size===PAGE?'block':'none';
-    try{const ms=await getDoc(doc(db,'meta','counters'));$('st-fees').textContent='Rs '+(ms.exists()?(ms.data().totalPaid||0):0);}catch(x){}
-    $('fee-records').innerHTML='';
-    feeRecs.forEach(r=>{$('fee-records').innerHTML+=`<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${r.dueDate||'—'}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.76rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="btn-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`;});
-  }catch(e){$('fee-records').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+window.loadFees = async (reset=true) => {
+  if(reset){
+    feeCursor = null;
+    feeRecs = [];
+    $('fe-rec').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  }
+  try {
+    let q;
+    if(feeCursor){
+      q = query(collection(db,'fees'), orderBy('createdAt','desc'), startAfter(feeCursor), limit(PAGE));
+    } else {
+      q = query(collection(db,'fees'), orderBy('createdAt','desc'), limit(PAGE));
+    }
+    const snap = await getDocs(q);
+    if(snap.empty && !feeRecs.length){
+      $('fe-rec').innerHTML = '<div class="empty" style="color:#8b949e">No fee records yet.</div>';
+      $('fe-more').style.display = 'none';
+    }
+    snap.forEach(d => feeRecs.push({...d.data(), id:d.id}));
+    if(snap.docs.length) feeCursor = snap.docs[snap.docs.length-1];
+    $('fe-more').style.display = snap.size === PAGE ? 'block' : 'none';
+    try {
+      const ms = await getDoc(doc(db,'meta','counters'));
+      $('st-fe').textContent = 'Rs ' + (ms.exists() ? (ms.data().totalPaid||0) : 0);
+    } catch(_){}
+    $('fe-rec').innerHTML = '';
+    feeRecs.forEach(r => {
+      $('fe-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${esc(r.dueDate||'—')}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.74rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="b-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`;
+    });
+  } catch(e){
+    $('fe-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
+  }
 };
 
-window.updateFeeStatus=async(id,ns,amount,os)=>{
-  await updateDoc(doc(db,'fees',id),{status:ns});
-  try{const d=feeCont(ns,amount)-feeCont(os,amount);if(d!==0)await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});}catch(x){}
+window.updateFeeStatus = async (id, ns, amount, os) => {
+  await updateDoc(doc(db,'fees', id), { status: ns });
+  try {
+    const d = feeContrib(ns, amount) - feeContrib(os, amount);
+    if(d !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(d) });
+  } catch(_){}
   loadFees(true);
 };
-window.delFee=async(id,amount,status)=>{
-  if(!confirm('Delete this fee record?'))return;
-  await deleteDoc(doc(db,'fees',id));
-  try{const d=-feeCont(status,amount);if(d!==0)await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});}catch(x){}
+
+window.delFee = async (id, amount, status) => {
+  if(!confirm('Delete this fee record?')) return;
+  await deleteDoc(doc(db,'fees', id));
+  try {
+    const d = -feeContrib(status, amount);
+    if(d !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(d) });
+  } catch(_){}
   loadFees(true);
 };
 
 // ══ NOTICES ══
-window.postNotice=async()=>{
-  const title=$('not-title').value.trim(),body=$('not-body').value.trim();
-  if(!title||!body){alert('Please fill in title and message.');return;}
-  await addDoc(collection(db,'notices'),{title,body,createdAt:serverTimestamp()});
-  $('not-title').value='';$('not-body').value='';
-  loadNotices();alert('✅ Announcement posted!');
+window.postNotice = async () => {
+  const title = $('no-ti').value.trim();
+  const body = $('no-bo').value.trim();
+  if(!title || !body){ alert('Please fill in title and message.'); return; }
+  try {
+    await addDoc(collection(db,'notices'), { title, body, createdAt: serverTimestamp() });
+    $('no-ti').value=''; $('no-bo').value='';
+    loadNotices();
+    alert('✅ Announcement posted!');
+  } catch(e){
+    alert('Failed: ' + e.message);
+  }
 };
 
 async function loadNotices(){
-  const el=$('notices-list');
-  try{
-    const q=query(collection(db,'notices'),orderBy('createdAt','desc'),limit(50));
-    const snap=await getDocs(q);
-    $('st-notices').textContent=snap.size;
-    if(snap.empty){el.innerHTML='<div style="color:#8b949e;padding:2rem;text-align:center;font-size:.84rem">No notices yet.</div>';return;}
-    el.innerHTML='';
-    snap.forEach(d=>{const n=d.data();el.innerHTML+=`<div class="dark-card" style="margin-bottom:.6rem;padding:.95rem 1.15rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem"><div style="color:#fff;font-weight:600;font-size:.88rem">${esc(n.title)}</div><button class="btn-del" onclick="delNotice('${d.id}')">🗑</button></div><div style="color:#8b949e;font-size:.8rem">${esc(n.body)}</div></div>`;});
-  }catch(e){}
+  const el = $('no-list');
+  try {
+    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
+    const snap = await getDocs(q);
+    $('st-no').textContent = snap.size;
+    if(snap.empty){
+      el.innerHTML = '<div class="empty" style="color:#8b949e">No notices yet.</div>';
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const n = d.data();
+      el.innerHTML += `<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem"><div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div><button class="b-del" onclick="delNotice('${d.id}')">🗑</button></div><div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div></div>`;
+    });
+  } catch(e){ console.error(e); }
 }
-window.delNotice=async id=>{await deleteDoc(doc(db,'notices',id));loadNotices();};
 
-// ══ ADD STUDENT ══
-window.onAddPhoto=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  const c=$('add-photo-circle');
-  c.innerHTML='<span style="font-size:1.8rem">⏳</span>';
-  try{addPhoto=await resizeImg(f);c.innerHTML=`<img src="${addPhoto}" alt="">`;c.style.borderColor='var(--accent)';}
-  catch(err){c.innerHTML='<span style="font-size:1.8rem">📷</span>';console.error(err);}
+window.delNotice = async id => {
+  if(!confirm('Delete this notice?')) return;
+  await deleteDoc(doc(db,'notices', id));
+  loadNotices();
 };
 
-window.adminAddStudent=async()=>{
-  const name=$('add-name').value.trim(),phone=$('add-phone').value.trim();
-  const email=$('add-email').value.trim(),pass=$('add-pass').value;
-  const batch=$('add-batch').value;
-  const btn=$('btn-add');
-  if(!name||!phone||!email||!pass||!batch){showAlert('add-alert','Please fill in all fields.');return;}
-  if(pass.length<6){showAlert('add-alert','Password must be at least 6 characters.');return;}
-  btn.innerHTML='<span class="loader"></span>Creating...';btn.disabled=true;
-  try{
-    const cred=await createUserWithEmailAndPassword(auth,email,pass);
-    const sid=await nextStudentId();
-    await setDoc(doc(db,'students',cred.user.uid),{
-      name,nameLower:name.toLowerCase(),phone,email,
-      course:batch,studentId:sid,
-      photo:addPhoto||'',
-      enrolledAt:serverTimestamp(),role:'student'
-    });
-    showAlert('add-alert',`✅ Student created! ID: ${sid}`,'ok');
-    $('add-name').value='';$('add-phone').value='';$('add-email').value='';
-    $('add-pass').value='';$('add-batch').value='';
-    addPhoto=null;
-    $('add-photo-circle').innerHTML='<span style="font-size:1.8rem">📷</span>';
-    $('add-photo-circle').style.borderColor='';
-    loadBatches();
-  }catch(e){
-    let m='Failed: '+e.message;
-    if(e.code==='auth/email-already-in-use')m='This email is already registered.';
-    showAlert('add-alert',m);
+// ══ ADD STUDENT (admin) ══
+window.onAddPhoto = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const c = $('ad-pc');
+  c.innerHTML = '⏳';
+  try {
+    addPhoto = await resizeImg(f);
+    c.innerHTML = `<img src="${addPhoto}" alt="">`;
+    c.style.borderColor = 'var(--accent)';
+    c.style.borderStyle = 'solid';
+  } catch(err){
+    c.innerHTML = '📷';
+    alert('Could not process image.');
   }
-  btn.innerHTML='Create Student Account';btn.disabled=false;
+};
+
+window.adminAdd = async () => {
+  const name = $('ad-nm').value.trim();
+  const phone = $('ad-ph').value.trim();
+  const email = $('ad-em').value.trim();
+  const pass = $('ad-pw').value;
+  const batch = $('ad-ba').value;
+  const btn = $('bt-add');
+  if(!name || !phone || !email || !pass || !batch){
+    alertMsg('ad-al', 'Please fill in all fields.');
+    return;
+  }
+  if(pass.length < 6){
+    alertMsg('ad-al', 'Password must be at least 6 characters.');
+    return;
+  }
+  btn.innerHTML = '<span class="spin"></span>Creating...'; btn.disabled = true;
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    const sid = await nextStudentId();
+    await setDoc(doc(db,'students', cred.user.uid), {
+      name, nameLower: name.toLowerCase(),
+      phone, email, course: batch,
+      studentId: sid,
+      photo: addPhoto || '',
+      enrolledAt: serverTimestamp(),
+      role: 'student'
+    });
+    alertMsg('ad-al', `✅ Student created! ID: ${sid}`, 'ok');
+    $('ad-nm').value=''; $('ad-ph').value=''; $('ad-em').value='';
+    $('ad-pw').value=''; $('ad-ba').value='';
+    addPhoto = null;
+    $('ad-pc').innerHTML = '📷';
+    $('ad-pc').style.borderColor = '';
+    $('ad-pc').style.borderStyle = '';
+    loadBatches();
+  } catch(e){
+    let m = 'Failed: ' + e.message;
+    if(e.code === 'auth/email-already-in-use') m = 'This email is already registered.';
+    alertMsg('ad-al', m);
+  }
+  btn.innerHTML = 'Create Student Account'; btn.disabled = false;
 };
 
 // ══ ADMINS ══
-window.grantAdmin=async()=>{
-  const email=$('adm-email-inp').value.trim().toLowerCase();
-  if(!email||!email.includes('@')){showAlert('admins-alert','Please enter a valid email.');return;}
-  if(email===SUPER_ADMIN){showAlert('admins-alert','That is already the super admin.');return;}
-  try{
-    await setDoc(doc(db,'admins',email),{email,grantedBy:CU.email,grantedAt:serverTimestamp()});
-    showAlert('admins-alert','✅ Admin access granted to '+email,'ok');
-    $('adm-email-inp').value='';
-    loadAdminsList();
-  }catch(e){showAlert('admins-alert','Failed: '+e.message);}
-};
-
-async function loadAdminsList(){
-  const el=$('admins-list2');
-  if(!el)return;
-  try{
-    const snap=await getDocs(collection(db,'admins'));
-    el.innerHTML=`<div class="adm-row"><div><div class="adm-email">${esc(SUPER_ADMIN)}<span class="super-tag">SUPER</span></div><div class="adm-sub">Owner — permanent</div></div></div>`;
-    if(snap.empty)return;
-    snap.forEach(d=>{
-      const a=d.data();
-      el.innerHTML+=`<div class="adm-row"><div><div class="adm-email">${esc(a.email)}</div><div class="adm-sub">Added by ${esc(a.grantedBy||'')}</div></div><button class="btn-del" onclick="removeAdmin('${esc(a.email)}')">Remove</button></div>`;
+window.grantAdmin = async () => {
+  const email = $('am-em').value.trim().toLowerCase();
+  if(!email || !email.includes('@')){
+    alertMsg('am-al', 'Please enter a valid email address.');
+    return;
+  }
+  if(email === SUPER_ADMIN){
+    alertMsg('am-al', 'That is already the super admin.');
+    return;
+  }
+  try {
+    await setDoc(doc(db,'admins', email), {
+      email, grantedBy: CU.email, grantedAt: serverTimestamp()
     });
-  }catch(e){el.innerHTML='<div style="color:#8b949e;font-size:.8rem">Error loading admins.</div>';}
-}
-
-window.removeAdmin=async email=>{
-  if(!confirm('Remove admin access for '+email+'?'))return;
-  await deleteDoc(doc(db,'admins',email));
-  loadAdminsList();
-  loadGrantAdminList();
-};
-
-// Grant admin modal
-window.openGrantModal=()=>{
-  $('grant-email').value='';
-  $('grant-alert').className='alert';
-  $('modal-grant').classList.add('open');
-  loadGrantAdminList();
-};
-
-async function loadGrantAdminList(){
-  const el=$('grant-admins-list');if(!el)return;
-  try{
-    const snap=await getDocs(collection(db,'admins'));
-    if(snap.empty){el.innerHTML='<div style="color:#8b949e;font-size:.76rem;margin-top:.75rem">No extra admins yet.</div>';return;}
-    const emails=[];snap.forEach(d=>emails.push(d.data().email));
-    el.innerHTML='<div style="color:#8b949e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-top:.85rem;margin-bottom:.4rem">Current Admins</div>'+
-      emails.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid #30363d"><span style="color:#fff;font-size:.8rem">${esc(e)}</span><button onclick="removeAdminGrant('${esc(e)}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.75rem">✕ Remove</button></div>`).join('');
-  }catch(e){el.innerHTML='';}
-}
-
-window.removeAdminGrant=async email=>{
-  if(!confirm('Remove admin access for '+email+'?'))return;
-  await deleteDoc(doc(db,'admins',email));
-  loadGrantAdminList();loadAdminsList();
-};
-
-window.doGrantAdmin=async()=>{
-  const email=$('grant-email').value.trim().toLowerCase();
-  const btn=$('btn-grant-do');
-  if(!email||!email.includes('@')){showAlert('grant-alert','Enter a valid email address.');return;}
-  if(email===SUPER_ADMIN){showAlert('grant-alert','That is already the super admin!');return;}
-  btn.textContent='Saving...';btn.disabled=true;
-  try{
-    await setDoc(doc(db,'admins',email),{email,grantedBy:CU.email,grantedAt:serverTimestamp()});
-    showAlert('grant-alert','✅ Admin access granted to '+email+'! They see admin panel on next login.','ok');
-    $('grant-email').value='';
-    loadGrantAdminList();loadAdminsList();
-  }catch(e){showAlert('grant-alert','Failed: '+e.message);}
-  btn.textContent='✅ Grant Access';btn.disabled=false;
-};
-</script>
-
-<script>
-// ── Navigation (non-module) ──
-window.loginTab=tab=>{
-  $('tab-in').style.display=tab==='in'?'block':'none';
-  $('tab-reg').style.display=tab==='reg'?'block':'none';
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='in'&&i===0)||(tab==='reg'&&i===1)));
-  $('la').className='alert';
-  if(tab==='reg'){
-    $('reg1').style.display='block';
-    $('reg2').style.display='none';
-    const c=document.getElementById('reg-photo-circle');
-    if(c){c.innerHTML='<span style="font-size:1.8rem">📷</span>';c.style.borderColor='';}
+    alertMsg('am-al', '✅ Admin access granted to ' + email, 'ok');
+    $('am-em').value = '';
+    loadAdminsList();
+  } catch(e){
+    alertMsg('am-al', 'Failed: ' + e.message);
   }
 };
 
-window.stuTab=(sec,btn)=>{
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.sub-screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('ss-'+sec).classList.add('active');
+async function loadAdminsList(){
+  const el = $('am-list');
+  if(!el) return;
+  try {
+    const snap = await getDocs(collection(db,'admins'));
+    el.innerHTML = `<div class="a-row"><div><div class="em">${esc(SUPER_ADMIN)}<span class="s-tag">SUPER</span></div><div class="sb">Owner — permanent</div></div></div>`;
+    snap.forEach(d => {
+      const a = d.data();
+      el.innerHTML += `<div class="a-row"><div><div class="em">${esc(a.email)}</div><div class="sb">Added by ${esc(a.grantedBy||'')}</div></div><button class="b-del" onclick="removeAdmin('${esc(a.email)}')">Remove</button></div>`;
+    });
+  } catch(e){
+    el.innerHTML = '<div style="color:var(--danger);font-size:.8rem">Error loading admins.</div>';
+  }
+}
+
+window.removeAdmin = async email => {
+  if(!confirm('Remove admin access for ' + email + '?')) return;
+  await deleteDoc(doc(db,'admins', email));
+  loadAdminsList();
+  loadGrantList();
 };
 
-window.admTab=(sec,btn)=>{
-  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
-  document.getElementById('as-'+sec).classList.add('active');
-  if(sec==='batches'&&typeof showBatchList==='function')showBatchList();
+// Grant admin modal
+window.openGrantModal = () => {
+  $('g-em').value = '';
+  $('g-al').className = 'alert';
+  $('m-grant').classList.add('open');
+  loadGrantList();
 };
 
-function $(id){return document.getElementById(id);}
+async function loadGrantList(){
+  const el = $('g-list');
+  if(!el) return;
+  try {
+    const snap = await getDocs(collection(db,'admins'));
+    if(snap.empty){
+      el.innerHTML = '<div style="color:#8b949e;font-size:.76rem;margin-top:.7rem">No extra admins yet.</div>';
+      return;
+    }
+    let html = '<div style="color:#8b949e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-top:.85rem;margin-bottom:.4rem">Current Admins</div>';
+    snap.forEach(d => {
+      const e = d.data().email;
+      html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid #30363d"><span style="color:#fff;font-size:.8rem">${esc(e)}</span><button onclick="removeAdminGrant('${esc(e)}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.74rem">✕ Remove</button></div>`;
+    });
+    el.innerHTML = html;
+  } catch(_){
+    el.innerHTML = '';
+  }
+}
+
+window.removeAdminGrant = async email => {
+  if(!confirm('Remove admin access for ' + email + '?')) return;
+  await deleteDoc(doc(db,'admins', email));
+  loadGrantList();
+  loadAdminsList();
+};
+
+window.doGrant = async () => {
+  const email = $('g-em').value.trim().toLowerCase();
+  const btn = $('bt-g');
+  if(!email || !email.includes('@')){
+    alertMsg('g-al', 'Enter a valid email address.');
+    return;
+  }
+  if(email === SUPER_ADMIN){
+    alertMsg('g-al', 'That is already the super admin!');
+    return;
+  }
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    await setDoc(doc(db,'admins', email), {
+      email, grantedBy: CU.email, grantedAt: serverTimestamp()
+    });
+    alertMsg('g-al', '✅ Admin access granted to ' + email + '! They see admin panel on next login.', 'ok');
+    $('g-em').value = '';
+    loadGrantList();
+    loadAdminsList();
+  } catch(e){
+    alertMsg('g-al', 'Failed: ' + e.message);
+  }
+  btn.textContent = '✅ Grant Access'; btn.disabled = false;
+};
+
+</script>
+
+<script>
+// ── Navigation (non-module, plain script) ──
+function $$(id){ return document.getElementById(id); }
+
+function loginTab(tab){
+  $$('pg-in').style.display = tab === 'in' ? 'block' : 'none';
+  $$('pg-rg').style.display = tab === 'rg' ? 'block' : 'none';
+  $$('t-in').classList.toggle('active', tab === 'in');
+  $$('t-rg').classList.toggle('active', tab === 'rg');
+  $$('la').className = 'alert';
+  if(tab === 'rg'){
+    $$('rg-1').style.display = 'block';
+    $$('rg-2').style.display = 'none';
+  }
+}
+window.loginTab = loginTab;
+
+function stuTab(sec, btn){
+  document.querySelectorAll('.bnav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sub').forEach(s => s.classList.remove('active'));
+  $$('ss-' + sec).classList.add('active');
+}
+window.stuTab = stuTab;
+
+function admTab(sec, btn){
+  document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  $$('as-' + sec).classList.add('active');
+  if(sec === 'batches' && typeof showBatchList === 'function'){
+    showBatchList();
+  }
+}
+window.admTab = admTab;
 </script>
 </body>
 </html>
