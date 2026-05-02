@@ -1004,8 +1004,19 @@ window.sendOTP = async () => {
   btn.innerHTML = '<span class="spin"></span>Sending...'; btn.disabled = true;
 
   try {
-    if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-    $('recaptcha-container').innerHTML = '';
+    // Properly clear any existing reCAPTCHA
+    if(window._rcv){
+      try { window._rcv.clear(); } catch(_){}
+      window._rcv = null;
+    }
+    // Reset the container completely - remove and recreate
+    const oldContainer = $('recaptcha-container');
+    const newContainer = document.createElement('div');
+    newContainer.id = 'recaptcha-container';
+    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
+    // Small delay to let DOM settle
+    await new Promise(r => setTimeout(r, 100));
+    // Create new verifier
     window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
     await window._rcv.render();
     confirmRes = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
@@ -1022,7 +1033,7 @@ window.sendOTP = async () => {
     if(e.code === 'auth/invalid-phone-number') m = 'Invalid phone number. Enter digits only without leading 0 (e.g. 761234567).';
     if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait a few minutes.';
     if(e.code === 'auth/operation-not-allowed') m = 'SMS not enabled for this region. Contact admin.';
-    if(e.code === 'auth/captcha-check-failed') m = 'reCAPTCHA failed. Please refresh the page and try again.';
+    if(e.code === 'auth/captcha-check-failed' || e.message.includes('reCAPTCHA') || e.message.includes('captcha')) m = 'reCAPTCHA verification failed. This usually fixes itself — please wait 5 seconds and try again, or reload the page.';
     alertMsg('la', m, 'err', true);
     if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
   }
@@ -1075,8 +1086,15 @@ window.resendOTP = async () => {
   if(!window._rgData) return;
   $('rs-a').style.display = 'none';
   try {
-    if(window._rcv){ try { window._rcv.clear(); } catch(_){} }
-    $('recaptcha-container').innerHTML = '';
+    if(window._rcv){
+      try { window._rcv.clear(); } catch(_){}
+      window._rcv = null;
+    }
+    const oldContainer = $('recaptcha-container');
+    const newContainer = document.createElement('div');
+    newContainer.id = 'recaptcha-container';
+    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
+    await new Promise(r => setTimeout(r, 100));
     window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
     await window._rcv.render();
     confirmRes = await signInWithPhoneNumber(auth, window._rgData.phone, window._rcv);
