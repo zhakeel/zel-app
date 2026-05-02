@@ -745,8 +745,9 @@ select.dark-input option { background:#0d1117; color:white; }
 
     <div class="admin-topbar">
       <div class="brand">ZEL <span class="admin-badge">Admin</span></div>
-      <div style="display:flex;align-items:center;gap:.75rem">
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
         <span id="admin-name-display" style="color:#8b949e;font-size:.75rem"></span>
+        <button id="btn-grant-admin-top" onclick="openGrantAdminModal()" style="display:none;background:rgba(0,180,216,.15);border:1px solid var(--accent);color:var(--accent);padding:.35rem .8rem;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:background .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.15)'">👑 Grant Admin</button>
         <button class="btn-logout" onclick="doLogout()">Logout</button>
       </div>
     </div>
@@ -904,10 +905,15 @@ select.dark-input option { background:#0d1117; color:white; }
 <!-- ══ MODALS ══ -->
 <div class="modal-overlay" id="modal-photo">
   <div class="modal">
-    <h3>📷 Upload Photo</h3>
-    <input type="file" class="dark-input" id="upload-photo" accept="image/*" style="background:var(--sky); color:var(--ink); border:1.5px solid var(--border);">
-    <button class="btn-main" onclick="uploadPhoto()">Upload</button>
-    <button class="btn-close" onclick="closeModal('modal-photo')">Cancel</button>
+    <button class="modal-close" onclick="closeModal('modal-photo')">✕</button>
+    <h3>📷 Update Profile Photo</h3>
+    <div id="photo-alert" class="alert"></div>
+    <label style="width:110px;height:110px;border-radius:50%;background:var(--sky);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 1rem;overflow:hidden;position:relative;transition:border-color .2s" for="upload-photo-input" id="upload-photo-label" onmouseover="this.style.borderColor='var(--ocean)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:2rem;color:var(--muted)" id="upload-photo-icon">📷</span>
+      <input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">
+    </label>
+    <div style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
+    <button class="btn-main" onclick="saveStudentPhoto()" id="btn-save-photo">Save Photo</button>
   </div>
 </div>
 
@@ -986,6 +992,8 @@ onAuthStateChanged(auth, async (user) => {
       if (_admEl) _admEl.textContent = user.email;
       const _tabBtn = document.getElementById('admins-tab-btn');
       if (_tabBtn) _tabBtn.style.display = (user.email === SUPER_ADMIN) ? 'block' : 'none';
+      const _grantBtn = document.getElementById('btn-grant-admin-top');
+      if (_grantBtn) _grantBtn.style.display = (user.email === SUPER_ADMIN) ? 'block' : 'none';
       if (user.email === SUPER_ADMIN) { try { loadAdmins(); } catch(e) {} }
     } else {
       showScreen('dashboard');
@@ -1074,10 +1082,14 @@ async function loadStudentData(user) {
       d.enrolledAt.toDate().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
   }
 
-  if (d.photoURL) {
-    document.getElementById('id-photo-img').src = d.photoURL;
-    document.getElementById('id-photo-img').style.display = 'block';
-    document.getElementById('id-photo-placeholder').style.display = 'none';
+  const photoSrc = d.photo || d.photoURL || '';
+  if (photoSrc) {
+    const imgEl = document.getElementById('id-photo-img');
+    const phEl  = document.getElementById('id-photo-placeholder');
+    const avEl  = document.getElementById('dash-avatar');
+    if (imgEl) { imgEl.src = photoSrc; imgEl.style.display = 'block'; }
+    if (phEl)  { phEl.style.display = 'none'; }
+    if (avEl)  { avEl.innerHTML = '<img src="'+photoSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; }
   }
 }
 
@@ -1310,7 +1322,13 @@ window.deleteStudent = async (uid) => {
 
 let uploadTargetStudentId = null;
 window.openPhotoModal = (uid) => {
-  uploadTargetStudentId = uid;
+  uploadTargetStudentId = uid || (currentUser ? currentUser.uid : null);
+  _pendingStudentPhoto = null;
+  // Reset modal UI
+  const lbl = document.getElementById('upload-photo-label');
+  if (lbl) lbl.innerHTML = '<span style="font-size:2rem;color:var(--muted)">📷</span><input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">';
+  const alert = document.getElementById('photo-alert');
+  if (alert) alert.className = 'alert';
   document.getElementById('modal-photo').classList.add('open');
 };
 
@@ -1318,18 +1336,55 @@ window.closeModal = (id) => {
   document.getElementById(id).classList.remove('open');
 };
 
-window.uploadPhoto = async () => {
-  const file = document.getElementById('upload-photo').files[0];
-  if (!file) { alert('Please select a photo'); return; }
+// ── Student photo preview & save ──
+let _pendingStudentPhoto = null;
+
+window.previewStudentPhoto = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  showPhotoAlert('Processing image...', 'info');
   try {
-    const storageRef = ref(storage, `students/${uploadTargetStudentId}.jpg`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    await updateDoc(doc(db,'students',uploadTargetStudentId), { photoURL: url });
-    alert('✅ Photo uploaded!');
-    closeModal('modal-photo');
-    openStudentDetail(uploadTargetStudentId);
-  } catch(e) { alert('Upload failed: ' + e.message); }
+    _pendingStudentPhoto = await resizeImage(f, 400, 0.7);
+    const lbl = document.getElementById('upload-photo-label');
+    lbl.innerHTML = '<img src="' + _pendingStudentPhoto + '" style="width:100%;height:100%;object-fit:cover"><input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">';
+    showPhotoAlert('✅ Ready — tap Save Photo', 'success');
+  } catch(err) { showPhotoAlert('Error: ' + err.message, 'error'); _pendingStudentPhoto = null; }
+};
+
+function showPhotoAlert(msg, type) {
+  const el = document.getElementById('photo-alert');
+  if (!el) return;
+  el.className = 'alert ' + type; el.textContent = msg;
+  if (type !== 'error') setTimeout(() => { el.className = 'alert'; }, 4000);
+}
+
+window.saveStudentPhoto = async () => {
+  const btn = document.getElementById('btn-save-photo');
+  if (!_pendingStudentPhoto) { showPhotoAlert('Please choose a photo first.', 'error'); return; }
+  if (!currentUser) { showPhotoAlert('Not logged in.', 'error'); return; }
+  btn.innerHTML = '<span class="loader"></span> Saving...'; btn.disabled = true;
+  try {
+    const targetId = uploadTargetStudentId || currentUser.uid;
+    await updateDoc(doc(db,'students', targetId), { photo: _pendingStudentPhoto });
+    // If updating own photo, refresh dashboard
+    if (targetId === currentUser.uid && currentUserData) {
+      currentUserData.photo = _pendingStudentPhoto;
+      loadStudentData(currentUser);
+    }
+    showPhotoAlert('✅ Photo saved!', 'success');
+    setTimeout(() => {
+      closeModal('modal-photo');
+      if (uploadTargetStudentId && uploadTargetStudentId !== currentUser.uid) {
+        openStudentDetail(uploadTargetStudentId);
+      }
+      _pendingStudentPhoto = null;
+      uploadTargetStudentId = null;
+    }, 800);
+  } catch(e) {
+    let msg = 'Save failed: ' + e.message;
+    if (e.code === 'permission-denied') msg = 'Permission denied — check Firestore rules.';
+    showPhotoAlert(msg, 'error');
+  }
+  btn.innerHTML = 'Save Photo'; btn.disabled = false;
 };
 
 async function loadStudentDropdowns() {
@@ -1582,8 +1637,14 @@ window.previewRegPhoto = async (e) => {
     const data = await resizeImage(f, 400, 0.7);
     window._regPhoto = data;
     const lbl = document.getElementById('reg-photo-label');
-    lbl.innerHTML = '<img src="'+data+'" style="width:100%;height:100%;object-fit:cover"><input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">';
-  } catch(err) { console.error(err); }
+    if (lbl) {
+      lbl.style.border = '2px solid var(--ocean)';
+      lbl.innerHTML = '<img src="'+data+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">';
+    }
+  } catch(err) {
+    alert('Could not load image. Try a smaller photo.');
+    console.error(err);
+  }
 };
 
 window.sendOTP = async () => {
@@ -1706,6 +1767,68 @@ window.otpBack = (e, i) => {
     document.getElementById('otp'+(i-1)).focus();
 };
 
+// ══ GRANT ADMIN MODAL ══
+window.openGrantAdminModal = () => {
+  const inp = document.getElementById('grant-admin-email');
+  if (inp) inp.value = '';
+  const al = document.getElementById('grant-admin-alert');
+  if (al) al.className = 'alert';
+  document.getElementById('modal-grant-admin').classList.add('open');
+  loadCurrentAdminsMini();
+  setTimeout(() => { if (inp) inp.focus(); }, 150);
+};
+
+async function loadCurrentAdminsMini() {
+  const el = document.getElementById('current-admins-mini');
+  if (!el) return;
+  try {
+    const snap = await getDocs(collection(db,'admins'));
+    if (snap.empty) {
+      el.innerHTML = '<div style="color:#8b949e;font-size:.78rem;margin-top:.75rem">No extra admins yet.</div>';
+      return;
+    }
+    const emails = [];
+    snap.forEach(d => emails.push(d.data().email));
+    el.innerHTML = '<div style="margin-top:.75rem;margin-bottom:.4rem;color:#8b949e;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Current Admins</div>' +
+      emails.map(e => '<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid #30363d"><span style="color:white;font-size:.82rem">' + escapeHtml(e) + '</span><button onclick="removeAdminMini('' + escapeHtml(e) + '')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.75rem;padding:0 .35rem">✕ Remove</button></div>').join('');
+  } catch(e) { el.innerHTML = ''; }
+}
+
+window.removeAdminMini = async (email) => {
+  if (!confirm('Remove admin access for ' + email + '?')) return;
+  try {
+    await deleteDoc(doc(db,'admins',email));
+    loadCurrentAdminsMini();
+    showGrantAlert('✅ Removed: ' + email, 'success');
+    try { loadAdmins(); } catch(e) {}
+  } catch(e) { showGrantAlert('Failed: ' + e.message, 'error'); }
+};
+
+window.grantAdminFromModal = async () => {
+  const email = document.getElementById('grant-admin-email').value.trim().toLowerCase();
+  const btn = document.getElementById('btn-do-grant');
+  if (!email || !email.includes('@')) { showGrantAlert('Enter a valid email address.', 'error'); return; }
+  if (email === SUPER_ADMIN) { showGrantAlert('That is already the super admin!', 'error'); return; }
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    await setDoc(doc(db,'admins',email), {
+      email, grantedBy: currentUser.email, grantedAt: serverTimestamp()
+    });
+    showGrantAlert('✅ Admin granted to ' + email + '! They see the admin panel on next login.', 'success');
+    document.getElementById('grant-admin-email').value = '';
+    loadCurrentAdminsMini();
+    try { loadAdmins(); } catch(e) {}
+  } catch(e) { showGrantAlert('Failed: ' + e.message, 'error'); }
+  btn.textContent = '✅ Grant Access'; btn.disabled = false;
+};
+
+function showGrantAlert(msg, type) {
+  const el = document.getElementById('grant-admin-alert');
+  if (!el) return;
+  el.className = 'alert ' + type; el.textContent = msg;
+  if (type !== 'error') setTimeout(() => { el.className = 'alert'; }, 5000);
+}
+
 </script>
 
 <script>
@@ -1739,6 +1862,21 @@ window.adminTab = (tab, btn) => {
   if (tab === 'admins') { try { loadAdmins(); } catch(e){} }
 };
 </script>
+
+<!-- GRANT ADMIN MODAL -->
+<div class="modal-overlay" id="modal-grant-admin">
+  <div class="modal dark" style="max-width:380px">
+    <button class="modal-close" onclick="closeModal('modal-grant-admin')" style="color:#8b949e">✕</button>
+    <h3 style="color:white;margin-bottom:.5rem">👑 Grant Admin Access</h3>
+    <p style="color:#8b949e;font-size:.8rem;margin-bottom:1.25rem;line-height:1.6">Enter the email of a person who already has an account in ZEL. They will see the admin panel on their next login.</p>
+    <div id="grant-admin-alert" class="alert"></div>
+    <input type="email" id="grant-admin-email" placeholder="Enter their email address..." style="width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:.75rem 1rem;color:white;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;margin-bottom:.75rem;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#30363d'">
+    <button onclick="grantAdminFromModal()" id="btn-do-grant" style="width:100%;background:var(--accent);color:#0d1117;border:none;border-radius:8px;padding:.8rem;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s;letter-spacing:.05em" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">✅ Grant Access</button>
+    <div style="margin-top:1rem">
+      <div id="current-admins-mini" style="color:#8b949e;font-size:.78rem"></div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
