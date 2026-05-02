@@ -373,9 +373,8 @@ textarea.di{min-height:78px;resize:vertical}
    <button class="btn" id="bt-li" onclick="doLogin()">Sign In</button>
   </div>
 
-  <!-- REGISTER STEP 1 -->
+  <!-- REGISTER -->
   <div id="pg-rg" style="display:none">
-   <div id="rg-1">
     <!-- Photo -->
     <div style="text-align:center;margin-bottom:.85rem">
      <div class="pc" id="rg-pc" onclick="document.getElementById('rg-pf').click()">📷</div>
@@ -401,35 +400,15 @@ textarea.di{min-height:78px;resize:vertical}
       <input class="ph-num" type="tel" id="rg-ph" placeholder="761234567" autocomplete="tel">
      </div>
     </div>
-    <div class="fg"><label>Email Address</label><input type="email" id="rg-em" placeholder="your@email.com" autocomplete="email"></div>
-    <div class="fg"><label>Batch</label>
+    <div class="fg"><label>Email Address *</label><input type="email" id="rg-em" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
      </select>
     </div>
-    <div class="fg"><label>Password (min. 6 chars)</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
-    <div id="recaptcha-container"></div>
-    <button class="btn" id="bt-otp" onclick="sendOTP()">Send OTP via SMS →</button>
-   </div>
-
-   <!-- REGISTER STEP 2: OTP -->
-   <div id="rg-2" style="display:none">
-    <div class="otp-info">
-     <strong id="otp-ph">Code sent!</strong>
-     <span>Enter the 6-digit SMS code below</span>
-    </div>
-    <div class="otp-row">
-     <input class="otp-box" type="tel" maxlength="1" id="o0" oninput="otpIn(0)" onkeydown="otpBk(event,0)" autocomplete="one-time-code">
-     <input class="otp-box" type="tel" maxlength="1" id="o1" oninput="otpIn(1)" onkeydown="otpBk(event,1)">
-     <input class="otp-box" type="tel" maxlength="1" id="o2" oninput="otpIn(2)" onkeydown="otpBk(event,2)">
-     <input class="otp-box" type="tel" maxlength="1" id="o3" oninput="otpIn(3)" onkeydown="otpBk(event,3)">
-     <input class="otp-box" type="tel" maxlength="1" id="o4" oninput="otpIn(4)" onkeydown="otpBk(event,4)">
-     <input class="otp-box" type="tel" maxlength="1" id="o5" oninput="otpIn(5)" onkeydown="otpBk(event,5)">
-    </div>
-    <button class="btn" id="bt-vf" onclick="verifyOTP()">Verify &amp; Create Account</button>
-    <button class="btn-ol" onclick="backToReg1()">← Change Details</button>
-    <div class="resend"><span id="rs-tm">Resend in <b id="rs-n">30</b>s</span><a id="rs-a" style="display:none" onclick="resendOTP()">↺ Resend OTP</a></div>
-   </div>
+    <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
+    <button class="btn" id="bt-rg" onclick="doRegister()">Create Account</button>
+    <p style="text-align:center;font-size:.74rem;color:var(--muted);margin-top:.85rem">After registering, sign in with your email and password.</p>
   </div>
  </div>
 </div>
@@ -762,8 +741,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut, onAuthStateChanged, EmailAuthProvider,
-  reauthenticateWithCredential, updatePassword,
-  RecaptchaVerifier, signInWithPhoneNumber
+  reauthenticateWithCredential, updatePassword
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, updateDoc,
@@ -974,161 +952,63 @@ window.onRegPhoto = async e => {
   }
 };
 
-// ══ PHONE OTP ══
-window.sendOTP = async () => {
+// ══ EMAIL/PASSWORD REGISTER ══
+window.doRegister = async () => {
   const name = $('rg-nm').value.trim();
   const cc = $('rg-cc').value;
   const raw = $('rg-ph').value.trim();
   const email = $('rg-em').value.trim();
   const batch = $('rg-ba').value;
   const pass = $('rg-pw').value;
-  const btn = $('bt-otp');
+  const btn = $('bt-rg');
 
-  if(!name || !raw || !batch || !pass){
-    alertMsg('la', 'Please fill in all required fields (Name, Phone, Batch, Password).');
+  if(!name || !email || !batch || !pass){
+    alertMsg('la', 'Please fill in all required fields (Name, Email, Batch, Password).');
+    return;
+  }
+  if(!email.includes('@')){
+    alertMsg('la', 'Please enter a valid email address.');
     return;
   }
   if(pass.length < 6){
     alertMsg('la', 'Password must be at least 6 characters.');
     return;
   }
-  if(email && !email.includes('@')){
-    alertMsg('la', 'Please enter a valid email or leave it empty.');
-    return;
+
+  // Format phone
+  let fullPhone = '';
+  if(raw){
+    let phone = raw.replace(/\D/g, '');
+    if(phone.startsWith('0')) phone = phone.substring(1);
+    fullPhone = cc + phone;
   }
 
-  let phone = raw.replace(/\D/g, '');
-  if(phone.startsWith('0')) phone = phone.substring(1);
-  const fullPhone = cc + phone;
-
-  btn.innerHTML = '<span class="spin"></span>Sending...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Creating account...'; btn.disabled = true;
 
   try {
-    // Properly clear any existing reCAPTCHA
-    if(window._rcv){
-      try { window._rcv.clear(); } catch(_){}
-      window._rcv = null;
-    }
-    // Reset the container completely - remove and recreate
-    const oldContainer = $('recaptcha-container');
-    const newContainer = document.createElement('div');
-    newContainer.id = 'recaptcha-container';
-    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
-    // Small delay to let DOM settle
-    await new Promise(r => setTimeout(r, 100));
-    // Create new verifier
-    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    await window._rcv.render();
-    confirmRes = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
-
-    window._rgData = { name, phone: fullPhone, email, batch, pass, photo: regPhoto || '' };
-    $('otp-ph').textContent = 'Code sent to ' + fullPhone;
-    $('rg-1').style.display = 'none';
-    $('rg-2').style.display = 'block';
-    setTimeout(()=>$('o0').focus(), 100);
-    startResend();
-    alertMsg('la', 'OTP sent! Check your phone.', 'ok');
-  } catch(e){
-    let m = 'Could not send OTP: ' + e.message;
-    if(e.code === 'auth/invalid-phone-number') m = 'Invalid phone number. Enter digits only without leading 0 (e.g. 761234567).';
-    if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait a few minutes.';
-    if(e.code === 'auth/operation-not-allowed') m = 'SMS not enabled for this region. Contact admin.';
-    if(e.code === 'auth/captcha-check-failed' || e.message.includes('reCAPTCHA') || e.message.includes('captcha')) m = 'reCAPTCHA verification failed. This usually fixes itself — please wait 5 seconds and try again, or reload the page.';
-    alertMsg('la', m, 'err', true);
-    if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-  }
-  btn.innerHTML = 'Send OTP via SMS →'; btn.disabled = false;
-};
-
-window.verifyOTP = async () => {
-  const code = [0,1,2,3,4,5].map(i=>$('o'+i).value).join('');
-  const btn = $('bt-vf');
-  if(code.length !== 6){ alertMsg('la', 'Please enter all 6 digits.'); return; }
-  if(!confirmRes){ alertMsg('la', 'Please request OTP first.'); return; }
-  btn.innerHTML = '<span class="spin"></span>Verifying...'; btn.disabled = true;
-  try {
-    const result = await confirmRes.confirm(code);
-    const d = window._rgData;
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const sid = await nextStudentId();
-    await setDoc(doc(db, 'students', result.user.uid), {
-      name: d.name,
-      nameLower: d.name.toLowerCase(),
-      phone: d.phone,
-      email: d.email || '',
-      course: d.batch,
+    await setDoc(doc(db, 'students', cred.user.uid), {
+      name: name,
+      nameLower: name.toLowerCase(),
+      phone: fullPhone,
+      email: email,
+      course: batch,
       studentId: sid,
-      photo: d.photo || '',
+      photo: regPhoto || '',
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
-    alertMsg('la', `✅ Account created! Your Student ID: ${sid}`, 'ok', true);
-    clearInterval(resendTimer);
-    // Note: user is now signed in via phone — they'll auto-route to dashboard via onAuthStateChanged
+    alertMsg('la', `\u2705 Account created! Your Student ID: ${sid}`, 'ok', true);
+    // User is now logged in automatically — onAuthStateChanged will route to dashboard
   } catch(e){
-    let m = 'Invalid OTP. Please try again.';
-    if(e.code === 'auth/code-expired') m = 'OTP expired. Please tap Resend.';
-    if(e.code === 'auth/invalid-verification-code') m = 'Wrong code. Please check and try again.';
+    let m = 'Registration failed: ' + e.message;
+    if(e.code === 'auth/email-already-in-use') m = 'This email is already registered. Please sign in instead.';
+    if(e.code === 'auth/invalid-email') m = 'Please enter a valid email address.';
+    if(e.code === 'auth/weak-password') m = 'Password is too weak. Use at least 6 characters.';
     alertMsg('la', m);
   }
-  btn.innerHTML = 'Verify &amp; Create Account'; btn.disabled = false;
-};
-
-window.backToReg1 = () => {
-  $('rg-2').style.display = 'none';
-  $('rg-1').style.display = 'block';
-  clearInterval(resendTimer);
-  if(window._rcv){ try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-  $('recaptcha-container').innerHTML = '';
-  for(let i=0;i<6;i++) $('o'+i).value='';
-};
-
-window.resendOTP = async () => {
-  if(!window._rgData) return;
-  $('rs-a').style.display = 'none';
-  try {
-    if(window._rcv){
-      try { window._rcv.clear(); } catch(_){}
-      window._rcv = null;
-    }
-    const oldContainer = $('recaptcha-container');
-    const newContainer = document.createElement('div');
-    newContainer.id = 'recaptcha-container';
-    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
-    await new Promise(r => setTimeout(r, 100));
-    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    await window._rcv.render();
-    confirmRes = await signInWithPhoneNumber(auth, window._rgData.phone, window._rcv);
-    startResend();
-    alertMsg('la', 'OTP resent!', 'ok');
-  } catch(e){
-    alertMsg('la', 'Could not resend: ' + e.message);
-  }
-};
-
-function startResend(){
-  clearInterval(resendTimer);
-  let t = 30;
-  $('rs-n').textContent = t;
-  $('rs-tm').style.display = 'inline';
-  $('rs-a').style.display = 'none';
-  resendTimer = setInterval(() => {
-    t--;
-    $('rs-n').textContent = t;
-    if(t <= 0){
-      clearInterval(resendTimer);
-      $('rs-tm').style.display = 'none';
-      $('rs-a').style.display = 'inline';
-    }
-  }, 1000);
-}
-
-window.otpIn = i => {
-  const v = $('o'+i).value;
-  if(v && i < 5) $('o'+(i+1)).focus();
-  if([0,1,2,3,4,5].every(j=>$('o'+j).value)) verifyOTP();
-};
-window.otpBk = (e, i) => {
-  if(e.key === 'Backspace' && !$('o'+i).value && i > 0) $('o'+(i-1)).focus();
+  btn.innerHTML = 'Create Account'; btn.disabled = false;
 };
 
 // ══ STUDENT UI ══
@@ -1986,10 +1866,6 @@ function loginTab(tab){
   $$('t-in').classList.toggle('active', tab === 'in');
   $$('t-rg').classList.toggle('active', tab === 'rg');
   $$('la').className = 'alert';
-  if(tab === 'rg'){
-    $$('rg-1').style.display = 'block';
-    $$('rg-2').style.display = 'none';
-  }
 }
 window.loginTab = loginTab;
 
