@@ -535,6 +535,11 @@ select.dark-input option { background:#0d1117; color:white; }
     <div id="tab-register" style="display:none;">
       <!-- Step 1 -->
       <div id="reg-step1">
+        <label class="photo-upload" for="reg-photo-input" id="reg-photo-label" style="width:90px;height:90px;border-radius:50%;background:var(--sky);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto .75rem;overflow:hidden;position:relative">
+          <span style="font-size:1.5rem;color:var(--muted)" id="reg-photo-icon">📷</span>
+          <input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">
+        </label>
+        <div style="text-align:center;font-size:.7rem;color:var(--muted);margin-bottom:.75rem">Profile photo (optional)</div>
         <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
         <div class="form-group">
           <label>Phone / WhatsApp</label>
@@ -557,6 +562,7 @@ select.dark-input option { background:#0d1117; color:white; }
           <option value="">Select batch...</option>
           <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
         </select></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@gmail.com"></div>
         <div class="form-group"><label>Password (min. 6 chars)</label><input type="password" id="reg-password" placeholder="Create a password"></div>
         <div id="recaptcha-container"></div>
         <button class="btn-main" onclick="sendOTP()" id="btn-send-otp">Send OTP via SMS &rarr;</button>
@@ -1199,7 +1205,7 @@ async function loadBatches() {
     const snap = await getDocs(collection(db,'students'));
     const batches = {};
     snap.forEach(d => {
-      const batch = d.data().batch || 'Unknown';
+      const batch = d.data().course || d.data().batch || 'Unknown';
       batches[batch] = (batches[batch] || 0) + 1;
     });
     document.getElementById('stat-total').textContent = snap.size;
@@ -1225,7 +1231,7 @@ window.openBatch = async (batch) => {
   const list = document.getElementById('batch-students-list');
   list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
   try {
-    const q = query(collection(db,'students'), where('batch','==',batch));
+    const q = query(collection(db,'students'), where('course','==',batch));
     const snap = await getDocs(q);
     if (snap.empty) {
       list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch</div>';
@@ -1570,6 +1576,16 @@ window.removeAdmin = async email => {
 
 
 // ══ PHONE OTP ══
+window.previewRegPhoto = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const data = await resizeImage(f, 400, 0.7);
+    window._regPhoto = data;
+    const lbl = document.getElementById('reg-photo-label');
+    lbl.innerHTML = '<img src="'+data+'" style="width:100%;height:100%;object-fit:cover"><input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">';
+  } catch(err) { console.error(err); }
+};
+
 window.sendOTP = async () => {
   const name = document.getElementById('reg-name').value.trim();
   const cc   = document.getElementById('reg-country').value;
@@ -1599,7 +1615,8 @@ window.sendOTP = async () => {
     document.getElementById('reg-step2').style.display = 'block';
     document.getElementById('otp-phone-shown').textContent = 'Code sent to ' + fullPhone;
     document.getElementById('otp0').focus();
-    window._pendingReg = { name, phone: fullPhone, course, pass };
+    const regEmail = document.getElementById('reg-email') ? document.getElementById('reg-email').value.trim() : '';
+    window._pendingReg = { name, phone: fullPhone, course, pass, email: regEmail, photo: window._regPhoto || '' };
     startResendTimer();
   } catch(e) {
     let msg = 'Could not send OTP: ' + e.message;
@@ -1623,8 +1640,8 @@ window.verifyOTP = async () => {
     const studentId = await generateStudentId();
     await setDoc(doc(db,'students',result.user.uid), {
       name: reg.name, nameLower: reg.name.toLowerCase(),
-      phone: reg.phone, email: result.user.email || '',
-      course: reg.course, studentId, photo: '',
+      phone: reg.phone, email: reg.email || result.user.email || '',
+      course: reg.course, studentId, photo: reg.photo || '',
       enrolledAt: serverTimestamp(), role: 'student'
     });
     showAlert('login-alert', '\u2705 Account created! Your ID: ' + studentId, 'success');
@@ -1718,6 +1735,8 @@ window.adminTab = (tab, btn) => {
   btn.classList.add('active');
   document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   document.getElementById('section-'+tab).classList.add('active');
+  if (tab === 'batches') { try { loadBatches(); } catch(e){} }
+  if (tab === 'admins') { try { loadAdmins(); } catch(e){} }
 };
 </script>
 
