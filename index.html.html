@@ -2,1881 +2,1571 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="theme-color" content="#064e73">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <title>ZEL — Zone for English Learners</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ocean:#0a6e9f; --ocean-dark:#064e73; --ocean-deep:#03324a;
-  --accent:#00b4d8; --sky:#e8f4fb; --sky-mid:#bde0f5;
-  --white:#ffffff; --ink:#0d1f2d; --muted:#5a7d94;
-  --border:rgba(10,110,159,0.2);
-  --success:#16a34a; --danger:#dc2626; --warning:#d97706;
+:root{
+  --ocean:#0a6e9f;--ocean-dark:#064e73;--ocean-deep:#03324a;
+  --accent:#00b4d8;--sky:#e8f4fb;--white:#fff;
+  --ink:#0d1f2d;--muted:#5a7d94;--border:rgba(10,110,159,.2);
+  --success:#16a34a;--danger:#dc2626;--warn:#d97706;
 }
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'DM Sans',sans-serif; background:var(--sky); color:var(--ink); overflow-x:hidden; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--ink);overflow-x:hidden}
 
-.screen { display:none; min-height:100vh; }
-.screen.active { display:flex; }
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh}.screen.active{display:flex}
 
-/* ══ LOGIN SCREEN ══ */
-#screen-login {
-  flex-direction:column; align-items:center; justify-content:center;
-  background:linear-gradient(145deg, var(--ocean-deep) 0%, var(--ocean-dark) 60%, var(--ocean) 100%);
-  padding:2rem 1.5rem; position:relative; overflow:hidden;
-}
-#screen-login::before {
-  content:''; position:absolute; width:500px; height:500px; border-radius:50%;
-  border:1px solid rgba(255,255,255,0.06); top:-150px; right:-150px;
-}
-#screen-login::after {
-  content:''; position:absolute; width:300px; height:300px; border-radius:50%;
-  background:rgba(0,180,216,0.07); bottom:-100px; left:-80px;
-}
+/* ── LOGIN ── */
+#scr-login{flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,var(--ocean-deep),var(--ocean-dark) 55%,var(--ocean));
+  padding:2rem 1.5rem;position:relative;overflow:hidden}
+#scr-login::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.06);top:-150px;right:-150px}
+.login-card{background:rgba(255,255,255,.97);border-radius:20px;padding:2.5rem 2rem;
+  width:100%;max-width:400px;box-shadow:0 30px 80px rgba(0,0,0,.35);
+  position:relative;z-index:2;animation:slideUp .5s ease both}
+.brand-logo{text-align:center;margin-bottom:1.75rem}
+.brand-logo .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);
+  display:inline-block;margin-right:.4rem;vertical-align:middle}
+.brand-logo h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;
+  color:var(--ocean-dark);display:inline}
+.brand-logo p{font-size:.75rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:.3rem}
+.tab-row{display:flex;background:var(--sky);border-radius:10px;padding:4px;margin-bottom:1.75rem;gap:4px}
+.tab-btn{flex:1;padding:.6rem;border:none;border-radius:7px;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s}
+.tab-btn.active{background:#fff;color:var(--ocean-dark);box-shadow:0 2px 8px rgba(10,110,159,.15)}
+.fgroup{margin-bottom:1rem}
+.fgroup label{display:block;font-size:.73rem;font-weight:600;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem}
+.fgroup input,.fgroup select{width:100%;background:var(--sky);border:1.5px solid var(--border);
+  border-radius:10px;padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;
+  color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
+.fgroup input:focus,.fgroup select:focus{border-color:var(--ocean);
+  box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
+.btn-main{width:100%;background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));color:#fff;
+  border:none;border-radius:50px;padding:.85rem;font-family:'DM Sans',sans-serif;font-size:.88rem;
+  font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;
+  transition:opacity .2s,transform .2s;box-shadow:0 4px 20px rgba(10,110,159,.3)}
+.btn-main:hover{opacity:.9;transform:translateY(-1px)}
+.btn-main:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-outline{width:100%;background:transparent;color:var(--ocean-dark);
+  border:1.5px solid var(--border);border-radius:50px;padding:.72rem;
+  font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;margin-top:.5rem;transition:all .2s}
+.btn-outline:hover{border-color:var(--ocean);background:var(--sky)}
+.alert{padding:.75rem 1rem;border-radius:8px;font-size:.82rem;margin-bottom:1rem;
+  display:none;word-break:break-word;line-height:1.5}
+.alert.err{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;display:block}
+.alert.ok{background:#f0fdf4;border:1px solid #86efac;color:#15803d;display:block}
+.alert.info{background:#eff6ff;border:1px solid #93c5fd;color:#1e40af;display:block}
 
-.login-card {
-  background:rgba(255,255,255,0.97); border-radius:20px; padding:2.5rem 2rem;
-  width:100%; max-width:400px; box-shadow:0 30px 80px rgba(0,0,0,0.35);
-  position:relative; z-index:2; animation:slideUp 0.5s ease both;
-}
+/* OTP */
+.otp-wrap{display:none}.otp-wrap.show{display:block}
+.otp-info{text-align:center;margin-bottom:1.25rem}
+.otp-info strong{display:block;font-size:.95rem;color:var(--ocean-dark);font-weight:600;margin-bottom:.25rem}
+.otp-info span{font-size:.78rem;color:var(--muted)}
+.otp-boxes{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.25rem}
+.otp-box{width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;
+  background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;
+  color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+.otp-box:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
+.resend-row{text-align:center;margin-top:.6rem;font-size:.78rem;color:var(--muted)}
+.resend-link{color:var(--ocean);cursor:pointer;display:none}
+.resend-link:hover{text-decoration:underline}
 
-.login-logo { text-align:center; margin-bottom:1.75rem; }
-.login-logo .dot {
-  width:12px; height:12px; border-radius:50%; background:var(--accent);
-  display:inline-block; margin-right:0.4rem; vertical-align:middle;
-}
-.login-logo h1 {
-  font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600;
-  color:var(--ocean-dark); display:inline;
-}
-.login-logo p {
-  font-size:0.75rem; color:var(--muted); letter-spacing:0.15em;
-  text-transform:uppercase; margin-top:0.3rem;
-}
+/* phone row */
+.ph-row{display:flex;gap:.5rem}
+.ph-cc{width:100px;flex-shrink:0;background:var(--sky);border:1.5px solid var(--border);
+  border-radius:10px;padding:.75rem .5rem;font-family:'DM Sans',sans-serif;
+  font-size:.85rem;color:var(--ink);outline:none;transition:border-color .2s}
+.ph-cc:focus{border-color:var(--ocean)}
+.ph-num{flex:1;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;
+  padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);
+  outline:none;transition:border-color .2s}
+.ph-num:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(10,110,159,.1);background:#fff}
 
-.login-tabs {
-  display:flex; background:var(--sky); border-radius:10px; padding:4px;
-  margin-bottom:1.75rem; gap:4px;
-}
-.tab-btn {
-  flex:1; padding:0.6rem; border:none; border-radius:7px; background:transparent;
-  font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:500;
-  color:var(--muted); cursor:pointer; transition:all 0.2s;
-}
-.tab-btn.active {
-  background:var(--white); color:var(--ocean-dark);
-  box-shadow:0 2px 8px rgba(10,110,159,0.15);
-}
+/* photo circle */
+.photo-circle{width:90px;height:90px;border-radius:50%;background:var(--sky);
+  border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;margin:0 auto .5rem;overflow:hidden;transition:border-color .2s;position:relative}
+.photo-circle:hover{border-color:var(--ocean)}
+.photo-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.photo-circle-dark{background:#0d1117;border-color:#30363d}
+.photo-circle-dark:hover{border-color:var(--accent)}
 
-.form-group { margin-bottom:1rem; }
-.form-group label {
-  display:block; font-size:0.75rem; font-weight:500; color:var(--muted);
-  letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.4rem;
-}
-.form-group input, .form-group select {
-  width:100%; background:var(--sky); border:1.5px solid var(--border);
-  border-radius:10px; padding:0.75rem 1rem; font-family:'DM Sans',sans-serif;
-  font-size:0.9rem; color:var(--ink); outline:none;
-  transition:border-color 0.2s, box-shadow 0.2s;
-}
-.form-group input:focus, .form-group select:focus {
-  border-color:var(--ocean); box-shadow:0 0 0 3px rgba(10,110,159,0.1);
-  background:white;
-}
+/* ── TOPBAR ── */
+.topbar{background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark));color:#fff;
+  padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;box-shadow:0 4px 20px rgba(3,50,74,.3)}
+.topbar-brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;
+  display:flex;align-items:center;gap:.4rem}
+.topbar-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.top-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);
+  border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.btn-top{border:1px solid rgba(255,255,255,.25);color:#fff;padding:.38rem .85rem;
+  border-radius:50px;font-size:.72rem;font-family:'DM Sans',sans-serif;cursor:pointer;
+  transition:background .2s;white-space:nowrap}
+.btn-top.ghost{background:rgba(255,255,255,.1)}
+.btn-top.ghost:hover{background:rgba(255,255,255,.2)}
+.btn-top.accent{background:rgba(0,180,216,.2);border-color:var(--accent);color:var(--accent);font-weight:600}
+.btn-top.accent:hover{background:rgba(0,180,216,.3)}
 
-.btn-main {
-  width:100%; background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
-  color:white; border:none; border-radius:50px; padding:0.85rem;
-  font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600;
-  letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
-  margin-top:0.5rem; transition:opacity 0.2s, transform 0.2s;
-  box-shadow:0 4px 20px rgba(10,110,159,0.3);
-}
-.btn-main:hover { opacity:0.9; transform:translateY(-1px); }
-.btn-main:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+/* ── STUDENT DASH ── */
+#scr-dash{flex-direction:column;background:var(--sky)}
+.dash-body{padding:1.5rem;max-width:600px;margin:0 auto;width:100%;padding-bottom:88px}
+.welcome-card{background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
+  border-radius:16px;padding:1.5rem;color:#fff;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.welcome-card::after{content:'ZEL';position:absolute;right:-8px;top:-8px;
+  font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;
+  color:rgba(255,255,255,.06);line-height:1;pointer-events:none}
+.welcome-card h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;margin-bottom:.35rem}
+.welcome-card p{font-size:.82rem;opacity:.85;line-height:1.6}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ocean-dark);
+  margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.card{background:#fff;border-radius:14px;padding:1.25rem;margin-bottom:1rem;
+  border:1px solid var(--border);box-shadow:0 2px 12px rgba(10,110,159,.06)}
+.card.accent-top{position:relative;overflow:hidden}
+.card.accent-top::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--ocean-dark),var(--accent))}
 
-.alert {
-  padding:0.75rem 1rem; border-radius:8px; font-size:0.82rem;
-  margin-bottom:1rem; display:none;
-}
-.alert.error { background:#fef2f2; border:1px solid #fca5a5; color:#b91c1c; display:block; }
-.alert.success { background:#f0fdf4; border:1px solid #86efac; color:#15803d; display:block; }
+/* ID card */
+.id-photo-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.2rem;
+  padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+.id-photo{width:88px;height:108px;border-radius:8px;
+  background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
+  border:3px solid var(--accent);overflow:hidden;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-family:'Cormorant Garamond',serif;
+  font-size:2.5rem;flex-shrink:0}
+.id-photo img{width:100%;height:100%;object-fit:cover}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.id-grid.full-col{grid-column:1/-1}
+.id-field label{display:block;font-size:.67rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:.2rem}
+.id-field span{font-size:.88rem;font-weight:500;color:var(--ink);word-break:break-word}
+.id-badge{background:var(--sky);border:1px solid var(--border);border-radius:50px;
+  padding:.28rem .85rem;font-size:.74rem;font-weight:700;color:var(--ocean);letter-spacing:.08em}
 
-/* ══ STUDENT DASHBOARD ══ */
-#screen-dashboard { flex-direction:column; background:var(--sky); min-height:100vh; }
+/* notices */
+.notice-item{background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;
+  border:1px solid var(--border);border-left:3px solid var(--ocean)}
+.notice-date{font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
+.notice-title{font-size:.9rem;font-weight:600;color:var(--ink)}
+.notice-body{font-size:.8rem;color:var(--muted);margin-top:.3rem;line-height:1.6}
 
-.topbar {
-  background:linear-gradient(135deg, var(--ocean-deep), var(--ocean-dark));
-  color:white; padding:1.25rem 1.5rem; display:flex; align-items:center;
-  justify-content:space-between; position:sticky; top:0; z-index:50;
-  box-shadow:0 4px 20px rgba(3,50,74,0.3);
-}
-.topbar-brand {
-  font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600;
-  display:flex; align-items:center; gap:0.4rem;
-}
-.topbar-brand .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+/* attendance */
+.pct-bar-wrap{margin-top:.6rem}
+.pct-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--ocean-dark);line-height:1}
+.pct-bar{height:10px;background:var(--sky);border-radius:6px;overflow:hidden;margin-top:.5rem}
+.pct-fill{height:100%;background:linear-gradient(90deg,var(--ocean),var(--accent));transition:width .6s}
+.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:.9rem}
+.att-cell{aspect-ratio:1;border-radius:5px;background:var(--sky);display:flex;
+  align-items:center;justify-content:center;font-size:.65rem;color:var(--muted)}
+.att-cell.present{background:var(--success);color:#fff}
+.att-cell.absent{background:var(--danger);color:#fff}
+.att-cell.late{background:var(--warn);color:#fff}
 
-.topbar-right { display:flex; align-items:center; gap:0.75rem; }
-.avatar {
-  width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2);
-  border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center;
-  justify-content:center; font-size:0.9rem; font-weight:600; color:white; cursor:pointer;
-}
-.btn-logout {
-  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-  color:white; padding:0.4rem 0.9rem; border-radius:50px; font-size:0.75rem;
-  font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s;
-}
-.btn-logout:hover { background:rgba(255,255,255,0.2); }
+/* fees */
+.fee-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1rem}
+.fee-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.9rem;text-align:center}
+.fee-box .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
+.fee-box .amt{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:500}
+.fee-box.t .amt{color:var(--ocean-dark)}.fee-box.p .amt{color:var(--success)}.fee-box.d .amt{color:var(--danger)}
+.fee-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;
+  margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}
+.fee-row .mon{font-weight:500;font-size:.88rem;color:var(--ink)}
+.fee-row .sub{font-size:.76rem;color:var(--muted);margin-top:.1rem}
+.status-pill{padding:.22rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;letter-spacing:.04em}
+.status-pill.Paid{background:#d1fae5;color:#065f46}
+.status-pill.Partial{background:#fef3c7;color:#92400e}
+.status-pill.Unpaid{background:#fee2e2;color:#991b1b}
 
-.dash-content { padding:1.5rem; max-width:600px; margin:0 auto; width:100%; padding-bottom:80px; }
+/* bottom nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;z-index:50;box-shadow:0 -4px 20px rgba(10,110,159,.08)}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:.6rem .3rem;
+  background:none;border:none;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;
+  font-size:.58rem;gap:.18rem;transition:color .2s}
+.bnav-btn .ic{font-size:1.15rem}
+.bnav-btn.active{color:var(--ocean)}
+.sub-screen{display:none}.sub-screen.active{display:block;animation:fadeIn .3s ease both}
 
-.welcome-banner {
-  background:linear-gradient(135deg, var(--ocean-dark), var(--ocean));
-  border-radius:16px; padding:1.5rem; color:white; margin-bottom:1.5rem;
-  position:relative; overflow:hidden;
-}
-.welcome-banner::after {
-  content:'ZEL'; position:absolute; right:-10px; top:-10px;
-  font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300;
-  color:rgba(255,255,255,0.06); line-height:1;
-}
-.welcome-banner h2 {
-  font-family:'Cormorant Garamond',serif; font-size:1.5rem;
-  font-weight:400; margin-bottom:0.4rem;
-}
-.welcome-banner p { font-size:0.82rem; opacity:0.8; line-height:1.6; }
+/* ── ADMIN ── */
+#scr-admin{flex-direction:column;background:#0d1117}
+.adm-topbar{background:#161b22;border-bottom:1px solid #30363d;padding:.95rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.adm-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;
+  display:flex;align-items:center;gap:.5rem}
+.adm-badge{background:var(--accent);color:#0d1117;font-size:.63rem;font-weight:700;
+  letter-spacing:.1em;padding:.18rem .48rem;border-radius:4px;text-transform:uppercase}
+.adm-body{padding:1.25rem 1rem;max-width:1000px;margin:0 auto;width:100%}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.4rem}
+.stat-box{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.9rem .7rem;text-align:center}
+.stat-box .n{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--accent);font-weight:300;line-height:1;margin-bottom:.2rem}
+.stat-box .l{font-size:.63rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em}
+.adm-tabs{display:flex;border-bottom:1px solid #30363d;margin-bottom:1.2rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.adm-tab{background:none;border:none;border-bottom:2px solid transparent;color:#8b949e;
+  font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.52rem .85rem;cursor:pointer;
+  transition:all .2s;margin-bottom:-1px;white-space:nowrap}
+.adm-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.adm-sec{display:none}.adm-sec.active{display:block;animation:fadeIn .3s ease both}
+.dark-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.2rem;margin-bottom:1rem}
+.dark-card h3{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:1rem}
+.di,.ds{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;
+  padding:.68rem .95rem;color:#fff;font-family:'DM Sans',sans-serif;font-size:.87rem;
+  outline:none;margin-bottom:.65rem;transition:border-color .2s}
+.di:focus,.ds:focus{border-color:var(--accent)}
+textarea.di{min-height:78px;resize:vertical}
+.btn-acc{background:var(--accent);color:#0d1117;border:none;border-radius:8px;
+  padding:.52rem .95rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;
+  cursor:pointer;transition:opacity .2s;letter-spacing:.04em}
+.btn-acc:hover{opacity:.85}.btn-acc:disabled{opacity:.5;cursor:not-allowed}
+.btn-del{background:var(--danger);color:#fff;border:none;border-radius:6px;
+  padding:.28rem .65rem;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s}
+.btn-del:hover{opacity:.8}
+.btn-sec{background:#30363d;color:#fff;border:none;border-radius:6px;
+  padding:.45rem .9rem;font-size:.76rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-sec:hover{background:#3f4651}
 
-.id-card {
-  background:white; border-radius:16px; padding:1.5rem; margin-bottom:1.5rem;
-  box-shadow:0 4px 20px rgba(10,110,159,0.08); border:1px solid var(--border);
-  position:relative; overflow:hidden;
-}
-.id-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:4px;
-  background:linear-gradient(90deg, var(--ocean-dark), var(--accent));
-}
+/* batch grid */
+.batch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.7rem}
+.batch-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.2rem;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.batch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent);opacity:0;transition:opacity .2s}
+.batch-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.batch-card:hover::before{opacity:1}
+.batch-card .bi{font-size:1.75rem;margin-bottom:.55rem}
+.batch-card .bn{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:#fff;
+  font-weight:500;margin-bottom:.35rem}
+.batch-card .bc{font-size:.76rem;color:#8b949e}
+.batch-card .bc strong{color:var(--accent);font-weight:600}
+.back-btn{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent);
+  cursor:pointer;font-size:.84rem;margin-bottom:.9rem;padding:.3rem 0;
+  background:none;border:none;font-family:'DM Sans',sans-serif}
+.back-btn:hover{text-decoration:underline}
+.stu-row{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.82rem .95rem;
+  margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:all .2s}
+.stu-row:hover{border-color:var(--accent);background:#1c2128}
+.stu-av{width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:600;font-size:.95rem;overflow:hidden;flex-shrink:0}
+.stu-av img{width:100%;height:100%;object-fit:cover}
+.stu-id{font-size:.69rem;color:var(--accent);font-weight:700;letter-spacing:.08em}
+.stu-name{font-size:.9rem;color:#fff;font-weight:500;margin-top:.1rem}
+.stu-meta{font-size:.73rem;color:#8b949e;margin-top:.1rem;word-break:break-word}
+.arr{color:#8b949e;font-size:1.2rem}
 
-.id-card-header {
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;
-}
-.id-card-header h3 {
-  font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--ocean-dark);
-}
-.id-badge {
-  background:var(--sky); border:1px solid var(--border); border-radius:50px;
-  padding:0.3rem 0.9rem; font-size:0.75rem; font-weight:600;
-  color:var(--ocean); letter-spacing:0.08em;
-}
+/* student detail card (admin) */
+.det-card{background:linear-gradient(135deg,var(--ocean-deep),var(--ocean-dark));
+  border-radius:18px;padding:1.8rem 1.4rem;color:#fff;position:relative;overflow:hidden;
+  margin-bottom:1.2rem;border:1px solid #30363d}
+.det-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  background:linear-gradient(90deg,var(--accent),var(--ocean))}
+.det-card::after{content:'ZEL';position:absolute;right:-8px;bottom:-25px;
+  font-family:'Cormorant Garamond',serif;font-size:6.5rem;font-weight:300;
+  color:rgba(255,255,255,.05);line-height:1}
+.det-photo-row{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.4rem;position:relative;z-index:2}
+.det-photo{width:95px;height:115px;border-radius:10px;background:rgba(255,255,255,.12);
+  border:3px solid var(--accent);overflow:hidden;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-family:'Cormorant Garamond',serif;font-size:2.4rem;flex-shrink:0}
+.det-photo img{width:100%;height:100%;object-fit:cover}
+.det-name{font-family:'Cormorant Garamond',serif;font-size:1.45rem;margin-bottom:.35rem}
+.det-id{font-size:.76rem;color:var(--accent);font-weight:700;letter-spacing:.1em;
+  background:rgba(0,180,216,.15);padding:.22rem .65rem;border-radius:50px;display:inline-block}
+.det-fields{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;position:relative;z-index:2}
+.det-field label{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;
+  color:rgba(255,255,255,.5);margin-bottom:.18rem;display:block}
+.det-field span{font-size:.88rem;word-break:break-word}
+.act-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.55rem;margin-bottom:.9rem}
+.act-btn{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.8rem .4rem;
+  color:#fff;font-family:'DM Sans',sans-serif;font-size:.76rem;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.3rem;text-align:center}
+.act-btn:hover{border-color:var(--accent);background:#1c2128}
 
-.id-photo-wrap {
-  text-align:center; margin-bottom:1.25rem;
-}
-.id-photo {
-  width:100px; height:100px; border-radius:50%; object-fit:cover;
-  border:3px solid var(--ocean); box-shadow:0 4px 12px rgba(10,110,159,0.2);
-}
-.id-photo-placeholder {
-  width:100px; height:100px; border-radius:50%; background:var(--sky);
-  border:3px solid var(--border); display:inline-flex; align-items:center;
-  justify-content:center; font-size:2.5rem; color:var(--ocean);
-}
+/* picker */
+.picker-wrap{position:relative;margin-bottom:.65rem}
+.picker-res{position:absolute;top:100%;left:0;right:0;background:#0d1117;
+  border:1px solid #30363d;border-radius:8px;max-height:220px;overflow-y:auto;
+  z-index:20;margin-top:3px;display:none}
+.picker-res.open{display:block}
+.picker-item{padding:.62rem .82rem;cursor:pointer;border-bottom:1px solid #1c2128;transition:background .15s}
+.picker-item:hover{background:#1c2128}.picker-item:last-child{border-bottom:none}
+.picker-item .pid{font-size:.68rem;color:var(--accent);font-weight:700;letter-spacing:.05em}
+.picker-item .pname{font-size:.84rem;color:#fff;margin-top:.12rem}
+.picker-item .pbatch{font-size:.7rem;color:#8b949e;margin-top:.08rem}
+.picker-empty{padding:.82rem;text-align:center;color:#8b949e;font-size:.8rem}
+.chip{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(0,180,216,.12);border:1px solid var(--accent);border-radius:8px;
+  padding:.52rem .82rem;margin-bottom:.65rem}
+.chip span{color:#fff;font-size:.84rem}
+.chip strong{color:var(--accent);margin-right:.38rem}
+.chip button{background:none;border:none;color:#8b949e;cursor:pointer;font-size:.95rem;padding:0 .25rem}
+.chip button:hover{color:#fff}
 
-.id-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.id-field label {
-  display:block; font-size:0.68rem; text-transform:uppercase;
-  letter-spacing:0.1em; color:var(--muted); margin-bottom:0.2rem;
-}
-.id-field span { font-size:0.9rem; font-weight:500; color:var(--ink); }
-.id-field.full { grid-column:1/-1; }
+/* modals */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;
+  display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.7rem;width:100%;
+  max-width:420px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease both}
+.modal.dark{background:#161b22;border:1px solid #30363d}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ocean-dark);margin-bottom:1.2rem}
+.modal.dark h3{color:#fff}
+.modal-x{float:right;background:none;border:none;cursor:pointer;font-size:1.25rem;
+  color:var(--muted);line-height:1}
+.modal.dark .modal-x{color:#8b949e}
 
-/* Attendance grid */
-.attendance-grid {
-  display:grid; grid-template-columns:repeat(7, 1fr); gap:0.4rem; margin:1rem 0;
-}
-.att-cell {
-  aspect-ratio:1; border-radius:6px; display:flex; align-items:center;
-  justify-content:center; font-size:0.7rem; font-weight:600;
-  border:1px solid var(--border);
-}
-.att-cell.present { background:var(--success); color:white; border-color:var(--success); }
-.att-cell.absent  { background:var(--danger); color:white; border-color:var(--danger); }
-.att-cell.late    { background:var(--warning); color:white; border-color:var(--warning); }
-.att-cell.empty   { background:var(--sky); color:var(--muted); }
+/* admin row (admins list) */
+.adm-row{background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.8rem .95rem;
+  margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}
+.adm-email{color:#fff;font-size:.88rem;font-weight:500}
+.adm-sub{color:#8b949e;font-size:.73rem;margin-top:.12rem}
+.super-tag{background:rgba(0,180,216,.15);color:var(--accent);border:1px solid var(--accent);
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:.14rem .45rem;
+  border-radius:4px;margin-left:.4rem;text-transform:uppercase}
 
-.progress-bar {
-  height:8px; background:var(--sky); border-radius:50px; overflow:hidden; margin-top:0.5rem;
-}
-.progress-fill {
-  height:100%; background:linear-gradient(90deg, var(--success), #22c55e);
-  transition:width 0.3s;
-}
+.loader{display:inline-block;width:17px;height:17px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
+  vertical-align:middle;margin-right:.35rem}
 
-/* Fee breakdown */
-.fee-row {
-  display:flex; justify-content:space-between; padding:0.6rem 0;
-  border-bottom:1px solid var(--border);
-}
-.fee-row:last-child { border:none; }
-.fee-label { font-size:0.82rem; color:var(--muted); }
-.fee-value { font-size:0.9rem; font-weight:600; color:var(--ink); }
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-.cards-grid {
-  display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;
-}
-.info-card {
-  background:white; border-radius:14px; padding:1.25rem;
-  box-shadow:0 2px 12px rgba(10,110,159,0.06); border:1px solid var(--border);
-}
-.info-card .icon { font-size:1.5rem; margin-bottom:0.6rem; display:block; }
-.info-card h4 {
-  font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em;
-  color:var(--muted); margin-bottom:0.3rem;
-}
-.info-card p { font-size:0.9rem; font-weight:500; color:var(--ocean-dark); line-height:1.4; }
-
-.section-title {
-  font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--ocean-dark);
-  margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;
-}
-
-.notice-card {
-  background:white; border-radius:12px; padding:1.1rem 1.25rem; margin-bottom:0.75rem;
-  border:1px solid var(--border); border-left:3px solid var(--ocean);
-  box-shadow:0 2px 8px rgba(10,110,159,0.05);
-}
-.notice-card .notice-date { font-size:0.72rem; color:var(--muted); margin-bottom:0.3rem; }
-.notice-card .notice-title { font-size:0.92rem; font-weight:500; color:var(--ink); }
-.notice-card .notice-body {
-  font-size:0.82rem; color:var(--muted); margin-top:0.3rem; line-height:1.6;
-}
-
-.empty-state { text-align:center; padding:2rem; color:var(--muted); font-size:0.85rem; }
-.empty-state .empty-icon { font-size:2rem; display:block; margin-bottom:0.5rem; }
-
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; background:white;
-  border-top:1px solid var(--border); display:flex; z-index:50;
-  box-shadow:0 -4px 20px rgba(10,110,159,0.08);
-}
-.nav-item {
-  flex:1; display:flex; flex-direction:column; align-items:center;
-  padding:0.65rem 0.5rem; background:none; border:none; cursor:pointer;
-  transition:color 0.2s; color:var(--muted); font-family:'DM Sans',sans-serif;
-  font-size:0.65rem; gap:0.2rem;
-}
-.nav-item .nav-icon { font-size:1.2rem; }
-.nav-item.active { color:var(--ocean); }
-.nav-item.active .nav-icon { transform:scale(1.1); }
-
-/* ══ ADMIN PANEL ══ */
-#screen-admin { flex-direction:column; background:#0d1117; min-height:100vh; }
-
-.admin-topbar {
-  background:#161b22; border-bottom:1px solid #30363d; padding:1rem 1.5rem;
-  display:flex; align-items:center; justify-content:space-between;
-  position:sticky; top:0; z-index:50;
-}
-.admin-topbar .brand {
-  font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:white;
-  display:flex; align-items:center; gap:0.5rem;
-}
-.admin-badge {
-  background:#00b4d8; color:#0d1117; font-size:0.65rem; font-weight:700;
-  letter-spacing:0.1em; padding:0.2rem 0.5rem; border-radius:4px;
-  text-transform:uppercase;
-}
-
-.admin-content { padding:1.5rem; max-width:900px; margin:0 auto; width:100%; }
-
-.admin-stats {
-  display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;
-}
-.stat-box {
-  background:#161b22; border:1px solid #30363d; border-radius:12px;
-  padding:1.25rem; text-align:center;
-}
-.stat-box .num {
-  font-family:'Cormorant Garamond',serif; font-size:2rem; color:#00b4d8;
-  font-weight:300; line-height:1; margin-bottom:0.3rem;
-}
-.stat-box .lbl {
-  font-size:0.72rem; color:#8b949e; text-transform:uppercase; letter-spacing:0.08em;
-}
-
-.admin-tabs {
-  display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1px solid #30363d;
-  padding-bottom:0; overflow-x:auto;
-}
-.admin-tab {
-  background:transparent; border:none; border-bottom:2px solid transparent;
-  color:#8b949e; font-family:'DM Sans',sans-serif; font-size:0.85rem;
-  padding:0.6rem 1rem; cursor:pointer; transition:all 0.2s;
-  margin-bottom:-1px; white-space:nowrap;
-}
-.admin-tab.active { color:#00b4d8; border-bottom-color:#00b4d8; }
-
-.admin-section { display:none; }
-.admin-section.active { display:block; }
-
-.table-header {
-  display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;
-}
-.table-header h3 {
-  color:white; font-family:'Cormorant Garamond',serif; font-size:1.2rem;
-}
-
-.btn-admin {
-  background:#00b4d8; color:#0d1117; border:none; border-radius:8px;
-  padding:0.5rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.8rem;
-  font-weight:600; cursor:pointer; transition:opacity 0.2s;
-}
-.btn-admin:hover { opacity:0.85; }
-
-.btn-danger {
-  background:#dc2626; color:white; border:none; border-radius:6px;
-  padding:0.3rem 0.7rem; font-size:0.75rem; cursor:pointer;
-  font-family:'DM Sans',sans-serif; transition:opacity 0.2s;
-}
-.btn-danger:hover { opacity:0.8; }
-
-.btn-sm {
-  background:#00b4d8; color:#0d1117; border:none; border-radius:6px;
-  padding:0.25rem 0.6rem; font-size:0.72rem; cursor:pointer;
-  font-family:'DM Sans',sans-serif; transition:opacity 0.2s; font-weight:600;
-}
-.btn-sm:hover { opacity:0.8; }
-
-/* Batch cards */
-.batch-card {
-  background:#161b22; border:1px solid #30363d; border-radius:12px;
-  padding:1.25rem; margin-bottom:0.75rem; cursor:pointer;
-  transition:border-color 0.2s, box-shadow 0.2s;
-}
-.batch-card:hover { border-color:#00b4d8; box-shadow:0 4px 12px rgba(0,180,216,0.15); }
-.batch-name {
-  font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:white;
-  margin-bottom:0.3rem;
-}
-.batch-count {
-  font-size:0.8rem; color:#8b949e; display:flex; align-items:center; gap:0.3rem;
-}
-
-/* Student list in batch */
-.student-card {
-  background:#161b22; border:1px solid #30363d; border-radius:12px;
-  padding:1.1rem 1.25rem; margin-bottom:0.75rem; display:flex;
-  align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
-  cursor:pointer; transition:border-color 0.2s;
-}
-.student-card:hover { border-color:#00b4d8; }
-
-.student-info { flex:1; min-width:200px; }
-.student-id-badge {
-  background:#0d1117; border:1px solid #00b4d8; color:#00b4d8;
-  font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem;
-  border-radius:4px; letter-spacing:0.1em; margin-bottom:0.4rem; display:inline-block;
-}
-.student-name { font-size:0.95rem; font-weight:500; color:white; margin-bottom:0.2rem; }
-.student-meta { font-size:0.78rem; color:#8b949e; }
-.student-actions { display:flex; gap:0.5rem; align-items:center; }
-
-/* Detail card view */
-.detail-card {
-  background:#161b22; border:1px solid #30363d; border-radius:16px;
-  padding:2rem; margin-bottom:1.5rem;
-}
-.detail-header {
-  text-align:center; margin-bottom:1.5rem;
-}
-.detail-photo {
-  width:120px; height:120px; border-radius:50%; object-fit:cover;
-  border:4px solid #00b4d8; box-shadow:0 4px 16px rgba(0,180,216,0.3);
-  margin-bottom:1rem;
-}
-.detail-photo-placeholder {
-  width:120px; height:120px; border-radius:50%; background:#0d1117;
-  border:4px solid #30363d; display:inline-flex; align-items:center;
-  justify-content:center; font-size:3rem; color:#8b949e; margin-bottom:1rem;
-}
-.detail-id { color:#00b4d8; font-size:0.85rem; font-weight:700; letter-spacing:0.1em; }
-.detail-name {
-  color:white; font-family:'Cormorant Garamond',serif; font-size:1.6rem;
-  margin:0.5rem 0;
-}
-
-.detail-fields {
-  display:grid; grid-template-columns:1fr 1fr; gap:1rem;
-}
-.detail-field { margin-bottom:0.5rem; }
-.detail-field.full { grid-column:1/-1; }
-.detail-field label {
-  font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;
-  color:#8b949e; display:block; margin-bottom:0.2rem;
-}
-.detail-field span { font-size:0.88rem; color:white; font-weight:500; }
-
-/* Form */
-.notice-form {
-  background:#161b22; border:1px solid #30363d; border-radius:12px;
-  padding:1.5rem; margin-bottom:1.5rem;
-}
-.notice-form h3 {
-  color:white; font-family:'Cormorant Garamond',serif; font-size:1.1rem;
-  margin-bottom:1rem;
-}
-
-.dark-input {
-  width:100%; background:#0d1117; border:1px solid #30363d; border-radius:8px;
-  padding:0.7rem 1rem; color:white; font-family:'DM Sans',sans-serif;
-  font-size:0.88rem; outline:none; margin-bottom:0.75rem;
-  transition:border-color 0.2s;
-}
-.dark-input:focus { border-color:#00b4d8; }
-textarea.dark-input { min-height:90px; resize:vertical; }
-
-select.dark-input option { background:#0d1117; color:white; }
-
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
-
-.loader {
-  display:inline-block; width:18px; height:18px;
-  border:2px solid rgba(255,255,255,0.3); border-top-color:white;
-  border-radius:50%; animation:spin 0.7s linear infinite;
-  vertical-align:middle; margin-right:0.4rem;
-}
-
-@keyframes spin { to { transform:rotate(360deg); } }
-@keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
-@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
-
-.modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999;
-  display:none; align-items:center; justify-content:center; padding:1.5rem;
-}
-.modal-overlay.open { display:flex; }
-
-.modal {
-  background:white; border-radius:16px; padding:2rem; width:100%;
-  max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,0.4);
-  animation:slideUp 0.3s ease both; max-height:80vh; overflow-y:auto;
-}
-.modal h3 {
-  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
-  color:var(--ocean-dark); margin-bottom:1.25rem;
-}
-
-.modal-dark {
-  background:#161b22; border:1px solid #30363d; border-radius:16px;
-  padding:2rem; width:100%; max-width:500px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.6); animation:slideUp 0.3s ease both;
-  max-height:85vh; overflow-y:auto;
-}
-.modal-dark h3 {
-  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
-  color:white; margin-bottom:1.25rem;
-}
-
-.btn-close {
-  background:var(--sky); border:1px solid var(--border); color:var(--ink);
-  border-radius:8px; padding:0.5rem 1rem; font-family:'DM Sans',sans-serif;
-  font-size:0.82rem; cursor:pointer; transition:opacity 0.2s; margin-top:1rem;
-  width:100%;
-}
-.btn-close:hover { opacity:0.8; }
-
-@media(max-width:600px) {
-  .cards-grid { grid-template-columns:1fr; }
-  .admin-stats { grid-template-columns:1fr 1fr; }
-  .id-fields { grid-template-columns:1fr; }
-  .detail-fields { grid-template-columns:1fr; }
-  .form-row { grid-template-columns:1fr; }
+@media(max-width:580px){
+  .stat-row{grid-template-columns:1fr 1fr}
+  .id-grid{grid-template-columns:1fr}
+  .det-fields{grid-template-columns:1fr}
+  .fee-sum{grid-template-columns:1fr}
+  .det-photo-row{flex-direction:column;align-items:flex-start}
+  .act-row{grid-template-columns:1fr}
+  .otp-box{width:42px;height:50px;font-size:1.2rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ SCREEN 1: LOGIN ══ -->
-<div class="screen active" id="screen-login">
-  <div class="login-card">
-    <div class="login-logo">
-      <span class="dot"></span><h1>ZEL</h1>
-      <p>Zone for English Learners</p>
-    </div>
-
-    <div id="login-alert" class="alert"></div>
-
-    <div class="login-tabs">
-      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
-      <button class="tab-btn" onclick="switchTab('register')">Register</button>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="tab-login">
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="login-email" placeholder="your@gmail.com">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="login-password" placeholder="••••••••">
-      </div>
-      <button class="btn-main" onclick="doLogin()" id="btn-login">Sign In</button>
-      <p style="text-align:center; font-size:0.75rem; color:var(--muted); margin-top:1rem;">
-        Admin? Use your admin credentials to access the panel.
-      </p>
-    </div>
-
-    <!-- REGISTER -->
-    <div id="tab-register" style="display:none;">
-      <!-- Step 1 -->
-      <div id="reg-step1">
-        <label class="photo-upload" for="reg-photo-input" id="reg-photo-label" style="width:90px;height:90px;border-radius:50%;background:var(--sky);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto .75rem;overflow:hidden;position:relative">
-          <span style="font-size:1.5rem;color:var(--muted)" id="reg-photo-icon">📷</span>
-          <input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">
-        </label>
-        <div style="text-align:center;font-size:.7rem;color:var(--muted);margin-bottom:.75rem">Profile photo (optional)</div>
-        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
-        <div class="form-group">
-          <label>Phone / WhatsApp</label>
-          <div style="display:flex;gap:.5rem">
-            <select id="reg-country" style="width:100px;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;padding:.75rem .4rem;font-size:.85rem;color:var(--ink);outline:none;flex-shrink:0;font-family:'DM Sans',sans-serif">
-              <option value="+94">+94 LK</option>
-              <option value="+91">+91 IN</option>
-              <option value="+92">+92 PK</option>
-              <option value="+880">+880 BD</option>
-              <option value="+971">+971 AE</option>
-              <option value="+966">+966 SA</option>
-              <option value="+60">+60 MY</option>
-              <option value="+1">+1 US</option>
-              <option value="+44">+44 UK</option>
-            </select>
-            <input type="tel" id="reg-phone" placeholder="761234567" style="flex:1;background:var(--sky);border:1.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;font-size:.9rem;color:var(--ink);outline:none;font-family:'DM Sans',sans-serif">
-          </div>
-        </div>
-        <div class="form-group"><label>Batch</label><select id="reg-course">
-          <option value="">Select batch...</option>
-          <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option><option>Batch 23</option><option>Batch 24</option>
-        </select></div>
-        <div class="form-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@gmail.com"></div>
-        <div class="form-group"><label>Password (min. 6 chars)</label><input type="password" id="reg-password" placeholder="Create a password"></div>
-        <div id="recaptcha-container"></div>
-        <button class="btn-main" onclick="sendOTP()" id="btn-send-otp">Send OTP via SMS &rarr;</button>
-      </div>
-      <!-- Step 2: OTP -->
-      <div id="reg-step2" style="display:none">
-        <div style="text-align:center;margin-bottom:1.25rem">
-          <div style="font-size:.9rem;color:var(--ocean-dark);font-weight:600" id="otp-phone-shown">Code sent!</div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem">Enter the 6-digit SMS code</div>
-        </div>
-        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:1.25rem">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp0" oninput="otpMove(0)" onkeydown="otpBack(event,0)">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp1" oninput="otpMove(1)" onkeydown="otpBack(event,1)">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp2" oninput="otpMove(2)" onkeydown="otpBack(event,2)">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp3" oninput="otpMove(3)" onkeydown="otpBack(event,3)">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp4" oninput="otpMove(4)" onkeydown="otpBack(event,4)">
-          <input style="width:46px;height:54px;border:1.5px solid var(--border);border-radius:10px;background:var(--sky);font-size:1.4rem;font-weight:700;text-align:center;color:var(--ocean-dark);outline:none;font-family:'DM Sans',sans-serif" type="tel" maxlength="1" id="otp5" oninput="otpMove(5)" onkeydown="otpBack(event,5)">
-        </div>
-        <button class="btn-main" onclick="verifyOTP()" id="btn-verify-otp">Verify &amp; Create Account</button>
-        <button style="width:100%;background:transparent;color:var(--ocean-dark);border:1.5px solid var(--border);border-radius:50px;padding:.75rem;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;margin-top:.5rem" onclick="backToOTPStep1()">&larr; Change Details</button>
-        <div id="resend-timer" style="font-size:.78rem;color:var(--muted);text-align:center;margin-top:.75rem">Resend in <b id="resend-count">30</b>s</div>
-        <div id="resend-btn" style="font-size:.78rem;color:var(--ocean);cursor:pointer;text-align:center;margin-top:.75rem;display:none" onclick="resendOTP()">&circlearrowleft; Resend OTP</div>
-      </div>
-    </div>
+<!-- ══ LOGIN ══ -->
+<div class="screen active" id="scr-login">
+ <div class="login-card">
+  <div class="brand-logo">
+   <span class="dot"></span><h1>ZEL</h1>
+   <p>Zone for English Learners</p>
   </div>
+  <div id="la" class="alert"></div>
+  <div class="tab-row">
+   <button class="tab-btn active" onclick="loginTab('in')">Sign In</button>
+   <button class="tab-btn" onclick="loginTab('reg')">Register</button>
+  </div>
+
+  <!-- SIGN IN -->
+  <div id="tab-in">
+   <div class="fgroup"><label>Email Address</label><input type="email" id="li-email" placeholder="your@email.com"></div>
+   <div class="fgroup"><label>Password</label><input type="password" id="li-pass" placeholder="••••••••"></div>
+   <button class="btn-main" id="btn-li" onclick="doLogin()">Sign In</button>
+  </div>
+
+  <!-- REGISTER Step 1 -->
+  <div id="tab-reg" style="display:none">
+   <div id="reg1">
+    <!-- Photo -->
+    <div style="text-align:center;margin-bottom:.85rem">
+     <div class="photo-circle" id="reg-photo-circle" onclick="document.getElementById('reg-photo-file').click()">
+      <span style="font-size:1.8rem">📷</span>
+     </div>
+     <input type="file" id="reg-photo-file" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
+     <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
+    </div>
+    <div class="fgroup"><label>Full Name</label><input type="text" id="reg-name" placeholder="e.g. Sara Ahmed"></div>
+    <div class="fgroup">
+     <label>Phone / WhatsApp</label>
+     <div class="ph-row">
+      <select class="ph-cc" id="reg-cc">
+       <option value="+94">🇱🇰 +94</option>
+       <option value="+91">🇮🇳 +91</option>
+       <option value="+92">🇵🇰 +92</option>
+       <option value="+880">🇧🇩 +880</option>
+       <option value="+971">🇦🇪 +971</option>
+       <option value="+966">🇸🇦 +966</option>
+       <option value="+60">🇲🇾 +60</option>
+       <option value="+65">🇸🇬 +65</option>
+       <option value="+1">🇺🇸 +1</option>
+       <option value="+44">🇬🇧 +44</option>
+      </select>
+      <input class="ph-num" type="tel" id="reg-phone" placeholder="761234567">
+     </div>
+    </div>
+    <div class="fgroup"><label>Email Address</label><input type="email" id="reg-email" placeholder="your@email.com"></div>
+    <div class="fgroup"><label>Batch</label>
+     <select id="reg-batch">
+      <option value="">Select batch...</option>
+      <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option>
+      <option>Batch 23</option><option>Batch 24</option>
+     </select>
+    </div>
+    <div class="fgroup"><label>Password (min. 6 chars)</label><input type="password" id="reg-pass" placeholder="Create a password"></div>
+    <div id="recaptcha-container"></div>
+    <button class="btn-main" id="btn-otp" onclick="sendOTP()">Send OTP via SMS →</button>
+   </div>
+
+   <!-- Register Step 2: OTP -->
+   <div id="reg2" style="display:none">
+    <div class="otp-info">
+     <strong id="otp-phone-txt">Code sent!</strong>
+     <span>Enter the 6-digit SMS code below</span>
+    </div>
+    <div class="otp-boxes">
+     <input class="otp-box" type="tel" maxlength="1" id="o0" oninput="otpIn(0)" onkeydown="otpBk(event,0)">
+     <input class="otp-box" type="tel" maxlength="1" id="o1" oninput="otpIn(1)" onkeydown="otpBk(event,1)">
+     <input class="otp-box" type="tel" maxlength="1" id="o2" oninput="otpIn(2)" onkeydown="otpBk(event,2)">
+     <input class="otp-box" type="tel" maxlength="1" id="o3" oninput="otpIn(3)" onkeydown="otpBk(event,3)">
+     <input class="otp-box" type="tel" maxlength="1" id="o4" oninput="otpIn(4)" onkeydown="otpBk(event,4)">
+     <input class="otp-box" type="tel" maxlength="1" id="o5" oninput="otpIn(5)" onkeydown="otpBk(event,5)">
+    </div>
+    <button class="btn-main" id="btn-verify" onclick="verifyOTP()">Verify &amp; Create Account</button>
+    <button class="btn-outline" onclick="backToReg1()">← Change Details</button>
+    <div class="resend-row">
+     <span id="resend-timer">Resend in <b id="resend-n">30</b>s</span>
+     <span class="resend-link" id="resend-link" onclick="resendOTP()">↺ Resend OTP</span>
+    </div>
+   </div>
+  </div>
+ </div>
 </div>
 
-<!-- ══ SCREEN 2: STUDENT DASHBOARD ══ -->
-<div class="screen" id="screen-dashboard">
-  <div style="width:100%; padding-bottom:70px;">
-    <div class="topbar">
-      <div class="topbar-brand"><span class="dot"></span> ZEL</div>
-      <div class="topbar-right">
-        <div class="avatar" id="dash-avatar">S</div>
-        <button class="btn-logout" onclick="doLogout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="dash-content">
-
-      <!-- HOME TAB -->
-      <div id="student-tab-home">
-        <div class="welcome-banner">
-          <h2 id="dash-welcome">Welcome back! 👋</h2>
-          <p>Keep up the great work. Your English journey is progressing well!</p>
-        </div>
-
-        <div class="cards-grid">
-          <div class="info-card">
-            <span class="icon">📚</span><h4>My Course</h4>
-            <p id="card-course">—</p>
-          </div>
-          <div class="info-card">
-            <span class="icon">📅</span><h4>Enrolled</h4>
-            <p id="card-enrolled">—</p>
-          </div>
-        </div>
-
-        <div class="section-title">📢 Announcements</div>
-        <div id="notices-list">
-          <div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div>
-        </div>
-      </div>
-
-      <!-- MY ID TAB -->
-      <div id="student-tab-id" style="display:none;">
-        <div class="id-card">
-          <div class="id-card-header">
-            <h3>🪪 Student ID Card</h3>
-            <span class="id-badge" id="dash-student-id">ZEL-0000</span>
-          </div>
-          <div class="id-photo-wrap">
-            <img id="id-photo-img" class="id-photo" style="display:none;">
-            <div id="id-photo-placeholder" class="id-photo-placeholder">👤</div>
-          </div>
-          <div class="id-fields">
-            <div class="id-field full"><label>Full Name</label><span id="id-name">—</span></div>
-            <div class="id-field"><label>Phone</label><span id="id-phone">—</span></div>
-            <div class="id-field"><label>Batch</label><span id="id-batch">—</span></div>
-            <div class="id-field full"><label>Course</label><span id="id-course">—</span></div>
-            <div class="id-field"><label>Email</label><span id="id-email">—</span></div>
-            <div class="id-field">
-              <label>Status</label>
-              <span style="color:var(--success); font-weight:600;">✅ Active</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ATTENDANCE TAB -->
-      <div id="student-tab-attendance" style="display:none;">
-        <div class="id-card">
-          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
-            📅 My Attendance
-          </h3>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-            <span style="font-size:0.82rem; color:var(--muted);">Attendance Rate</span>
-            <span style="font-size:1.1rem; font-weight:600; color:var(--success);" id="att-rate">0%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="att-bar" style="width:0%;"></div>
-          </div>
-          <p style="font-size:0.75rem; color:var(--muted); margin-top:0.5rem; text-align:center;" id="att-summary">
-            Loading attendance...
-          </p>
-          <div class="attendance-grid" id="att-grid" style="margin-top:1rem;"></div>
-        </div>
-      </div>
-
-      <!-- FEES TAB -->
-      <div id="student-tab-fees" style="display:none;">
-        <div class="id-card">
-          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
-            💳 Fee Records
-          </h3>
-          <div class="fee-row">
-            <span class="fee-label">Total Fees</span>
-            <span class="fee-value" id="fee-total">Rs. 0</span>
-          </div>
-          <div class="fee-row">
-            <span class="fee-label">Paid</span>
-            <span class="fee-value" style="color:var(--success);" id="fee-paid">Rs. 0</span>
-          </div>
-          <div class="fee-row">
-            <span class="fee-label">Outstanding</span>
-            <span class="fee-value" style="color:var(--danger);" id="fee-outstanding">Rs. 0</span>
-          </div>
-          <div style="margin-top:1rem;" id="fee-details-list"></div>
-        </div>
-      </div>
-
-      <!-- CHANGE PASSWORD TAB -->
-      <div id="student-tab-password" style="display:none;">
-        <div class="id-card">
-          <h3 style="margin-bottom:1rem; font-family:'Cormorant Garamond',serif; color:var(--ocean-dark);">
-            🔐 Change Password
-          </h3>
-          <div id="pass-alert" class="alert"></div>
-          <div class="form-group">
-            <label>Current Password</label>
-            <input type="password" id="pass-current" placeholder="Enter current password">
-          </div>
-          <div class="form-group">
-            <label>New Password (min. 6 chars)</label>
-            <input type="password" id="pass-new" placeholder="Enter new password">
-          </div>
-          <div class="form-group">
-            <label>Confirm New Password</label>
-            <input type="password" id="pass-confirm" placeholder="Confirm new password">
-          </div>
-          <button class="btn-main" onclick="changePassword()" id="btn-pass">Update Password</button>
-        </div>
-      </div>
-
-    </div>
+<!-- ══ STUDENT DASHBOARD ══ -->
+<div class="screen" id="scr-dash">
+ <div style="width:100%">
+  <div class="topbar">
+   <div class="topbar-brand"><span class="dot"></span> ZEL</div>
+   <div class="top-right">
+    <div class="avatar" id="d-av">S</div>
+    <button class="btn-top ghost" onclick="doLogout()">Logout</button>
+   </div>
   </div>
+  <div class="dash-body">
 
-  <div class="bottom-nav">
-    <button class="nav-item active" onclick="studentNav('home',this)">
-      <span class="nav-icon">🏠</span>Home
-    </button>
-    <button class="nav-item" onclick="studentNav('id',this)">
-      <span class="nav-icon">🪪</span>My ID
-    </button>
-    <button class="nav-item" onclick="studentNav('attendance',this)">
-      <span class="nav-icon">📅</span>Attend
-    </button>
-    <button class="nav-item" onclick="studentNav('fees',this)">
-      <span class="nav-icon">💳</span>Fees
-    </button>
-    <button class="nav-item" onclick="studentNav('password',this)">
-      <span class="nav-icon">🔐</span>Password
-    </button>
+   <!-- HOME -->
+   <div class="sub-screen active" id="ss-home">
+    <div class="welcome-card">
+     <h2 id="d-welcome">Welcome back! 👋</h2>
+     <p>Keep up the great work — your English journey is progressing well!</p>
+    </div>
+    <div class="sec-title">📊 Quick Info</div>
+    <div class="card" style="margin-bottom:1rem">
+     <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:110px">
+       <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">My Batch</div>
+       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-batch">—</div>
+      </div>
+      <div style="flex:1;min-width:110px">
+       <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">Student ID</div>
+       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-sid">—</div>
+      </div>
+     </div>
+    </div>
+    <div class="sec-title">📢 Announcements</div>
+    <div id="d-notices"><div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">📭 No announcements yet</div></div>
+   </div>
+
+   <!-- ID CARD -->
+   <div class="sub-screen" id="ss-id">
+    <div class="card accent-top" style="margin-top:.25rem">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ocean-dark)">🪪 Student ID</span>
+      <span class="id-badge" id="d-sid2">ZEL-0000</span>
+     </div>
+     <div class="id-photo-row">
+      <div class="id-photo" id="d-photo">S</div>
+      <div>
+       <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ocean-dark);margin-bottom:.25rem" id="d-name-big">—</div>
+       <div style="font-size:.84rem;color:var(--muted)" id="d-batch2">—</div>
+      </div>
+     </div>
+     <div class="id-grid">
+      <div class="id-field"><label>Full Name</label><span id="d-name">—</span></div>
+      <div class="id-field"><label>Phone</label><span id="d-phone">—</span></div>
+      <div class="id-field" style="grid-column:1/-1"><label>Email</label><span id="d-email">—</span></div>
+      <div class="id-field"><label>Status</label><span style="color:var(--success);font-weight:600">✅ Active</span></div>
+      <div class="id-field"><label>Enrolled</label><span id="d-enrolled">—</span></div>
+     </div>
+    </div>
+    <button class="btn-main" style="width:auto;padding:.6rem 1.5rem;font-size:.78rem" onclick="openPhotoModal(null)">📷 Update Photo</button>
+   </div>
+
+   <!-- ATTENDANCE -->
+   <div class="sub-screen" id="ss-att">
+    <div class="sec-title">📋 My Attendance</div>
+    <div class="card">
+     <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem">Attendance Rate</div>
+     <div class="pct-bar-wrap">
+      <div class="pct-num" id="d-att-pct">0%</div>
+      <div style="font-size:.76rem;color:var(--muted);margin-top:.25rem" id="d-att-sum">No records yet</div>
+      <div class="pct-bar"><div class="pct-fill" id="d-att-bar" style="width:0%"></div></div>
+     </div>
+    </div>
+    <div class="card">
+     <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.7rem">Recent History</div>
+     <div style="display:flex;gap:.65rem;font-size:.68rem;color:var(--muted);margin-bottom:.5rem">
+      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--success);border-radius:2px;display:inline-block"></span>Present</span>
+      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--danger);border-radius:2px;display:inline-block"></span>Absent</span>
+      <span style="display:flex;align-items:center;gap:.28rem"><span style="width:10px;height:10px;background:var(--warn);border-radius:2px;display:inline-block"></span>Late</span>
+     </div>
+     <div id="d-att-grid"><div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.84rem">No records yet</div></div>
+    </div>
+   </div>
+
+   <!-- FEES -->
+   <div class="sub-screen" id="ss-fees">
+    <div class="sec-title">💳 My Fees</div>
+    <div class="fee-sum">
+     <div class="fee-box t"><div class="lbl">Total</div><div class="amt" id="d-fee-t">Rs 0</div></div>
+     <div class="fee-box p"><div class="lbl">Paid</div><div class="amt" id="d-fee-p">Rs 0</div></div>
+     <div class="fee-box d"><div class="lbl">Due</div><div class="amt" id="d-fee-d">Rs 0</div></div>
+    </div>
+    <div id="d-fee-list"><div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">💳 No fee records yet</div></div>
+   </div>
+
+   <!-- SETTINGS -->
+   <div class="sub-screen" id="ss-set">
+    <div class="sec-title">⚙️ Settings</div>
+    <div class="card accent-top">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ocean-dark);margin-bottom:1rem">🔐 Change Password</div>
+     <div id="pw-alert" class="alert"></div>
+     <div class="fgroup"><label>Current Password</label><input type="password" id="pw-cur"></div>
+     <div class="fgroup"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 6 chars"></div>
+     <div class="fgroup"><label>Confirm New Password</label><input type="password" id="pw-con"></div>
+     <button class="btn-main" id="btn-pw" onclick="changePW()">Update Password</button>
+    </div>
+    <button class="btn-main" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3)">Sign Out</button>
+   </div>
+
   </div>
+ </div>
+ <div class="bnav">
+  <button class="bnav-btn active" onclick="stuTab('home',this)"><span class="ic">🏠</span>Home</button>
+  <button class="bnav-btn" onclick="stuTab('id',this)"><span class="ic">🪪</span>ID</button>
+  <button class="bnav-btn" onclick="stuTab('att',this)"><span class="ic">📋</span>Attend</button>
+  <button class="bnav-btn" onclick="stuTab('fees',this)"><span class="ic">💳</span>Fees</button>
+  <button class="bnav-btn" onclick="stuTab('set',this)"><span class="ic">⚙️</span>Settings</button>
+ </div>
 </div>
 
-<!-- ══ SCREEN 3: ADMIN PANEL ══ -->
-<div class="screen" id="screen-admin">
-  <div style="width:100%; padding-bottom:20px;">
-
-    <div class="admin-topbar">
-      <div class="brand">ZEL <span class="admin-badge">Admin</span></div>
-      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
-        <span id="admin-name-display" style="color:#8b949e;font-size:.75rem"></span>
-        <button id="btn-grant-admin-top" onclick="openGrantAdminModal()" style="display:none;background:rgba(0,180,216,.15);border:1px solid var(--accent);color:var(--accent);padding:.35rem .8rem;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:background .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.15)'">👑 Grant Admin</button>
-        <button class="btn-logout" onclick="doLogout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="admin-content">
-
-      <div class="admin-stats">
-        <div class="stat-box"><div class="num" id="stat-total">0</div><div class="lbl">Students</div></div>
-        <div class="stat-box"><div class="num" id="stat-batches">0</div><div class="lbl">Batches</div></div>
-        <div class="stat-box"><div class="num" id="stat-notices">0</div><div class="lbl">Notices</div></div>
-        <div class="stat-box"><div class="num" id="stat-fees">0</div><div class="lbl">Fees Collected</div></div>
-      </div>
-
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="adminTab('batches',this)">🗂 Batches</button>
-        <button class="admin-tab" onclick="adminTab('attendance',this)">📅 Attendance</button>
-        <button class="admin-tab" onclick="adminTab('fees',this)">💳 Fees</button>
-        <button class="admin-tab" onclick="adminTab('notices',this)">📢 Notices</button>
-        <button class="admin-tab" onclick="adminTab('addstudent',this)">➕ Add Student</button>
-      </div>
-
-      <!-- BATCHES -->
-      <div class="admin-section active" id="section-batches">
-        <div class="table-header">
-          <h3>All Batches</h3>
-          <button class="btn-admin" onclick="loadBatches()">🔄 Refresh</button>
-        </div>
-        <div id="batches-list">
-          <div class="empty-state" style="color:#8b949e;">Loading batches...</div>
-        </div>
-      </div>
-
-      <!-- BATCH DETAIL -->
-      <div class="admin-section" id="section-batch-detail">
-        <div class="table-header">
-          <h3 id="batch-detail-title">—</h3>
-          <button class="btn-admin" onclick="backToBatches()">← Back</button>
-        </div>
-        <div id="batch-students-list"></div>
-      </div>
-
-      <!-- STUDENT DETAIL -->
-      <div class="admin-section" id="section-student-detail">
-        <div class="table-header">
-          <button class="btn-admin" onclick="backToBatchDetail()">← Back</button>
-        </div>
-        <div class="detail-card" id="student-detail-card"></div>
-      </div>
-
-      <!-- ATTENDANCE -->
-      <div class="admin-section" id="section-attendance">
-        <div class="notice-form">
-          <h3>📅 Mark Attendance</h3>
-          <select class="dark-input" id="att-student" style="color:white;">
-            <option value="" style="color:black;">Select student...</option>
-          </select>
-          <input type="date" class="dark-input" id="att-date">
-          <select class="dark-input" id="att-status" style="color:white;">
-            <option value="" style="color:black;">Status...</option>
-            <option value="present">✅ Present</option>
-            <option value="absent">❌ Absent</option>
-            <option value="late">⏰ Late</option>
-          </select>
-          <button class="btn-admin" onclick="markAttendance()">Save Attendance</button>
-        </div>
-        <div id="att-records-list">
-          <div class="empty-state" style="color:#8b949e;">No records yet</div>
-        </div>
-      </div>
-
-      <!-- FEES -->
-      <div class="admin-section" id="section-fees">
-        <div class="notice-form">
-          <h3>💳 Add Fee Record</h3>
-          <select class="dark-input" id="fee-student" style="color:white;">
-            <option value="" style="color:black;">Select student...</option>
-          </select>
-          <input type="number" class="dark-input" id="fee-amount" placeholder="Amount (Rs.)">
-          <input type="date" class="dark-input" id="fee-due">
-          <button class="btn-admin" onclick="addFee()">Add Fee</button>
-        </div>
-        <div id="fee-records-list">
-          <div class="empty-state" style="color:#8b949e;">No fee records yet</div>
-        </div>
-      </div>
-
-      <!-- NOTICES -->
-      <div class="admin-section" id="section-notices">
-        <div class="notice-form">
-          <h3>📢 Post Announcement</h3>
-          <input type="text" class="dark-input" id="notice-title" placeholder="Notice title...">
-          <textarea class="dark-input" id="notice-body" placeholder="Write your announcement here..."></textarea>
-          <button class="btn-admin" onclick="postNotice()">Post Announcement</button>
-        </div>
-        <div id="admin-notices-list">
-          <div class="empty-state" style="color:#8b949e;">No notices yet</div>
-        </div>
-      </div>
-
-      <!-- ADMINS (super admin only) -->
-      <div class="admin-section" id="section-admins">
-        <div class="dark-card">
-          <h3>👑 Manage Admins</h3>
-          <div id="admin-mgmt-alert" class="alert"></div>
-          <p style="color:#8b949e;font-size:.82rem;margin-bottom:1rem;line-height:1.6">
-            Give someone admin access by entering their email. They must first 
-            <strong style="color:white">create an account</strong> in the app (Register tab), 
-            then you add their email here. Next login they will see the admin panel.
-          </p>
-          <input type="email" class="dark-input" id="new-admin-email" placeholder="Enter email to grant admin access...">
-          <button class="btn-admin" onclick="addAdmin()" style="width:100%;padding:.75rem">Grant Admin Access</button>
-        </div>
-        <div class="dark-card">
-          <h3>Current Admins</h3>
-          <div id="admins-list"><div class="empty-state" style="color:#8b949e">Loading...</div></div>
-        </div>
-      </div>
-
-      <!-- ADD STUDENT -->
-      <div class="admin-section" id="section-addstudent">
-        <div class="notice-form">
-          <h3>➕ Add New Student</h3>
-          <div id="add-alert" class="alert"></div>
-          <input type="text"  class="dark-input" id="add-name"     placeholder="Full Name *">
-          <input type="tel"   class="dark-input" id="add-phone"    placeholder="Phone / WhatsApp *">
-          <input type="email" class="dark-input" id="add-email"    placeholder="Email Address *">
-          <input type="password" class="dark-input" id="add-password" placeholder="Set Password (min. 6 chars) *">
-          <select class="dark-input" id="add-batch" style="color:white;">
-            <option value="" style="color:black;">Select Batch *</option>
-            <option>Batch 2026A</option>
-            <option>Batch 2026B</option>
-            <option>Batch 2025A</option>
-            <option>Batch 2025B</option>
-          </select>
-          <select class="dark-input" id="add-course" style="color:white;">
-            <option value="" style="color:black;">Select Course *</option>
-            <option>After Finishing O/L</option>
-            <option>After Finishing A/L</option>
-            <option>IELTS Preparation</option>
-            <option>English for Kids (Ages 6–14)</option>
-            <option>Business English</option>
-          </select>
-          <label style="color:#8b949e; font-size:0.8rem; margin-bottom:0.4rem;">Student Photo (optional)</label>
-          <input type="file" class="dark-input" id="add-photo" accept="image/*">
-          <button class="btn-admin" onclick="adminAddStudent()" id="btn-add-student" style="width:100%; padding:0.75rem;">
-            Create Student Account
-          </button>
-        </div>
-      </div>
-
-    </div>
+<!-- ══ ADMIN ══ -->
+<div class="screen" id="scr-admin">
+ <div style="width:100%">
+  <div class="adm-topbar">
+   <div class="adm-brand">ZEL <span class="adm-badge">Admin</span></div>
+   <div class="top-right">
+    <span id="adm-email-lbl" style="color:#8b949e;font-size:.73rem"></span>
+    <button class="btn-top accent" id="btn-grant-admin" style="display:none" onclick="openGrantModal()">👑 Grant Admin</button>
+    <button class="btn-top ghost" onclick="doLogout()">Logout</button>
+   </div>
   </div>
+  <div class="adm-body">
+   <div class="stat-row">
+    <div class="stat-box"><div class="n" id="st-students">0</div><div class="l">Students</div></div>
+    <div class="stat-box"><div class="n" id="st-batches">0</div><div class="l">Batches</div></div>
+    <div class="stat-box"><div class="n" id="st-fees">Rs 0</div><div class="l">Total Paid</div></div>
+    <div class="stat-box"><div class="n" id="st-notices">0</div><div class="l">Notices</div></div>
+   </div>
+   <div class="adm-tabs">
+    <button class="adm-tab active" onclick="admTab('batches',this)">📚 Batches</button>
+    <button class="adm-tab" onclick="admTab('att',this)">📋 Attendance</button>
+    <button class="adm-tab" onclick="admTab('fees',this)">💳 Fees</button>
+    <button class="adm-tab" onclick="admTab('notices',this)">📢 Notices</button>
+    <button class="adm-tab" onclick="admTab('add',this)">➕ Add Student</button>
+    <button class="adm-tab" id="adm-tab-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
+   </div>
+
+   <!-- BATCHES -->
+   <div class="adm-sec active" id="as-batches">
+    <div id="bv-list">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.28rem">All Batches</span>
+      <button class="btn-acc" onclick="loadBatches()">🔄 Refresh</button>
+     </div>
+     <div class="batch-grid" id="batch-grid"><div style="color:#8b949e;text-align:center;padding:2rem">Loading...</div></div>
+    </div>
+    <div id="bv-students" style="display:none">
+     <button class="back-btn" onclick="showBatchList()">← Back to Batches</button>
+     <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.28rem;margin-bottom:1rem" id="bv-title">Batch</div>
+     <input type="text" class="di" id="bv-search" placeholder="🔍 Search by name or ID..." oninput="filterStudents()">
+     <div id="bv-stu-list"></div>
+     <button class="btn-sec" id="bv-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStudents()">Load More</button>
+    </div>
+    <div id="bv-detail" style="display:none">
+     <button class="back-btn" onclick="backToStudentList()">← Back to Students</button>
+     <div id="bv-detail-content"></div>
+    </div>
+   </div>
+
+   <!-- ATTENDANCE -->
+   <div class="adm-sec" id="as-att">
+    <div class="dark-card">
+     <h3>📋 Mark Attendance</h3>
+     <div id="att-alert" class="alert"></div>
+     <div class="picker-wrap">
+      <input type="text" class="di" id="att-pick-inp" placeholder="🔍 Search student..." oninput="searchPicker('att',this.value)" onfocus="document.getElementById('att-pick-res').classList.add('open')">
+      <div class="picker-res" id="att-pick-res"></div>
+     </div>
+     <div id="att-chip" style="display:none"></div>
+     <input type="date" class="di" id="att-date">
+     <select class="ds" id="att-status">
+      <option value="">Select status...</option>
+      <option value="present">✅ Present</option>
+      <option value="absent">❌ Absent</option>
+      <option value="late">⏰ Late</option>
+     </select>
+     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="markAtt()">Save Attendance</button>
+    </div>
+    <div class="dark-card">
+     <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+      <input type="month" class="di" id="att-month" style="flex:1;margin-bottom:0">
+      <button class="btn-acc" onclick="loadAttRecords(true)">Filter</button>
+     </div>
+     <div id="att-records"><div style="color:#8b949e;text-align:center;padding:1.5rem;font-size:.84rem">Pick a month to view records</div></div>
+     <button class="btn-sec" id="att-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadAttRecords(false)">Load More</button>
+    </div>
+   </div>
+
+   <!-- FEES -->
+   <div class="adm-sec" id="as-fees">
+    <div class="dark-card">
+     <h3>💳 Add Fee Entry</h3>
+     <div id="fee-alert" class="alert"></div>
+     <div class="picker-wrap">
+      <input type="text" class="di" id="fee-pick-inp" placeholder="🔍 Search student..." oninput="searchPicker('fee',this.value)" onfocus="document.getElementById('fee-pick-res').classList.add('open')">
+      <div class="picker-res" id="fee-pick-res"></div>
+     </div>
+     <div id="fee-chip" style="display:none"></div>
+     <input type="text" class="di" id="fee-month" placeholder="Month (e.g. May 2026)">
+     <input type="number" class="di" id="fee-amount" placeholder="Amount (Rs)">
+     <input type="date" class="di" id="fee-due">
+     <select class="ds" id="fee-status">
+      <option value="Unpaid">Unpaid</option>
+      <option value="Partial">Partial</option>
+      <option value="Paid">Paid</option>
+     </select>
+     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="addFee()">Add Fee Entry</button>
+    </div>
+    <div class="dark-card">
+     <h3>All Fee Records</h3>
+     <div id="fee-records"><div style="color:#8b949e;text-align:center;padding:1.5rem;font-size:.84rem">Loading...</div></div>
+     <button class="btn-sec" id="fee-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadFees(false)">Load More</button>
+    </div>
+   </div>
+
+   <!-- NOTICES -->
+   <div class="adm-sec" id="as-notices">
+    <div class="dark-card">
+     <h3>📢 Post Announcement</h3>
+     <input type="text" class="di" id="not-title" placeholder="Notice title...">
+     <textarea class="di" id="not-body" placeholder="Write your announcement..."></textarea>
+     <button class="btn-acc" onclick="postNotice()">Post Announcement</button>
+    </div>
+    <div id="notices-list"><div style="color:#8b949e;text-align:center;padding:2rem;font-size:.84rem">No notices yet</div></div>
+   </div>
+
+   <!-- ADD STUDENT -->
+   <div class="adm-sec" id="as-add">
+    <div class="dark-card">
+     <h3>➕ Add New Student</h3>
+     <div id="add-alert" class="alert"></div>
+     <div style="text-align:center;margin-bottom:.85rem">
+      <div class="photo-circle photo-circle-dark" id="add-photo-circle" onclick="document.getElementById('add-photo-file').click()">
+       <span style="font-size:1.8rem">📷</span>
+      </div>
+      <input type="file" id="add-photo-file" accept="image/*" style="display:none" onchange="onAddPhoto(event)">
+      <div style="font-size:.7rem;color:#8b949e;margin-top:.3rem">Click to add photo</div>
+     </div>
+     <input type="text" class="di" id="add-name" placeholder="Full Name *">
+     <input type="tel" class="di" id="add-phone" placeholder="Phone (e.g. +94761234567) *">
+     <input type="email" class="di" id="add-email" placeholder="Email *">
+     <input type="password" class="di" id="add-pass" placeholder="Password (min. 6) *">
+     <select class="ds" id="add-batch">
+      <option value="">Select Batch *</option>
+      <option>Batch 20</option><option>Batch 21</option><option>Batch 22</option>
+      <option>Batch 23</option><option>Batch 24</option>
+     </select>
+     <button class="btn-acc" id="btn-add" onclick="adminAddStudent()" style="width:100%;padding:.72rem">Create Student Account</button>
+    </div>
+   </div>
+
+   <!-- ADMINS -->
+   <div class="adm-sec" id="as-admins">
+    <div class="dark-card">
+     <h3>👑 Manage Admins</h3>
+     <div id="admins-alert" class="alert"></div>
+     <p style="color:#8b949e;font-size:.8rem;margin-bottom:1rem;line-height:1.65">
+      Grant admin access to someone by entering their email. They must first create an account via the Register tab. On their next login they will see the full admin panel.
+     </p>
+     <input type="email" class="di" id="adm-email-inp" placeholder="Enter email to grant admin access...">
+     <button class="btn-acc" style="width:100%;padding:.72rem" onclick="grantAdmin()">✅ Grant Admin Access</button>
+    </div>
+    <div class="dark-card">
+     <h3>Current Admins</h3>
+     <div id="admins-list2"><div style="color:#8b949e;font-size:.82rem">Loading...</div></div>
+    </div>
+   </div>
+
+  </div>
+ </div>
 </div>
 
-<!-- ══ MODALS ══ -->
-<div class="modal-overlay" id="modal-photo">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-photo')">✕</button>
-    <h3>📷 Update Profile Photo</h3>
-    <div id="photo-alert" class="alert"></div>
-    <label style="width:110px;height:110px;border-radius:50%;background:var(--sky);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 1rem;overflow:hidden;position:relative;transition:border-color .2s" for="upload-photo-input" id="upload-photo-label" onmouseover="this.style.borderColor='var(--ocean)'" onmouseout="this.style.borderColor='var(--border)'">
-      <span style="font-size:2rem;color:var(--muted)" id="upload-photo-icon">📷</span>
-      <input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">
-    </label>
-    <div style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
-    <button class="btn-main" onclick="saveStudentPhoto()" id="btn-save-photo">Save Photo</button>
+<!-- PHOTO MODAL (student own photo) -->
+<div class="overlay" id="modal-photo">
+ <div class="modal">
+  <button class="modal-x" onclick="closeModal('modal-photo')">✕</button>
+  <h3>📷 Update Photo</h3>
+  <div id="photo-modal-alert" class="alert"></div>
+  <div class="photo-circle" id="photo-modal-circle" style="width:110px;height:110px" onclick="document.getElementById('photo-modal-file').click()">
+   <span style="font-size:2rem" id="photo-modal-icon">📷</span>
   </div>
+  <input type="file" id="photo-modal-file" accept="image/*" style="display:none" onchange="onModalPhoto(event)">
+  <div style="text-align:center;font-size:.76rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
+  <button class="btn-main" id="btn-save-photo" onclick="savePhoto()">Save Photo</button>
+ </div>
 </div>
 
-<!-- ══ FIREBASE ══ -->
+<!-- GRANT ADMIN MODAL -->
+<div class="overlay" id="modal-grant">
+ <div class="modal dark" style="max-width:380px">
+  <button class="modal-x" onclick="closeModal('modal-grant')">✕</button>
+  <h3>👑 Grant Admin Access</h3>
+  <p style="color:#8b949e;font-size:.8rem;margin-bottom:1.2rem;line-height:1.65">Enter the email of a person who already has an account. They will see the admin panel on their next login.</p>
+  <div id="grant-alert" class="alert"></div>
+  <input type="email" class="di" id="grant-email" placeholder="Enter email address...">
+  <button class="btn-acc" id="btn-grant-do" style="width:100%;padding:.76rem" onclick="doGrantAdmin()">✅ Grant Access</button>
+  <div id="grant-admins-list" style="margin-top:1rem"></div>
+ </div>
+</div>
+
 <script type="module">
-import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword,
-         signInWithEmailAndPassword, signOut,
-         onAuthStateChanged, updatePassword,
-         reauthenticateWithCredential,
-         EmailAuthProvider,
-         RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc,
-         collection, getDocs, addDoc,
-         deleteDoc, query, orderBy, where,
-         serverTimestamp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes,
-         getDownloadURL }                         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  signOut, onAuthStateChanged, EmailAuthProvider,
+  reauthenticateWithCredential, updatePassword,
+  RecaptchaVerifier, signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc, updateDoc,
+  collection, getDocs, addDoc, deleteDoc,
+  query, orderBy, where, serverTimestamp,
+  limit, startAfter, getCountFromServer, increment
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey:            "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
-  authDomain:        "zel-app-cfb38.firebaseapp.com",
-  projectId:         "zel-app-cfb38",
-  storageBucket:     "zel-app-cfb38.firebasestorage.app",
+// ── Config ──
+const app  = initializeApp({
+  apiKey: "AIzaSyDn4b3InpK68vw9HdTgHCc6jpmUuh0YD0c",
+  authDomain: "zel-app-cfb38.firebaseapp.com",
+  projectId: "zel-app-cfb38",
+  storageBucket: "zel-app-cfb38.firebasestorage.app",
   messagingSenderId: "178893517113",
-  appId:             "1:178893517113:web:65cfce0b5cdd2a655d78e8"
-};
-
-const app     = initializeApp(firebaseConfig);
-const auth    = getAuth(app);
-const db      = getFirestore(app);
-const storage = getStorage(app);
+  appId: "1:178893517113:web:65cfce0b5cdd2a655d78e8"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
 const SUPER_ADMIN = "zhakeel.mhd@gmail.com";
-const BATCHES_LIST = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
+const BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
+const PAGE = 30;
 
-async function isAdmin(email) {
-  if (!email) return false;
-  if (email === SUPER_ADMIN) return true;
-  try { const s = await getDoc(doc(db,'admins',email)); return s.exists(); }
-  catch(e) { return false; }
+// ── Helpers ──
+const $ = id => document.getElementById(id);
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); $(id).classList.add('active'); }
+function showAlert(id,msg,type='err',keep=false){
+  const el=$(id); if(!el)return;
+  el.className='alert '+type; el.textContent=msg;
+  if(!keep) setTimeout(()=>{el.className='alert';},5000);
 }
-let currentUser = null;
-let currentBatchView = null;
+function esc(s){ return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+window.esc=esc;
 
-async function generateStudentId() {
-  const year = new Date().getFullYear();
-  const snap = await getDocs(collection(db, 'students'));
-  return `ZEL-${year}-${String(snap.size + 1).padStart(3,'0')}`;
+// ── Image resizer ──
+function resizeImg(file,maxDim=400,q=0.75){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onerror=()=>rej(new Error('Cannot read file'));
+    r.onload=e=>{
+      const img=new Image();
+      img.onerror=()=>rej(new Error('Cannot load image'));
+      img.onload=()=>{
+        let{width:w,height:h}=img;
+        if(w>h&&w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}
+        else if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}
+        const cv=document.createElement('canvas');
+        cv.width=w;cv.height=h;
+        const ctx=cv.getContext('2d');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img,0,0,w,h);
+        res(cv.toDataURL('image/jpeg',q));
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
 }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
+// ── Student ID generator ──
+async function nextStudentId(){
+  const year=new Date().getFullYear();
+  const ref=doc(db,'meta','counters');
+  const snap=await getDoc(ref);
+  let n=1;
+  if(snap.exists()){n=(snap.data().studentCount||0)+1;await updateDoc(ref,{studentCount:increment(1)});}
+  else{const all=await getDocs(collection(db,'students'));n=all.size+1;await setDoc(ref,{studentCount:n,totalPaid:0});}
+  return `ZEL-${year}-${String(n).padStart(3,'0')}`;
 }
 
-function showAlert(elId, msg, type='error') {
-  const el = document.getElementById(elId);
-  el.className = 'alert ' + type;
-  el.textContent = msg;
-  setTimeout(() => { el.className = 'alert'; }, 4000);
+// ── State ──
+let CU=null, CUD=null; // currentUser, currentUserData
+let pendingPhoto=null, regPhoto=null, addPhoto=null;
+let photoTarget=null; // uid for photo modal
+let confirmRes=null, resendTimer=null;
+let attCursor=null, feeCursor=null, batchCursor=null;
+let currentBatch=null, batchLoaded=[];
+let pickers={att:null,fee:null}, pickerTimers={att:null,fee:null};
+let attRecs=[], feeRecs=[];
+let isSuperAdmin=false;
+
+// ── Admin check ──
+async function isAdmin(email){
+  if(!email)return false;
+  if(email===SUPER_ADMIN)return true;
+  try{const s=await getDoc(doc(db,'admins',email));return s.exists();}catch(e){return false;}
 }
 
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    if (await isAdmin(user.email)) {
-      showScreen('admin');
-      loadBatches();
-      loadAdminNotices();
-      loadStudentDropdowns();
-      loadAttendanceRecords();
-      loadFeeRecords();
-      // Multi-admin extras
-      const _admEl = document.getElementById('admin-name-display');
-      if (_admEl) _admEl.textContent = user.email;
-      const _tabBtn = document.getElementById('admins-tab-btn');
-      if (_tabBtn) _tabBtn.style.display = (user.email === SUPER_ADMIN) ? 'block' : 'none';
-      const _grantBtn = document.getElementById('btn-grant-admin-top');
-      if (_grantBtn) _grantBtn.style.display = (user.email === SUPER_ADMIN) ? 'block' : 'none';
-      if (user.email === SUPER_ADMIN) { try { loadAdmins(); } catch(e) {} }
-    } else {
-      showScreen('dashboard');
-      loadStudentData(user);
-      loadNotices();
-      loadStudentAttendance(user.uid);
-      loadStudentFees(user.uid);
-    }
+// ── Auth state ──
+onAuthStateChanged(auth,async user=>{
+  CU=user;
+  if(!user){CUD=null;showScreen('scr-login');return;}
+  const admin=await isAdmin(user.email);
+  if(admin){
+    isSuperAdmin=(user.email===SUPER_ADMIN);
+    showScreen('scr-admin');
+    $('adm-email-lbl').textContent=user.email;
+    $('btn-grant-admin').style.display=isSuperAdmin?'block':'none';
+    $('adm-tab-admins').style.display=isSuperAdmin?'block':'none';
+    loadBatches(); loadNotices(); loadFees(true);
+    if(isSuperAdmin) loadAdminsList();
   } else {
-    showScreen('login');
+    try{const s=await getDoc(doc(db,'students',user.uid));CUD=s.exists()?s.data():{};}catch(e){CUD={};}
+    showScreen('scr-dash');
+    renderStudentUI();
+    loadStudentNotices();
+    loadStudentAtt();
+    loadStudentFees();
   }
 });
 
-window.doLogin = async () => {
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-password').value;
-  const btn   = document.getElementById('btn-login');
-  if (!email || !pass) { showAlert('login-alert','Please fill in all fields.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Signing in...';
-  btn.disabled = true;
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-  } catch(e) {
-    let msg = 'Login failed. Check your credentials.';
-    if (e.code === 'auth/user-not-found')  msg = 'No account found with this email.';
-    if (e.code === 'auth/wrong-password')  msg = 'Incorrect password.';
-    showAlert('login-alert', msg);
-    btn.innerHTML = 'Sign In';
-    btn.disabled = false;
+// ══ AUTH ══
+window.doLogin=async()=>{
+  const email=$('li-email').value.trim(), pass=$('li-pass').value;
+  const btn=$('btn-li');
+  if(!email||!pass){showAlert('la','Please fill in all fields.');return;}
+  btn.innerHTML='<span class="loader"></span>Signing in...';btn.disabled=true;
+  try{await signInWithEmailAndPassword(auth,email,pass);}
+  catch(e){
+    let m='Login failed.';
+    if(e.code==='auth/user-not-found')m='No account found with this email.';
+    if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')m='Incorrect email or password.';
+    showAlert('la',m);btn.innerHTML='Sign In';btn.disabled=false;
   }
 };
 
-window.doRegister = async () => {
-  const name   = document.getElementById('reg-name').value.trim();
-  const phone  = document.getElementById('reg-phone').value.trim();
-  const email  = document.getElementById('reg-email').value.trim();
-  const batch  = document.getElementById('reg-batch').value;
-  const course = document.getElementById('reg-course').value;
-  const pass   = document.getElementById('reg-password').value;
-  const btn    = document.getElementById('btn-register');
+window.doLogout=async()=>await signOut(auth);
 
-  if (!name||!phone||!email||!batch||!course||!pass) { showAlert('login-alert','Please fill in all fields.'); return; }
-  if (pass.length < 6) { showAlert('login-alert','Password must be at least 6 characters.'); return; }
+// ══ PHONE OTP REGISTER ══
+window.onRegPhoto=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  const circle=$('reg-photo-circle');
+  circle.innerHTML='<span style="font-size:1.5rem">⏳</span>';
+  try{
+    regPhoto=await resizeImg(f);
+    circle.innerHTML=`<img src="${regPhoto}" alt="">`;
+    circle.style.borderColor='var(--ocean)';
+  }catch(err){circle.innerHTML='<span style="font-size:1.8rem">📷</span>';console.error(err);}
+};
 
-  btn.innerHTML = '<span class="loader"></span> Creating account...';
-  btn.disabled = true;
+window.sendOTP=async()=>{
+  const name=$('reg-name').value.trim();
+  const cc=$('reg-cc').value;
+  const raw=$('reg-phone').value.trim();
+  const email=$('reg-email').value.trim();
+  const batch=$('reg-batch').value;
+  const pass=$('reg-pass').value;
+  const btn=$('btn-otp');
+  if(!name||!raw||!batch||!pass){showAlert('la','Please fill in all required fields.');return;}
+  if(pass.length<6){showAlert('la','Password must be at least 6 characters.');return;}
+  let phone=raw.replace(/\D/g,'');
+  if(phone.startsWith('0'))phone=phone.substring(1);
+  const fullPhone=cc+phone;
+  btn.innerHTML='<span class="loader"></span>Sending...';btn.disabled=true;
+  try{
+    if(window._rcv){try{window._rcv.clear();}catch(x){}}
+    $('recaptcha-container').innerHTML='';
+    window._rcv=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible'});
+    await window._rcv.render();
+    confirmRes=await signInWithPhoneNumber(auth,fullPhone,window._rcv);
+    window._regData={name,phone:fullPhone,email,batch,pass,photo:regPhoto||''};
+    $('otp-phone-txt').textContent='Code sent to '+fullPhone;
+    $('reg1').style.display='none';
+    $('reg2').style.display='block';
+    $('o0').focus();
+    startResend();
+  }catch(e){
+    let m='Could not send OTP: '+e.message;
+    if(e.code==='auth/invalid-phone-number')m='Invalid phone number. Enter digits only, no leading 0 (e.g. 761234567).';
+    if(e.code==='auth/too-many-requests')m='Too many attempts. Please wait a few minutes.';
+    if(e.code==='auth/operation-not-allowed')m='SMS not enabled for this region. Contact admin.';
+    showAlert('la',m,'err',true);
+    if(window._rcv){try{window._rcv.clear();}catch(x){}window._rcv=null;}
+  }
+  btn.innerHTML='Send OTP via SMS →';btn.disabled=false;
+};
 
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const studentId = await generateStudentId();
-    await setDoc(doc(db, 'students', cred.user.uid), {
-      name, phone, email, batch, course, studentId,
-      enrolledAt: serverTimestamp(),
-      role: 'student'
+window.verifyOTP=async()=>{
+  const code=[0,1,2,3,4,5].map(i=>$('o'+i).value).join('');
+  const btn=$('btn-verify');
+  if(code.length!==6){showAlert('la','Enter all 6 digits.');return;}
+  if(!confirmRes){showAlert('la','Please request OTP first.');return;}
+  btn.innerHTML='<span class="loader"></span>Verifying...';btn.disabled=true;
+  try{
+    const result=await confirmRes.confirm(code);
+    const d=window._regData;
+    const sid=await nextStudentId();
+    await setDoc(doc(db,'students',result.user.uid),{
+      name:d.name, nameLower:d.name.toLowerCase(),
+      phone:d.phone, email:d.email,
+      course:d.batch, studentId:sid,
+      photo:d.photo||'',
+      enrolledAt:serverTimestamp(), role:'student'
     });
-    showAlert('login-alert', `Account created! Your ID: ${studentId}`, 'success');
-  } catch(e) {
-    let msg = 'Registration failed.';
-    if (e.code === 'auth/email-already-in-use') msg = 'This email is already registered.';
-    showAlert('login-alert', msg);
-    btn.innerHTML = 'Create Account';
-    btn.disabled = false;
+    showAlert('la',`✅ Account created! Your Student ID: ${sid}`,'ok');
+    clearInterval(resendTimer);
+    setTimeout(()=>{loginTab('in');},2500);
+  }catch(e){
+    let m='Invalid OTP. Please try again.';
+    if(e.code==='auth/code-expired')m='OTP expired. Please resend.';
+    if(e.code==='auth/invalid-verification-code')m='Wrong code. Please check and try again.';
+    showAlert('la',m);
+  }
+  btn.innerHTML='Verify &amp; Create Account';btn.disabled=false;
+};
+
+window.backToReg1=()=>{
+  $('reg2').style.display='none';
+  $('reg1').style.display='block';
+  clearInterval(resendTimer);
+  if(window._rcv){try{window._rcv.clear();}catch(x){}window._rcv=null;}
+  $('recaptcha-container').innerHTML='';
+};
+
+window.resendOTP=async()=>{
+  if(!window._regData)return;
+  $('resend-link').style.display='none';
+  try{
+    if(window._rcv){try{window._rcv.clear();}catch(x){}}
+    $('recaptcha-container').innerHTML='';
+    window._rcv=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible'});
+    await window._rcv.render();
+    confirmRes=await signInWithPhoneNumber(auth,window._regData.phone,window._rcv);
+    startResend();
+    showAlert('la','OTP resent!','ok');
+  }catch(e){showAlert('la','Could not resend: '+e.message);}
+};
+
+function startResend(){
+  clearInterval(resendTimer);
+  let t=30;
+  $('resend-n').textContent=t;
+  $('resend-timer').style.display='inline';
+  $('resend-link').style.display='none';
+  resendTimer=setInterval(()=>{
+    t--;$('resend-n').textContent=t;
+    if(t<=0){clearInterval(resendTimer);$('resend-timer').style.display='none';$('resend-link').style.display='inline';}
+  },1000);
+}
+
+window.otpIn=i=>{
+  const v=$('o'+i).value;
+  if(v&&i<5)$('o'+(i+1)).focus();
+  if([0,1,2,3,4,5].every(j=>$('o'+j).value))verifyOTP();
+};
+window.otpBk=(e,i)=>{if(e.key==='Backspace'&&!$('o'+i).value&&i>0)$('o'+(i-1)).focus();};
+
+// ══ STUDENT UI ══
+function renderStudentUI(){
+  if(!CUD||!CU)return;
+  const d=CUD;
+  const first=(d.name||'Student').split(' ')[0];
+  const init=first[0]?.toUpperCase()||'S';
+  $('d-welcome').textContent=`Welcome, ${first}! 👋`;
+  $('d-batch').textContent=d.course||'—';
+  $('d-sid').textContent=d.studentId||'—';
+  $('d-sid2').textContent=d.studentId||'ZEL-0000';
+  $('d-name-big').textContent=d.name||'—';
+  $('d-batch2').textContent=d.course||'—';
+  $('d-name').textContent=d.name||'—';
+  $('d-phone').textContent=d.phone||'—';
+  $('d-email').textContent=d.email||'—';
+  if(d.enrolledAt?.toDate)
+    $('d-enrolled').textContent=d.enrolledAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  const src=d.photo||'';
+  const av=$('d-av'), ph=$('d-photo');
+  if(src){av.innerHTML=`<img src="${src}" alt="">`;ph.innerHTML=`<img src="${src}" alt="">`;}
+  else{av.textContent=init;ph.textContent=init;}
+}
+
+async function loadStudentNotices(){
+  const el=$('d-notices');
+  try{
+    const q=query(collection(db,'notices'),orderBy('createdAt','desc'),limit(20));
+    const snap=await getDocs(q);
+    if(snap.empty){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">📭 No announcements yet</div>';return;}
+    el.innerHTML='';
+    snap.forEach(d=>{
+      const n=d.data();
+      const dt=n.createdAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})||'';
+      el.innerHTML+=`<div class="notice-item"><div class="notice-date">${dt}</div><div class="notice-title">${esc(n.title)}</div><div class="notice-body">${esc(n.body)}</div></div>`;
+    });
+  }catch(e){el.innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+}
+
+async function loadStudentAtt(){
+  if(!CU)return;
+  try{
+    const q=query(collection(db,'attendance'),where('studentUid','==',CU.uid));
+    const snap=await getDocs(q);
+    let total=0,present=0,late=0;const recs=[];
+    snap.forEach(d=>{const r=d.data();recs.push(r);total++;if(r.status==='present')present++;if(r.status==='late')late++;});
+    recs.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    const pct=total===0?0:Math.round(((present+late*.5)/total)*100);
+    $('d-att-pct').textContent=pct+'%';
+    $('d-att-bar').style.width=pct+'%';
+    $('d-att-sum').textContent=`${present} present · ${late} late · ${total-present-late} absent (${total} total)`;
+    const grid=$('d-att-grid');
+    if(!recs.length){grid.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.84rem">No records yet</div>';return;}
+    grid.innerHTML='<div class="att-grid">';
+    recs.slice(0,28).forEach(r=>{const day=r.date?r.date.split('-')[2]:'?';grid.innerHTML+=`<div class="att-cell ${r.status}" title="${r.date}">${day}</div>`;});
+    grid.innerHTML+='</div>';
+  }catch(e){console.error(e);}
+}
+
+async function loadStudentFees(){
+  if(!CU)return;
+  try{
+    const q=query(collection(db,'fees'),where('studentUid','==',CU.uid));
+    const snap=await getDocs(q);
+    let total=0,paid=0;const recs=[];
+    snap.forEach(d=>{const r=d.data();recs.push(r);total+=Number(r.amount||0);if(r.status==='Paid')paid+=Number(r.amount||0);if(r.status==='Partial')paid+=Number(r.amount||0)/2;});
+    recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
+    $('d-fee-t').textContent='Rs '+total;
+    $('d-fee-p').textContent='Rs '+paid;
+    $('d-fee-d').textContent='Rs '+(total-paid);
+    const el=$('d-fee-list');
+    if(!recs.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.84rem">💳 No fee records yet</div>';return;}
+    el.innerHTML='';
+    recs.forEach(r=>{el.innerHTML+=`<div class="fee-row"><div><div class="mon">${esc(r.month||'—')}</div><div class="sub">Rs ${r.amount||0} · Due ${r.dueDate||'—'}</div></div><span class="status-pill ${r.status}">${r.status}</span></div>`;});
+  }catch(e){console.error(e);}
+}
+
+// ── Change password ──
+window.changePW=async()=>{
+  const cur=$('pw-cur').value,neu=$('pw-new').value,con=$('pw-con').value;
+  const btn=$('btn-pw');
+  if(!cur||!neu||!con){showAlert('pw-alert','Fill all fields.');return;}
+  if(neu.length<6){showAlert('pw-alert','New password must be ≥6 characters.');return;}
+  if(neu!==con){showAlert('pw-alert','New passwords do not match.');return;}
+  btn.innerHTML='<span class="loader"></span>Updating...';btn.disabled=true;
+  try{
+    await reauthenticateWithCredential(CU,EmailAuthProvider.credential(CU.email,cur));
+    await updatePassword(CU,neu);
+    showAlert('pw-alert','✅ Password updated successfully!','ok');
+    $('pw-cur').value='';$('pw-new').value='';$('pw-con').value='';
+  }catch(e){
+    let m='Failed to update password.';
+    if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')m='Current password is incorrect.';
+    showAlert('pw-alert',m);
+  }
+  btn.innerHTML='Update Password';btn.disabled=false;
+};
+
+// ══ PHOTO MODAL ══
+window.openPhotoModal=(uid)=>{
+  photoTarget=uid||CU?.uid||null;
+  pendingPhoto=null;
+  $('photo-modal-circle').innerHTML='<span style="font-size:2rem" id="photo-modal-icon">📷</span>';
+  $('photo-modal-circle').style.borderColor='var(--border)';
+  $('photo-modal-alert').className='alert';
+  $('modal-photo').classList.add('open');
+};
+
+window.onModalPhoto=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  const circle=$('photo-modal-circle');
+  circle.innerHTML='<span style="font-size:2rem">⏳</span>';
+  showAlert('photo-modal-alert','Processing image...','info',true);
+  try{
+    pendingPhoto=await resizeImg(f);
+    circle.innerHTML=`<img src="${pendingPhoto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    circle.style.borderColor='var(--ocean)';
+    showAlert('photo-modal-alert','✅ Ready — tap Save Photo','ok');
+  }catch(err){
+    circle.innerHTML='<span style="font-size:2rem">📷</span>';
+    showAlert('photo-modal-alert','Could not process image. Try a smaller file.','err',true);
+    pendingPhoto=null;
   }
 };
 
-window.doLogout = async () => { await signOut(auth); };
-
-async function loadStudentData(user) {
-  const snap = await getDoc(doc(db, 'students', user.uid));
-  if (!snap.exists()) return;
-  const d = snap.data();
-  const firstName = d.name?.split(' ')[0] || 'Student';
-
-  document.getElementById('dash-welcome').textContent   = `Welcome, ${firstName}! 👋`;
-  document.getElementById('dash-avatar').textContent    = firstName[0].toUpperCase();
-  document.getElementById('dash-student-id').textContent = d.studentId || 'ZEL-0000';
-  document.getElementById('id-name').textContent        = d.name    || '—';
-  document.getElementById('id-phone').textContent       = d.phone   || '—';
-  document.getElementById('id-batch').textContent       = d.batch   || '—';
-  document.getElementById('id-course').textContent      = d.course  || '—';
-  document.getElementById('id-email').textContent       = d.email   || '—';
-  document.getElementById('card-course').textContent    = d.course  || '—';
-
-  if (d.enrolledAt?.toDate) {
-    document.getElementById('card-enrolled').textContent =
-      d.enrolledAt.toDate().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-  }
-
-  const photoSrc = d.photo || d.photoURL || '';
-  if (photoSrc) {
-    const imgEl = document.getElementById('id-photo-img');
-    const phEl  = document.getElementById('id-photo-placeholder');
-    const avEl  = document.getElementById('dash-avatar');
-    if (imgEl) { imgEl.src = photoSrc; imgEl.style.display = 'block'; }
-    if (phEl)  { phEl.style.display = 'none'; }
-    if (avEl)  { avEl.innerHTML = '<img src="'+photoSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; }
-  }
-}
-
-async function loadNotices() {
-  const list = document.getElementById('notices-list');
-  try {
-    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
-    const snap = await getDocs(q);
-    if (snap.empty) { list.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span>No announcements yet</div>'; return; }
-    list.innerHTML = '';
-    snap.forEach(d => {
-      const n = d.data();
-      const date = n.createdAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) || '';
-      list.innerHTML += `
-        <div class="notice-card">
-          <div class="notice-date">${date}</div>
-          <div class="notice-title">${n.title}</div>
-          <div class="notice-body">${n.body}</div>
-        </div>`;
-    });
-  } catch(e) {}
-}
-
-async function loadStudentAttendance(uid) {
-  try {
-    const q = query(collection(db,'attendance'), where('studentId','==',uid));
-    const snap = await getDocs(q);
-    const total = snap.size;
-    let present = 0;
-    snap.forEach(d => { if (d.data().status === 'present') present++; });
-    const rate = total ? Math.round((present/total)*100) : 0;
-    document.getElementById('att-rate').textContent = rate + '%';
-    document.getElementById('att-bar').style.width = rate + '%';
-    document.getElementById('att-summary').textContent = `${present} present out of ${total} days`;
-
-    const grid = document.getElementById('att-grid');
-    grid.innerHTML = '';
-    if (snap.empty) {
-      grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--muted); font-size:0.8rem;">No attendance records yet</div>';
-      return;
-    }
-    snap.forEach(d => {
-      const a = d.data();
-      const cls = `att-cell ${a.status}`;
-      const ico = a.status==='present'?'✓':a.status==='absent'?'✕':'⏰';
-      grid.innerHTML += `<div class="${cls}">${ico}</div>`;
-    });
-  } catch(e) {}
-}
-
-async function loadStudentFees(uid) {
-  try {
-    const q = query(collection(db,'fees'), where('studentId','==',uid));
-    const snap = await getDocs(q);
-    let total = 0, paid = 0;
-    const details = document.getElementById('fee-details-list');
-    details.innerHTML = '';
-    if (snap.empty) {
-      details.innerHTML = '<div class="empty-state"><span class="empty-icon">💳</span>No fee records yet</div>';
-      document.getElementById('fee-total').textContent = 'Rs. 0';
-      document.getElementById('fee-paid').textContent = 'Rs. 0';
-      document.getElementById('fee-outstanding').textContent = 'Rs. 0';
-      return;
-    }
-    snap.forEach(d => {
-      const f = d.data();
-      total += f.amount || 0;
-      if (f.status === 'paid') paid += f.amount || 0;
-      const statusColor = f.status==='paid'?'var(--success)':f.status==='partial'?'var(--warning)':'var(--danger)';
-      details.innerHTML += `
-        <div class="fee-row">
-          <div>
-            <div class="fee-label">${f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-GB') : '—'}</div>
-            <div class="fee-value" style="font-size:0.85rem;">Rs. ${f.amount}</div>
-          </div>
-          <div style="text-align:right;">
-            <div class="fee-label" style="color:${statusColor}; font-weight:600; text-transform:uppercase;">
-              ${f.status || 'unpaid'}
-            </div>
-          </div>
-        </div>`;
-    });
-    document.getElementById('fee-total').textContent = 'Rs. ' + total;
-    document.getElementById('fee-paid').textContent = 'Rs. ' + paid;
-    document.getElementById('fee-outstanding').textContent = 'Rs. ' + (total - paid);
-  } catch(e) {}
-}
-
-window.changePassword = async () => {
-  const current = document.getElementById('pass-current').value;
-  const newPass = document.getElementById('pass-new').value;
-  const confirm = document.getElementById('pass-confirm').value;
-  const btn = document.getElementById('btn-pass');
-  
-  if (!current || !newPass || !confirm) { showAlert('pass-alert','Please fill in all fields.'); return; }
-  if (newPass.length < 6) { showAlert('pass-alert','New password must be at least 6 characters.'); return; }
-  if (newPass !== confirm) { showAlert('pass-alert','Passwords do not match.'); return; }
-  
-  btn.innerHTML = '<span class="loader"></span> Updating...';
-  btn.disabled = true;
-  
-  try {
-    const cred = EmailAuthProvider.credential(currentUser.email, current);
-    await reauthenticateWithCredential(currentUser, cred);
-    await updatePassword(currentUser, newPass);
-    showAlert('pass-alert','✅ Password updated successfully!','success');
-    document.getElementById('pass-current').value = '';
-    document.getElementById('pass-new').value = '';
-    document.getElementById('pass-confirm').value = '';
-  } catch(e) {
-    let msg = 'Failed to update password.';
-    if (e.code === 'auth/wrong-password') msg = 'Current password is incorrect.';
-    showAlert('pass-alert', msg);
-  }
-  
-  btn.innerHTML = 'Update Password';
-  btn.disabled = false;
-};
-
-// ══ ADMIN ══
-async function loadBatches() {
-  const list = document.getElementById('batches-list');
-  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  try {
-    const snap = await getDocs(collection(db,'students'));
-    const batches = {};
-    snap.forEach(d => {
-      const batch = d.data().course || d.data().batch || 'Unknown';
-      batches[batch] = (batches[batch] || 0) + 1;
-    });
-    document.getElementById('stat-total').textContent = snap.size;
-    document.getElementById('stat-batches').textContent = Object.keys(batches).length;
-    if (Object.keys(batches).length === 0) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No batches yet</div>';
-      return;
-    }
-    list.innerHTML = '';
-    Object.entries(batches).forEach(([batch, count]) => {
-      list.innerHTML += `
-        <div class="batch-card" onclick="openBatch('${batch}')">
-          <div class="batch-name">${batch}</div>
-          <div class="batch-count">👥 ${count} students</div>
-        </div>`;
-    });
-  } catch(e) {}
-}
-
-window.openBatch = async (batch) => {
-  currentBatchView = batch;
-  document.getElementById('batch-detail-title').textContent = batch;
-  const list = document.getElementById('batch-students-list');
-  list.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  try {
-    const q = query(collection(db,'students'), where('course','==',batch));
-    const snap = await getDocs(q);
-    if (snap.empty) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No students in this batch</div>';
-      return;
-    }
-    list.innerHTML = '';
-    snap.forEach(d => {
-      const s = d.data();
-      list.innerHTML += `
-        <div class="student-card" onclick="openStudentDetail('${d.id}')">
-          <div class="student-info">
-            <div class="student-id-badge">${s.studentId || 'N/A'}</div>
-            <div class="student-name">${s.name}</div>
-            <div class="student-meta">${s.email}</div>
-          </div>
-          <div class="student-actions">
-            <button class="btn-sm" onclick="event.stopPropagation(); openStudentDetail('${d.id}')">View →</button>
-          </div>
-        </div>`;
-    });
-  } catch(e) {}
-  document.getElementById('section-batches').classList.remove('active');
-  document.getElementById('section-batch-detail').classList.add('active');
-};
-
-window.backToBatches = () => {
-  document.getElementById('section-batch-detail').classList.remove('active');
-  document.getElementById('section-batches').classList.add('active');
-};
-
-window.openStudentDetail = async (uid) => {
-  const card = document.getElementById('student-detail-card');
-  card.innerHTML = '<div class="empty-state" style="color:#8b949e;">Loading...</div>';
-  try {
-    const snap = await getDoc(doc(db,'students',uid));
-    if (!snap.exists()) return;
-    const s = snap.data();
-    const photo = s.photoURL ?
-      `<img src="${s.photoURL}" class="detail-photo">` :
-      `<div class="detail-photo-placeholder">👤</div>`;
-    card.innerHTML = `
-      <div class="detail-header">
-        ${photo}
-        <div class="detail-id">${s.studentId || 'N/A'}</div>
-        <div class="detail-name">${s.name}</div>
-      </div>
-      <div class="detail-fields">
-        <div class="detail-field"><label>Email</label><span>${s.email}</span></div>
-        <div class="detail-field"><label>Phone</label><span>${s.phone}</span></div>
-        <div class="detail-field"><label>Batch</label><span>${s.batch || '—'}</span></div>
-        <div class="detail-field"><label>Course</label><span>${s.course}</span></div>
-        <div class="detail-field full"><label>Enrolled</label><span>${s.enrolledAt?.toDate?.()?.toLocaleDateString('en-GB') || '—'}</span></div>
-      </div>
-      <div style="margin-top:1.5rem; display:flex; gap:0.5rem;">
-        <button class="btn-admin" style="flex:1;" onclick="openPhotoModal('${uid}')">📷 Upload Photo</button>
-        <button class="btn-danger" onclick="deleteStudent('${uid}')">🗑 Delete</button>
-      </div>
-    `;
-  } catch(e) {}
-  document.getElementById('section-batch-detail').classList.remove('active');
-  document.getElementById('section-student-detail').classList.add('active');
-};
-
-window.backToBatchDetail = () => {
-  document.getElementById('section-student-detail').classList.remove('active');
-  document.getElementById('section-batch-detail').classList.add('active');
-  openBatch(currentBatchView);
-};
-
-window.deleteStudent = async (uid) => {
-  if (!confirm('Delete this student? This cannot be undone.')) return;
-  await deleteDoc(doc(db,'students',uid));
-  backToBatchDetail();
-  loadBatches();
-};
-
-let uploadTargetStudentId = null;
-window.openPhotoModal = (uid) => {
-  uploadTargetStudentId = uid || (currentUser ? currentUser.uid : null);
-  _pendingStudentPhoto = null;
-  // Reset modal UI
-  const lbl = document.getElementById('upload-photo-label');
-  if (lbl) lbl.innerHTML = '<span style="font-size:2rem;color:var(--muted)">📷</span><input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">';
-  const alert = document.getElementById('photo-alert');
-  if (alert) alert.className = 'alert';
-  document.getElementById('modal-photo').classList.add('open');
-};
-
-window.closeModal = (id) => {
-  document.getElementById(id).classList.remove('open');
-};
-
-// ── Student photo preview & save ──
-let _pendingStudentPhoto = null;
-
-window.previewStudentPhoto = async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  showPhotoAlert('Processing image...', 'info');
-  try {
-    _pendingStudentPhoto = await resizeImage(f, 400, 0.7);
-    const lbl = document.getElementById('upload-photo-label');
-    lbl.innerHTML = '<img src="' + _pendingStudentPhoto + '" style="width:100%;height:100%;object-fit:cover"><input type="file" id="upload-photo-input" accept="image/*" style="display:none" onchange="previewStudentPhoto(event)">';
-    showPhotoAlert('✅ Ready — tap Save Photo', 'success');
-  } catch(err) { showPhotoAlert('Error: ' + err.message, 'error'); _pendingStudentPhoto = null; }
-};
-
-function showPhotoAlert(msg, type) {
-  const el = document.getElementById('photo-alert');
-  if (!el) return;
-  el.className = 'alert ' + type; el.textContent = msg;
-  if (type !== 'error') setTimeout(() => { el.className = 'alert'; }, 4000);
-}
-
-window.saveStudentPhoto = async () => {
-  const btn = document.getElementById('btn-save-photo');
-  if (!_pendingStudentPhoto) { showPhotoAlert('Please choose a photo first.', 'error'); return; }
-  if (!currentUser) { showPhotoAlert('Not logged in.', 'error'); return; }
-  btn.innerHTML = '<span class="loader"></span> Saving...'; btn.disabled = true;
-  try {
-    const targetId = uploadTargetStudentId || currentUser.uid;
-    await updateDoc(doc(db,'students', targetId), { photo: _pendingStudentPhoto });
-    // If updating own photo, refresh dashboard
-    if (targetId === currentUser.uid && currentUserData) {
-      currentUserData.photo = _pendingStudentPhoto;
-      loadStudentData(currentUser);
-    }
-    showPhotoAlert('✅ Photo saved!', 'success');
-    setTimeout(() => {
+window.savePhoto=async()=>{
+  const btn=$('btn-save-photo');
+  if(!pendingPhoto){showAlert('photo-modal-alert','Please choose a photo first.');return;}
+  if(!photoTarget){showAlert('photo-modal-alert','No target selected.');return;}
+  btn.innerHTML='<span class="loader"></span>Saving...';btn.disabled=true;
+  try{
+    await updateDoc(doc(db,'students',photoTarget),{photo:pendingPhoto});
+    if(CU&&photoTarget===CU.uid&&CUD){CUD.photo=pendingPhoto;renderStudentUI();}
+    showAlert('photo-modal-alert','✅ Photo saved!','ok');
+    setTimeout(()=>{
       closeModal('modal-photo');
-      if (uploadTargetStudentId && uploadTargetStudentId !== currentUser.uid) {
-        openStudentDetail(uploadTargetStudentId);
-      }
-      _pendingStudentPhoto = null;
-      uploadTargetStudentId = null;
-    }, 800);
-  } catch(e) {
-    let msg = 'Save failed: ' + e.message;
-    if (e.code === 'permission-denied') msg = 'Permission denied — check Firestore rules.';
-    showPhotoAlert(msg, 'error');
+      if(photoTarget&&CU&&photoTarget!==CU.uid)openStudentDetail(photoTarget);
+    },700);
+  }catch(e){
+    let m='Save failed: '+e.message;
+    if(e.code==='permission-denied')m='Permission denied — check Firestore rules in Firebase Console.';
+    showAlert('photo-modal-alert',m,'err',true);
   }
-  btn.innerHTML = 'Save Photo'; btn.disabled = false;
+  btn.innerHTML='Save Photo';btn.disabled=false;
 };
 
-async function loadStudentDropdowns() {
-  const snap = await getDocs(collection(db,'students'));
-  const attSel = document.getElementById('att-student');
-  const feeSel = document.getElementById('fee-student');
-  attSel.innerHTML = '<option value="">Select student...</option>';
-  feeSel.innerHTML = '<option value="">Select student...</option>';
-  snap.forEach(d => {
-    const s = d.data();
-    const opt = `<option value="${d.id}">${s.name} (${s.studentId})</option>`;
-    attSel.innerHTML += opt;
-    feeSel.innerHTML += opt;
+window.closeModal=id=>$(id).classList.remove('open');
+
+// ══ ADMIN: BATCHES ══
+window.loadBatches=async()=>{
+  const grid=$('batch-grid');
+  grid.innerHTML='<div style="color:#8b949e;text-align:center;padding:2rem">Loading...</div>';
+  try{
+    const total=await getCountFromServer(collection(db,'students'));
+    $('st-students').textContent=total.data().count;
+    $('st-batches').textContent=BATCHES.length;
+    grid.innerHTML='';
+    for(const b of BATCHES){
+      const cnt=await getCountFromServer(query(collection(db,'students'),where('course','==',b)));
+      const n=cnt.data().count;
+      grid.innerHTML+=`<div class="batch-card" onclick='openBatch("${b}")'><div class="bi">📚</div><div class="bn">${esc(b)}</div><div class="bc"><strong>${n}</strong> student${n===1?'':'s'}</div></div>`;
+    }
+  }catch(e){grid.innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+};
+
+window.openBatch=async b=>{
+  currentBatch=b;batchCursor=null;batchLoaded=[];
+  $('bv-list').style.display='none';
+  $('bv-students').style.display='block';
+  $('bv-detail').style.display='none';
+  $('bv-title').textContent=b;
+  $('bv-search').value='';
+  $('bv-stu-list').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';
+  await loadMoreStudents();
+};
+
+window.showBatchList=()=>{
+  $('bv-list').style.display='block';
+  $('bv-students').style.display='none';
+  $('bv-detail').style.display='none';
+};
+
+window.loadMoreStudents=async()=>{
+  try{
+    let q=query(collection(db,'students'),where('course','==',currentBatch),orderBy('name'),limit(PAGE));
+    if(batchCursor)q=query(collection(db,'students'),where('course','==',currentBatch),orderBy('name'),startAfter(batchCursor),limit(PAGE));
+    const snap=await getDocs(q);
+    if(snap.empty&&batchLoaded.length===0){$('bv-stu-list').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No students in this batch yet.</div>';$('bv-more').style.display='none';return;}
+    if(batchLoaded.length===0)$('bv-stu-list').innerHTML='';
+    snap.forEach(d=>batchLoaded.push({...d.data(),id:d.id}));
+    batchCursor=snap.docs[snap.docs.length-1];
+    $('bv-more').style.display=snap.size===PAGE?'block':'none';
+    renderStudentRows();
+  }catch(e){$('bv-stu-list').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+};
+
+function renderStudentRows(filter=''){
+  const el=$('bv-stu-list');
+  const list=filter?batchLoaded.filter(s=>(s.name||'').toLowerCase().includes(filter)||(s.studentId||'').toLowerCase().includes(filter)):batchLoaded;
+  if(!list.length){el.innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No matches found.</div>';return;}
+  el.innerHTML='';
+  list.forEach(s=>{
+    const init=(s.name?.[0]||'S').toUpperCase();
+    const ph=s.photo?`<img src="${s.photo}" alt="">`:init;
+    el.innerHTML+=`<div class="stu-row" onclick="openStudentDetail('${s.id}')"><div class="stu-av">${ph}</div><div style="flex:1;min-width:0"><div class="stu-id">${esc(s.studentId||'N/A')}</div><div class="stu-name">${esc(s.name||'—')}</div><div class="stu-meta">${esc(s.phone||'')} · ${esc(s.email||'')}</div></div><div class="arr">›</div></div>`;
   });
 }
 
-window.markAttendance = async () => {
-  const studentId = document.getElementById('att-student').value;
-  const date = document.getElementById('att-date').value;
-  const status = document.getElementById('att-status').value;
-  if (!studentId || !date || !status) { alert('Please fill all fields'); return; }
-  await addDoc(collection(db,'attendance'), { studentId, date, status, createdAt: serverTimestamp() });
-  alert('✅ Attendance marked!');
-  document.getElementById('att-status').value = '';
-  loadAttendanceRecords();
+window.filterStudents=()=>{renderStudentRows($('bv-search').value.toLowerCase().trim());};
+
+window.backToStudentList=()=>{$('bv-detail').style.display='none';$('bv-students').style.display='block';};
+
+window.openStudentDetail=async uid=>{
+  $('bv-students').style.display='none';
+  $('bv-detail').style.display='block';
+  const el=$('bv-detail-content');
+  el.innerHTML='<div style="color:#8b949e;padding:2rem;text-align:center">Loading...</div>';
+  const snap=await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){el.innerHTML='<div style="color:var(--danger);padding:1rem">Student not found.</div>';return;}
+  const s=snap.data();
+  const init=(s.name?.[0]||'S').toUpperCase();
+  const ph=s.photo?`<img src="${s.photo}" alt="">`:init;
+  const enr=s.enrolledAt?.toDate?.()?.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})||'—';
+  el.innerHTML=`
+    <div class="det-card">
+      <div class="det-photo-row">
+        <div class="det-photo">${ph}</div>
+        <div>
+          <div class="det-name">${esc(s.name||'—')}</div>
+          <span class="det-id">${esc(s.studentId||'N/A')}</span>
+        </div>
+      </div>
+      <div class="det-fields">
+        <div class="det-field"><label>Batch</label><span>${esc(s.course||'—')}</span></div>
+        <div class="det-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
+        <div class="det-field" style="grid-column:1/-1"><label>Email</label><span>${esc(s.email||'—')}</span></div>
+        <div class="det-field"><label>Enrolled</label><span>${enr}</span></div>
+        <div class="det-field"><label>Status</label><span style="color:#86efac;font-weight:600">✅ Active</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <button class="act-btn" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
+      <button class="act-btn" onclick="quickJump('att','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
+      <button class="act-btn" onclick="quickJump('fee','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">💳 Fees</button>
+    </div>
+    <button class="btn-del" style="width:100%;padding:.72rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
 };
 
-async function loadAttendanceRecords() {
-  const list = document.getElementById('att-records-list');
-  try {
-    const q = query(collection(db,'attendance'), orderBy('createdAt','desc'));
-    const snap = await getDocs(q);
-    if (snap.empty) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No attendance records yet</div>';
-      return;
-    }
-    list.innerHTML = '';
-    const studentsSnap = await getDocs(collection(db,'students'));
-    const studentsMap = {};
-    studentsSnap.forEach(d => studentsMap[d.id] = d.data());
-    
-    snap.forEach(d => {
-      const a = d.data();
-      const student = studentsMap[a.studentId] || {};
-      const statusColor = a.status==='present'?'var(--success)':a.status==='absent'?'var(--danger)':'var(--warning)';
-      list.innerHTML += `
-        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div style="color:white; font-weight:500; font-size:0.9rem;">${student.name || '—'}</div>
-              <div style="color:#8b949e; font-size:0.78rem;">${a.date} · <span style="color:${statusColor}; text-transform:uppercase; font-weight:600;">${a.status}</span></div>
-            </div>
-            <button class="btn-danger" onclick="deleteRecord('attendance','${d.id}')">🗑</button>
-          </div>
-        </div>`;
-    });
-  } catch(e) {}
+window.quickJump=(kind,uid,sid,name)=>{
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
+  if(kind==='att'){
+    document.querySelectorAll('.adm-tab')[1].classList.add('active');
+    $('as-att').classList.add('active');
+    selectPicker('att',uid,sid,name);
+  } else {
+    document.querySelectorAll('.adm-tab')[2].classList.add('active');
+    $('as-fees').classList.add('active');
+    selectPicker('fee',uid,sid,name);
+  }
+};
+
+window.deleteStudent=async uid=>{
+  if(!confirm('Remove this student from the database?'))return;
+  await deleteDoc(doc(db,'students',uid));
+  try{await updateDoc(doc(db,'meta','counters'),{studentCount:increment(-1)});}catch(x){}
+  showBatchList();loadBatches();
+};
+
+// ══ PICKER ══
+window.searchPicker=async(kind,term)=>{
+  const res=$(`${kind}-pick-res`);
+  res.classList.add('open');
+  term=term.trim();
+  if(!term){res.innerHTML='<div class="picker-empty">Type to search by name or ID...</div>';return;}
+  clearTimeout(pickerTimers[kind]);
+  pickerTimers[kind]=setTimeout(async()=>{
+    res.innerHTML='<div class="picker-empty">Searching...</div>';
+    try{
+      const up=term.toUpperCase(),lo=term.toLowerCase();
+      const map=new Map();
+      try{const q=query(collection(db,'students'),where('studentId','>=',up),where('studentId','<=',up+'\uf8ff'),limit(8));(await getDocs(q)).forEach(d=>map.set(d.id,{...d.data(),id:d.id}));}catch(x){}
+      try{const q=query(collection(db,'students'),where('nameLower','>=',lo),where('nameLower','<=',lo+'\uf8ff'),limit(8));(await getDocs(q)).forEach(d=>map.set(d.id,{...d.data(),id:d.id}));}catch(x){}
+      const arr=[...map.values()].slice(0,12);
+      if(!arr.length){res.innerHTML='<div class="picker-empty">No students found.</div>';return;}
+      res.innerHTML='';
+      arr.forEach(s=>{
+        const div=document.createElement('div');
+        div.className='picker-item';
+        div.innerHTML=`<div class="pid">${esc(s.studentId||'')}</div><div class="pname">${esc(s.name||'')}</div><div class="pbatch">${esc(s.course||'')}</div>`;
+        div.onclick=()=>selectPicker(kind,s.id,s.studentId,s.name);
+        res.appendChild(div);
+      });
+    }catch(e){res.innerHTML=`<div class="picker-empty">Error: ${e.message}</div>`;}
+  },250);
+};
+
+function selectPicker(kind,uid,sid,name){
+  pickers[kind]={uid,sid,name};
+  $(`${kind}-pick-inp`).parentElement.style.display='none';
+  const chip=$(`${kind}-chip`);
+  chip.style.display='block';
+  chip.innerHTML=`<div class="chip"><span><strong>${esc(sid)}</strong>${esc(name)}</span><button onclick="clearPicker('${kind}')">✕</button></div>`;
+  $(`${kind}-pick-res`).classList.remove('open');
 }
+window.selectPicker=selectPicker;
 
-window.addFee = async () => {
-  const studentId = document.getElementById('fee-student').value;
-  const amount = parseInt(document.getElementById('fee-amount').value);
-  const dueDate = document.getElementById('fee-due').value;
-  if (!studentId || !amount || !dueDate) { alert('Please fill all fields'); return; }
-  await addDoc(collection(db,'fees'), { studentId, amount, dueDate, status:'unpaid', createdAt: serverTimestamp() });
-  alert('✅ Fee record added!');
-  document.getElementById('fee-amount').value = '';
-  document.getElementById('fee-due').value = '';
-  loadFeeRecords();
+window.clearPicker=kind=>{
+  pickers[kind]=null;
+  $(`${kind}-pick-inp`).parentElement.style.display='block';
+  $(`${kind}-chip`).style.display='none';
+  $(`${kind}-pick-inp`).value='';
 };
 
-async function loadFeeRecords() {
-  const list = document.getElementById('fee-records-list');
-  try {
-    const q = query(collection(db,'fees'), orderBy('createdAt','desc'));
-    const snap = await getDocs(q);
-    let totalCollected = 0;
-    if (snap.empty) {
-      list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No fee records yet</div>';
-      document.getElementById('stat-fees').textContent = '0';
-      return;
-    }
-    list.innerHTML = '';
-    const studentsSnap = await getDocs(collection(db,'students'));
-    const studentsMap = {};
-    studentsSnap.forEach(d => studentsMap[d.id] = d.data());
-    
-    snap.forEach(d => {
-      const f = d.data();
-      const student = studentsMap[f.studentId] || {};
-      if (f.status === 'paid') totalCollected += f.amount || 0;
-      const statusColor = f.status==='paid'?'var(--success)':f.status==='partial'?'var(--warning)':'var(--danger)';
-      list.innerHTML += `
-        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-            <div style="flex:1; min-width:150px;">
-              <div style="color:white; font-weight:500; font-size:0.9rem;">${student.name || '—'}</div>
-              <div style="color:#8b949e; font-size:0.78rem;">Rs. ${f.amount} · Due: ${f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-GB') : '—'}</div>
-            </div>
-            <div style="display:flex; gap:0.5rem; align-items:center;">
-              <select style="background:#0d1117; border:1px solid #30363d; color:white; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.75rem;" onchange="updateFeeStatus('${d.id}', this.value)">
-                <option value="unpaid" ${f.status==='unpaid'?'selected':''}>Unpaid</option>
-                <option value="partial" ${f.status==='partial'?'selected':''}>Partial</option>
-                <option value="paid" ${f.status==='paid'?'selected':''}>Paid</option>
-              </select>
-              <button class="btn-danger" onclick="deleteRecord('fees','${d.id}')">🗑</button>
-            </div>
-          </div>
-        </div>`;
-    });
-    document.getElementById('stat-fees').textContent = totalCollected;
-  } catch(e) {}
+document.addEventListener('click',e=>{
+  ['att','fee'].forEach(k=>{const w=$(`${k}-pick-inp`)?.parentElement;if(w&&!w.contains(e.target))$(`${k}-pick-res`)?.classList.remove('open');});
+});
+
+// ══ ATTENDANCE ══
+window.markAtt=async()=>{
+  const sel=pickers.att, date=$('att-date').value, status=$('att-status').value;
+  if(!sel){showAlert('att-alert','Please select a student.');return;}
+  if(!date||!status){showAlert('att-alert','Please fill all fields.');return;}
+  try{
+    await addDoc(collection(db,'attendance'),{studentUid:sel.uid,studentName:sel.name,studentId:sel.sid,date,status,createdAt:serverTimestamp()});
+    showAlert('att-alert','✅ Attendance saved!','ok');
+    $('att-status').value='';
+    loadAttRecords(true);
+  }catch(e){showAlert('att-alert','Save failed: '+e.message);}
+};
+
+window.loadAttRecords=async(reset=true)=>{
+  const month=$('att-month').value;
+  if(!month){$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">Pick a month to view records</div>';$('att-more').style.display='none';return;}
+  if(reset){attCursor=null;attRecs=[];$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';}
+  try{
+    let q=query(collection(db,'attendance'),where('date','>=',month+'-01'),where('date','<=',month+'-31'),orderBy('date','desc'),limit(PAGE));
+    if(attCursor)q=query(collection(db,'attendance'),where('date','>=',month+'-01'),where('date','<=',month+'-31'),orderBy('date','desc'),startAfter(attCursor),limit(PAGE));
+    const snap=await getDocs(q);
+    if(snap.empty&&!attRecs.length){$('att-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No records found for this month.</div>';$('att-more').style.display='none';return;}
+    snap.forEach(d=>attRecs.push({...d.data(),id:d.id}));
+    attCursor=snap.docs[snap.docs.length-1];
+    $('att-more').style.display=snap.size===PAGE?'block':'none';
+    const colors={present:'#16a34a',absent:'#dc2626',late:'#d97706'};
+    $('att-records').innerHTML='';
+    attRecs.forEach(r=>{$('att-records').innerHTML+=`<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]};color:#fff;padding:.22rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="btn-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`;});
+  }catch(e){$('att-records').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+};
+
+window.delAtt=async id=>{if(!confirm('Delete?'))return;await deleteDoc(doc(db,'attendance',id));loadAttRecords(true);};
+
+// ══ FEES ══
+function feeCont(status,amount){if(status==='Paid')return Number(amount||0);if(status==='Partial')return Number(amount||0)/2;return 0;}
+
+window.addFee=async()=>{
+  const sel=pickers.fee,month=$('fee-month').value.trim(),amount=$('fee-amount').value,due=$('fee-due').value,status=$('fee-status').value;
+  if(!sel){showAlert('fee-alert','Please select a student.');return;}
+  if(!month||!amount){showAlert('fee-alert','Please fill required fields.');return;}
+  try{
+    await addDoc(collection(db,'fees'),{studentUid:sel.uid,studentName:sel.name,studentId:sel.sid,month,amount:Number(amount),dueDate:due,status,createdAt:serverTimestamp()});
+    const delta=feeCont(status,amount);
+    if(delta>0){try{const r=doc(db,'meta','counters');const s=await getDoc(r);if(s.exists())await updateDoc(r,{totalPaid:increment(delta)});else await setDoc(r,{totalPaid:delta},{merge:true});}catch(x){}}
+    showAlert('fee-alert','✅ Fee added!','ok');
+    $('fee-month').value='';$('fee-amount').value='';$('fee-due').value='';
+    loadFees(true);
+  }catch(e){showAlert('fee-alert','Save failed: '+e.message);}
+};
+
+window.loadFees=async(reset=true)=>{
+  if(reset){feeCursor=null;feeRecs=[];$('fee-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center">Loading...</div>';}
+  try{
+    let q=query(collection(db,'fees'),orderBy('createdAt','desc'),limit(PAGE));
+    if(feeCursor)q=query(collection(db,'fees'),orderBy('createdAt','desc'),startAfter(feeCursor),limit(PAGE));
+    const snap=await getDocs(q);
+    if(snap.empty&&!feeRecs.length){$('fee-records').innerHTML='<div style="color:#8b949e;padding:1.5rem;text-align:center;font-size:.84rem">No fee records yet.</div>';$('fee-more').style.display='none';}
+    snap.forEach(d=>feeRecs.push({...d.data(),id:d.id}));
+    if(snap.docs.length)feeCursor=snap.docs[snap.docs.length-1];
+    $('fee-more').style.display=snap.size===PAGE?'block':'none';
+    try{const ms=await getDoc(doc(db,'meta','counters'));$('st-fees').textContent='Rs '+(ms.exists()?(ms.data().totalPaid||0):0);}catch(x){}
+    $('fee-records').innerHTML='';
+    feeRecs.forEach(r=>{$('fee-records').innerHTML+=`<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${r.dueDate||'—'}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.76rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="btn-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`;});
+  }catch(e){$('fee-records').innerHTML=`<div style="color:var(--danger);padding:1rem;font-size:.82rem">Error: ${e.message}</div>`;}
+};
+
+window.updateFeeStatus=async(id,ns,amount,os)=>{
+  await updateDoc(doc(db,'fees',id),{status:ns});
+  try{const d=feeCont(ns,amount)-feeCont(os,amount);if(d!==0)await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});}catch(x){}
+  loadFees(true);
+};
+window.delFee=async(id,amount,status)=>{
+  if(!confirm('Delete this fee record?'))return;
+  await deleteDoc(doc(db,'fees',id));
+  try{const d=-feeCont(status,amount);if(d!==0)await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});}catch(x){}
+  loadFees(true);
+};
+
+// ══ NOTICES ══
+window.postNotice=async()=>{
+  const title=$('not-title').value.trim(),body=$('not-body').value.trim();
+  if(!title||!body){alert('Please fill in title and message.');return;}
+  await addDoc(collection(db,'notices'),{title,body,createdAt:serverTimestamp()});
+  $('not-title').value='';$('not-body').value='';
+  loadNotices();alert('✅ Announcement posted!');
+};
+
+async function loadNotices(){
+  const el=$('notices-list');
+  try{
+    const q=query(collection(db,'notices'),orderBy('createdAt','desc'),limit(50));
+    const snap=await getDocs(q);
+    $('st-notices').textContent=snap.size;
+    if(snap.empty){el.innerHTML='<div style="color:#8b949e;padding:2rem;text-align:center;font-size:.84rem">No notices yet.</div>';return;}
+    el.innerHTML='';
+    snap.forEach(d=>{const n=d.data();el.innerHTML+=`<div class="dark-card" style="margin-bottom:.6rem;padding:.95rem 1.15rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem"><div style="color:#fff;font-weight:600;font-size:.88rem">${esc(n.title)}</div><button class="btn-del" onclick="delNotice('${d.id}')">🗑</button></div><div style="color:#8b949e;font-size:.8rem">${esc(n.body)}</div></div>`;});
+  }catch(e){}
 }
+window.delNotice=async id=>{await deleteDoc(doc(db,'notices',id));loadNotices();};
 
-window.updateFeeStatus = async (id, status) => {
-  await updateDoc(doc(db,'fees',id), { status });
-  loadFeeRecords();
+// ══ ADD STUDENT ══
+window.onAddPhoto=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  const c=$('add-photo-circle');
+  c.innerHTML='<span style="font-size:1.8rem">⏳</span>';
+  try{addPhoto=await resizeImg(f);c.innerHTML=`<img src="${addPhoto}" alt="">`;c.style.borderColor='var(--accent)';}
+  catch(err){c.innerHTML='<span style="font-size:1.8rem">📷</span>';console.error(err);}
 };
 
-window.deleteRecord = async (col, id) => {
-  if (!confirm('Delete this record?')) return;
-  await deleteDoc(doc(db,col,id));
-  if (col === 'attendance') loadAttendanceRecords();
-  if (col === 'fees') loadFeeRecords();
-  if (col === 'notices') loadAdminNotices();
-};
-
-window.postNotice = async () => {
-  const title = document.getElementById('notice-title').value.trim();
-  const body  = document.getElementById('notice-body').value.trim();
-  if (!title || !body) { alert('Please fill in title and message.'); return; }
-  await addDoc(collection(db,'notices'), { title, body, createdAt: serverTimestamp() });
-  document.getElementById('notice-title').value = '';
-  document.getElementById('notice-body').value  = '';
-  loadAdminNotices();
-  alert('✅ Announcement posted!');
-};
-
-async function loadAdminNotices() {
-  const list = document.getElementById('admin-notices-list');
-  try {
-    const q    = query(collection(db,'notices'), orderBy('createdAt','desc'));
-    const snap = await getDocs(q);
-    document.getElementById('stat-notices').textContent = snap.size;
-    if (snap.empty) { list.innerHTML = '<div class="empty-state" style="color:#8b949e;">No notices posted yet.</div>'; return; }
-    list.innerHTML = '';
-    snap.forEach(d => {
-      const n = d.data();
-      list.innerHTML += `
-        <div class="notice-form" style="margin-bottom:0.75rem; padding:1rem 1.25rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
-            <div style="color:white; font-weight:500; font-size:0.9rem;">${n.title}</div>
-            <button class="btn-danger" onclick="deleteRecord('notices','${d.id}')">🗑</button>
-          </div>
-          <div style="color:#8b949e; font-size:0.82rem;">${n.body}</div>
-        </div>`;
+window.adminAddStudent=async()=>{
+  const name=$('add-name').value.trim(),phone=$('add-phone').value.trim();
+  const email=$('add-email').value.trim(),pass=$('add-pass').value;
+  const batch=$('add-batch').value;
+  const btn=$('btn-add');
+  if(!name||!phone||!email||!pass||!batch){showAlert('add-alert','Please fill in all fields.');return;}
+  if(pass.length<6){showAlert('add-alert','Password must be at least 6 characters.');return;}
+  btn.innerHTML='<span class="loader"></span>Creating...';btn.disabled=true;
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const sid=await nextStudentId();
+    await setDoc(doc(db,'students',cred.user.uid),{
+      name,nameLower:name.toLowerCase(),phone,email,
+      course:batch,studentId:sid,
+      photo:addPhoto||'',
+      enrolledAt:serverTimestamp(),role:'student'
     });
-  } catch(e) {}
-}
-
-window.adminAddStudent = async () => {
-  const name   = document.getElementById('add-name').value.trim();
-  const phone  = document.getElementById('add-phone').value.trim();
-  const email  = document.getElementById('add-email').value.trim();
-  const pass   = document.getElementById('add-password').value;
-  const batch  = document.getElementById('add-batch').value;
-  const course = document.getElementById('add-course').value;
-  const photoFile = document.getElementById('add-photo').files[0];
-  const btn    = document.getElementById('btn-add-student');
-
-  if (!name||!phone||!email||!pass||!batch||!course) { showAlert('add-alert','Please fill in all required fields.'); return; }
-  if (pass.length < 6) { showAlert('add-alert','Password must be at least 6 characters.'); return; }
-
-  btn.innerHTML = '<span class="loader"></span> Creating...';
-  btn.disabled  = true;
-
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const studentId = await generateStudentId();
-    const data = { name, phone, email, batch, course, studentId, enrolledAt: serverTimestamp(), role: 'student' };
-    
-    if (photoFile) {
-      const storageRef = ref(storage, `students/${cred.user.uid}.jpg`);
-      await uploadBytes(storageRef, photoFile);
-      data.photoURL = await getDownloadURL(storageRef);
-    }
-    
-    await setDoc(doc(db,'students', cred.user.uid), data);
-    showAlert('add-alert', `✅ Student created! ID: ${studentId}`, 'success');
-    document.getElementById('add-name').value     = '';
-    document.getElementById('add-phone').value    = '';
-    document.getElementById('add-email').value    = '';
-    document.getElementById('add-password').value = '';
-    document.getElementById('add-batch').value    = '';
-    document.getElementById('add-course').value   = '';
-    document.getElementById('add-photo').value    = '';
+    showAlert('add-alert',`✅ Student created! ID: ${sid}`,'ok');
+    $('add-name').value='';$('add-phone').value='';$('add-email').value='';
+    $('add-pass').value='';$('add-batch').value='';
+    addPhoto=null;
+    $('add-photo-circle').innerHTML='<span style="font-size:1.8rem">📷</span>';
+    $('add-photo-circle').style.borderColor='';
     loadBatches();
-    loadStudentDropdowns();
-  } catch(e) {
-    let msg = 'Failed to create student.';
-    if (e.code === 'auth/email-already-in-use') msg = 'This email already has an account.';
-    showAlert('add-alert', msg);
+  }catch(e){
+    let m='Failed: '+e.message;
+    if(e.code==='auth/email-already-in-use')m='This email is already registered.';
+    showAlert('add-alert',m);
   }
-
-  btn.innerHTML = 'Create Student Account';
-  btn.disabled  = false;
+  btn.innerHTML='Create Student Account';btn.disabled=false;
 };
 
-
-// ══ ADMINS MANAGEMENT ══
-window.addAdmin = async () => {
-  const email = document.getElementById('new-admin-email').value.trim().toLowerCase();
-  if (!email) { showAlert('admin-mgmt-alert','Enter an email.'); return; }
-  if (email === SUPER_ADMIN) { showAlert('admin-mgmt-alert','That is already the super admin.'); return; }
-  try {
-    await setDoc(doc(db,'admins',email), { email, grantedBy: currentUser.email, grantedAt: serverTimestamp() });
-    showAlert('admin-mgmt-alert', '✅ Admin access granted to ' + email, 'success');
-    document.getElementById('new-admin-email').value = '';
-    loadAdmins();
-  } catch(e) { showAlert('admin-mgmt-alert','Failed: '+e.message); }
+// ══ ADMINS ══
+window.grantAdmin=async()=>{
+  const email=$('adm-email-inp').value.trim().toLowerCase();
+  if(!email||!email.includes('@')){showAlert('admins-alert','Please enter a valid email.');return;}
+  if(email===SUPER_ADMIN){showAlert('admins-alert','That is already the super admin.');return;}
+  try{
+    await setDoc(doc(db,'admins',email),{email,grantedBy:CU.email,grantedAt:serverTimestamp()});
+    showAlert('admins-alert','✅ Admin access granted to '+email,'ok');
+    $('adm-email-inp').value='';
+    loadAdminsList();
+  }catch(e){showAlert('admins-alert','Failed: '+e.message);}
 };
 
-async function loadAdmins() {
-  const list = document.getElementById('admins-list');
-  if (!list) return;
-  try {
-    const snap = await getDocs(collection(db,'admins'));
-    list.innerHTML = '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.85rem 1rem;margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between"><div><div style="color:white;font-size:.9rem;font-weight:500">' + escapeHtml(SUPER_ADMIN) + ' <span style="background:rgba(0,180,216,.15);color:var(--accent);border:1px solid var(--accent);font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.15rem .5rem;border-radius:4px">SUPER</span></div><div style="color:#8b949e;font-size:.75rem;margin-top:.15rem">Owner — cannot be removed</div></div></div>';
-    if (snap.empty) return;
-    snap.forEach(d => {
-      const a = d.data();
-      list.innerHTML += '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.85rem 1rem;margin-bottom:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap"><div><div style="color:white;font-size:.9rem;font-weight:500">' + escapeHtml(a.email) + '</div><div style="color:#8b949e;font-size:.75rem;margin-top:.15rem">Added by ' + escapeHtml(a.grantedBy||'') + '</div></div><button class="btn-danger" onclick="removeAdmin(' + "'" + escapeHtml(a.email) + "'" + ')">Remove</button></div>';
+async function loadAdminsList(){
+  const el=$('admins-list2');
+  if(!el)return;
+  try{
+    const snap=await getDocs(collection(db,'admins'));
+    el.innerHTML=`<div class="adm-row"><div><div class="adm-email">${esc(SUPER_ADMIN)}<span class="super-tag">SUPER</span></div><div class="adm-sub">Owner — permanent</div></div></div>`;
+    if(snap.empty)return;
+    snap.forEach(d=>{
+      const a=d.data();
+      el.innerHTML+=`<div class="adm-row"><div><div class="adm-email">${esc(a.email)}</div><div class="adm-sub">Added by ${esc(a.grantedBy||'')}</div></div><button class="btn-del" onclick="removeAdmin('${esc(a.email)}')">Remove</button></div>`;
     });
-  } catch(e) { list.innerHTML='<div class="empty-state" style="color:#8b949e">Error loading admins.</div>'; }
+  }catch(e){el.innerHTML='<div style="color:#8b949e;font-size:.8rem">Error loading admins.</div>';}
 }
 
-window.removeAdmin = async email => {
-  if (!confirm('Remove admin access for ' + email + '?')) return;
+window.removeAdmin=async email=>{
+  if(!confirm('Remove admin access for '+email+'?'))return;
   await deleteDoc(doc(db,'admins',email));
-  showAlert('admin-mgmt-alert', '✅ Removed admin: ' + email, 'success');
-  loadAdmins();
+  loadAdminsList();
+  loadGrantAdminList();
 };
 
-
-
-// ══ PHONE OTP ══
-window.previewRegPhoto = async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  try {
-    const data = await resizeImage(f, 400, 0.7);
-    window._regPhoto = data;
-    const lbl = document.getElementById('reg-photo-label');
-    if (lbl) {
-      lbl.style.border = '2px solid var(--ocean)';
-      lbl.innerHTML = '<img src="'+data+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><input type="file" id="reg-photo-input" accept="image/*" style="display:none" onchange="previewRegPhoto(event)">';
-    }
-  } catch(err) {
-    alert('Could not load image. Try a smaller photo.');
-    console.error(err);
-  }
+// Grant admin modal
+window.openGrantModal=()=>{
+  $('grant-email').value='';
+  $('grant-alert').className='alert';
+  $('modal-grant').classList.add('open');
+  loadGrantAdminList();
 };
 
-window.sendOTP = async () => {
-  const name = document.getElementById('reg-name').value.trim();
-  const cc   = document.getElementById('reg-country').value;
-  const raw  = document.getElementById('reg-phone').value.trim();
-  const course = document.getElementById('reg-course').value;
-  const pass = document.getElementById('reg-password').value;
-  const btn  = document.getElementById('btn-send-otp');
-  if (!name||!raw||!course||!pass) { showAlert('login-alert','Fill all fields.'); return; }
-  if (pass.length < 6) { showAlert('login-alert','Password must be ≥6 chars.'); return; }
-  let phone = raw.replace(/\D/g,'');
-  if (phone.startsWith('0')) phone = phone.substring(1);
-  const fullPhone = cc + phone;
-  btn.innerHTML = '<span class="loader"></span> Sending...'; btn.disabled = true;
-  try {
-    // Always destroy and recreate reCAPTCHA to avoid "already rendered" error
-    if (window._rcv) {
-      try { window._rcv.clear(); } catch(_) {}
-      window._rcv = null;
-    }
-    // Reset the container element completely
-    const container = document.getElementById('recaptcha-container');
-    container.innerHTML = '';
-    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    await window._rcv.render();
-    window._confirmResult = await signInWithPhoneNumber(auth, fullPhone, window._rcv);
-    document.getElementById('reg-step1').style.display = 'none';
-    document.getElementById('reg-step2').style.display = 'block';
-    document.getElementById('otp-phone-shown').textContent = 'Code sent to ' + fullPhone;
-    document.getElementById('otp0').focus();
-    const regEmail = document.getElementById('reg-email') ? document.getElementById('reg-email').value.trim() : '';
-    window._pendingReg = { name, phone: fullPhone, course, pass, email: regEmail, photo: window._regPhoto || '' };
-    startResendTimer();
-  } catch(e) {
-    let msg = 'Could not send OTP: ' + e.message;
-    if (e.code === 'auth/invalid-phone-number') msg = 'Invalid phone number. Enter without leading 0 (e.g. 761234567)';
-    if (e.code === 'auth/too-many-requests') msg = 'Too many attempts. Try again later.';
-    showAlert('login-alert', msg);
-    if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-  }
-  btn.innerHTML = 'Send OTP via SMS &rarr;'; btn.disabled = false;
-};
-
-window.verifyOTP = async () => {
-  const code = [0,1,2,3,4,5].map(i => document.getElementById('otp'+i).value).join('');
-  const btn = document.getElementById('btn-verify-otp');
-  if (code.length !== 6) { showAlert('login-alert','Enter all 6 digits.'); return; }
-  if (!window._confirmResult) { showAlert('login-alert','Request OTP first.'); return; }
-  btn.innerHTML = '<span class="loader"></span> Verifying...'; btn.disabled = true;
-  try {
-    const result = await window._confirmResult.confirm(code);
-    const reg = window._pendingReg;
-    const studentId = await generateStudentId();
-    await setDoc(doc(db,'students',result.user.uid), {
-      name: reg.name, nameLower: reg.name.toLowerCase(),
-      phone: reg.phone, email: reg.email || result.user.email || '',
-      course: reg.course, studentId, photo: reg.photo || '',
-      enrolledAt: serverTimestamp(), role: 'student'
-    });
-    showAlert('login-alert', '\u2705 Account created! Your ID: ' + studentId, 'success');
-    [0,1,2,3,4,5].forEach(i => { document.getElementById('otp'+i).value = ''; });
-    clearInterval(window._resendTimer);
-  } catch(e) {
-    let msg = 'Invalid OTP. Try again.';
-    if (e.code === 'auth/code-expired') msg = 'OTP expired. Please resend.';
-    if (e.code === 'auth/invalid-verification-code') msg = 'Wrong code. Check and try again.';
-    showAlert('login-alert', msg);
-  }
-  btn.innerHTML = 'Verify &amp; Create Account'; btn.disabled = false;
-};
-
-window.backToOTPStep1 = () => {
-  document.getElementById('reg-step2').style.display = 'none';
-  document.getElementById('reg-step1').style.display = 'block';
-  clearInterval(window._resendTimer);
-  if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-  const container = document.getElementById('recaptcha-container');
-  if (container) container.innerHTML = '';
-};
-
-window.resendOTP = async () => {
-  if (!window._pendingReg) return;
-  document.getElementById('resend-btn').style.display = 'none';
-  try {
-    if (window._rcv) { try { window._rcv.clear(); } catch(_){} window._rcv = null; }
-    const container = document.getElementById('recaptcha-container');
-    container.innerHTML = '';
-    window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    await window._rcv.render();
-    window._confirmResult = await signInWithPhoneNumber(auth, window._pendingReg.phone, window._rcv);
-    startResendTimer();
-  } catch(e) { showAlert('login-alert','Could not resend: '+e.message); }
-};
-
-function startResendTimer() {
-  clearInterval(window._resendTimer);
-  let t = 30;
-  document.getElementById('resend-count').textContent = t;
-  document.getElementById('resend-timer').style.display = 'block';
-  document.getElementById('resend-btn').style.display = 'none';
-  window._resendTimer = setInterval(() => {
-    t--;
-    document.getElementById('resend-count').textContent = t;
-    if (t <= 0) {
-      clearInterval(window._resendTimer);
-      document.getElementById('resend-timer').style.display = 'none';
-      document.getElementById('resend-btn').style.display = 'block';
-    }
-  }, 1000);
+async function loadGrantAdminList(){
+  const el=$('grant-admins-list');if(!el)return;
+  try{
+    const snap=await getDocs(collection(db,'admins'));
+    if(snap.empty){el.innerHTML='<div style="color:#8b949e;font-size:.76rem;margin-top:.75rem">No extra admins yet.</div>';return;}
+    const emails=[];snap.forEach(d=>emails.push(d.data().email));
+    el.innerHTML='<div style="color:#8b949e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-top:.85rem;margin-bottom:.4rem">Current Admins</div>'+
+      emails.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid #30363d"><span style="color:#fff;font-size:.8rem">${esc(e)}</span><button onclick="removeAdminGrant('${esc(e)}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.75rem">✕ Remove</button></div>`).join('');
+  }catch(e){el.innerHTML='';}
 }
 
-window.otpMove = i => {
-  const val = document.getElementById('otp'+i).value;
-  if (val && i < 5) document.getElementById('otp'+(i+1)).focus();
-  if ([0,1,2,3,4,5].every(j => document.getElementById('otp'+j).value)) verifyOTP();
-};
-window.otpBack = (e, i) => {
-  if (e.key === 'Backspace' && !document.getElementById('otp'+i).value && i > 0)
-    document.getElementById('otp'+(i-1)).focus();
+window.removeAdminGrant=async email=>{
+  if(!confirm('Remove admin access for '+email+'?'))return;
+  await deleteDoc(doc(db,'admins',email));
+  loadGrantAdminList();loadAdminsList();
 };
 
-// ══ GRANT ADMIN MODAL ══
-window.openGrantAdminModal = () => {
-  const inp = document.getElementById('grant-admin-email');
-  if (inp) inp.value = '';
-  const al = document.getElementById('grant-admin-alert');
-  if (al) al.className = 'alert';
-  document.getElementById('modal-grant-admin').classList.add('open');
-  loadCurrentAdminsMini();
-  setTimeout(() => { if (inp) inp.focus(); }, 150);
+window.doGrantAdmin=async()=>{
+  const email=$('grant-email').value.trim().toLowerCase();
+  const btn=$('btn-grant-do');
+  if(!email||!email.includes('@')){showAlert('grant-alert','Enter a valid email address.');return;}
+  if(email===SUPER_ADMIN){showAlert('grant-alert','That is already the super admin!');return;}
+  btn.textContent='Saving...';btn.disabled=true;
+  try{
+    await setDoc(doc(db,'admins',email),{email,grantedBy:CU.email,grantedAt:serverTimestamp()});
+    showAlert('grant-alert','✅ Admin access granted to '+email+'! They see admin panel on next login.','ok');
+    $('grant-email').value='';
+    loadGrantAdminList();loadAdminsList();
+  }catch(e){showAlert('grant-alert','Failed: '+e.message);}
+  btn.textContent='✅ Grant Access';btn.disabled=false;
 };
-
-async function loadCurrentAdminsMini() {
-  const el = document.getElementById('current-admins-mini');
-  if (!el) return;
-  try {
-    const snap = await getDocs(collection(db,'admins'));
-    if (snap.empty) {
-      el.innerHTML = '<div style="color:#8b949e;font-size:.78rem;margin-top:.75rem">No extra admins yet.</div>';
-      return;
-    }
-    const emails = [];
-    snap.forEach(d => emails.push(d.data().email));
-    el.innerHTML = '<div style="margin-top:.75rem;margin-bottom:.4rem;color:#8b949e;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Current Admins</div>' +
-      emails.map(e => '<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid #30363d"><span style="color:white;font-size:.82rem">' + escapeHtml(e) + '</span><button onclick="removeAdminMini('' + escapeHtml(e) + '')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.75rem;padding:0 .35rem">✕ Remove</button></div>').join('');
-  } catch(e) { el.innerHTML = ''; }
-}
-
-window.removeAdminMini = async (email) => {
-  if (!confirm('Remove admin access for ' + email + '?')) return;
-  try {
-    await deleteDoc(doc(db,'admins',email));
-    loadCurrentAdminsMini();
-    showGrantAlert('✅ Removed: ' + email, 'success');
-    try { loadAdmins(); } catch(e) {}
-  } catch(e) { showGrantAlert('Failed: ' + e.message, 'error'); }
-};
-
-window.grantAdminFromModal = async () => {
-  const email = document.getElementById('grant-admin-email').value.trim().toLowerCase();
-  const btn = document.getElementById('btn-do-grant');
-  if (!email || !email.includes('@')) { showGrantAlert('Enter a valid email address.', 'error'); return; }
-  if (email === SUPER_ADMIN) { showGrantAlert('That is already the super admin!', 'error'); return; }
-  btn.textContent = 'Saving...'; btn.disabled = true;
-  try {
-    await setDoc(doc(db,'admins',email), {
-      email, grantedBy: currentUser.email, grantedAt: serverTimestamp()
-    });
-    showGrantAlert('✅ Admin granted to ' + email + '! They see the admin panel on next login.', 'success');
-    document.getElementById('grant-admin-email').value = '';
-    loadCurrentAdminsMini();
-    try { loadAdmins(); } catch(e) {}
-  } catch(e) { showGrantAlert('Failed: ' + e.message, 'error'); }
-  btn.textContent = '✅ Grant Access'; btn.disabled = false;
-};
-
-function showGrantAlert(msg, type) {
-  const el = document.getElementById('grant-admin-alert');
-  if (!el) return;
-  el.className = 'alert ' + type; el.textContent = msg;
-  if (type !== 'error') setTimeout(() => { el.className = 'alert'; }, 5000);
-}
-
 </script>
 
 <script>
-window.switchTab = (tab) => {
-  if (tab === 'register') {
-    document.getElementById('reg-step1').style.display = 'block';
-    document.getElementById('reg-step2').style.display = 'none';
+// ── Navigation (non-module) ──
+window.loginTab=tab=>{
+  $('tab-in').style.display=tab==='in'?'block':'none';
+  $('tab-reg').style.display=tab==='reg'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='in'&&i===0)||(tab==='reg'&&i===1)));
+  $('la').className='alert';
+  if(tab==='reg'){
+    $('reg1').style.display='block';
+    $('reg2').style.display='none';
+    const c=document.getElementById('reg-photo-circle');
+    if(c){c.innerHTML='<span style="font-size:1.8rem">📷</span>';c.style.borderColor='';}
   }
-  document.getElementById('tab-login').style.display    = tab==='login'    ? 'block' : 'none';
-  document.getElementById('tab-register').style.display = tab==='register' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    b.classList.toggle('active', (tab==='login' && i===0)||(tab==='register' && i===1));
-  });
-  document.getElementById('login-alert').className = 'alert';
 };
 
-window.studentNav = (section, btn) => {
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+window.stuTab=(sec,btn)=>{
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  ['home','id','attendance','fees','password'].forEach(s => {
-    document.getElementById('student-tab-'+s).style.display = s===section ? 'block' : 'none';
-  });
+  document.querySelectorAll('.sub-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ss-'+sec).classList.add('active');
 };
 
-window.adminTab = (tab, btn) => {
-  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+window.admTab=(sec,btn)=>{
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('section-'+tab).classList.add('active');
-  if (tab === 'batches') { try { loadBatches(); } catch(e){} }
-  if (tab === 'admins') { try { loadAdmins(); } catch(e){} }
+  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('as-'+sec).classList.add('active');
+  if(sec==='batches'&&typeof showBatchList==='function')showBatchList();
 };
+
+function $(id){return document.getElementById(id);}
 </script>
-
-<!-- GRANT ADMIN MODAL -->
-<div class="modal-overlay" id="modal-grant-admin">
-  <div class="modal dark" style="max-width:380px">
-    <button class="modal-close" onclick="closeModal('modal-grant-admin')" style="color:#8b949e">✕</button>
-    <h3 style="color:white;margin-bottom:.5rem">👑 Grant Admin Access</h3>
-    <p style="color:#8b949e;font-size:.8rem;margin-bottom:1.25rem;line-height:1.6">Enter the email of a person who already has an account in ZEL. They will see the admin panel on their next login.</p>
-    <div id="grant-admin-alert" class="alert"></div>
-    <input type="email" id="grant-admin-email" placeholder="Enter their email address..." style="width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:.75rem 1rem;color:white;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;margin-bottom:.75rem;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#30363d'">
-    <button onclick="grantAdminFromModal()" id="btn-do-grant" style="width:100%;background:var(--accent);color:#0d1117;border:none;border-radius:8px;padding:.8rem;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s;letter-spacing:.05em" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">✅ Grant Access</button>
-    <div style="margin-top:1rem">
-      <div id="current-admins-mini" style="color:#8b949e;font-size:.78rem"></div>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
