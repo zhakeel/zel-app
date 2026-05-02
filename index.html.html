@@ -552,6 +552,7 @@ textarea.di{min-height:78px;resize:vertical}
     <button onclick="admTab('att',this)">📋 Attendance</button>
     <button onclick="admTab('fees',this)">💳 Fees</button>
     <button onclick="admTab('notices',this)">📢 Notices</button>
+    <button onclick="admTab('gallery',this)">📸 Gallery</button>
     <button onclick="admTab('add',this)">➕ Add Student</button>
     <button id="t-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
    </div>
@@ -666,6 +667,29 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="b-acc" onclick="postNotice()">Post Announcement</button>
     </div>
     <div id="no-list"><div class="empty" style="color:#8b949e">No notices yet</div></div>
+   </div>
+
+   <!-- GALLERY -->
+   <div class="sec" id="as-gallery">
+    <div class="dc">
+     <h3>📸 Upload Photo to Website Gallery</h3>
+     <div id="gl-al" class="alert"></div>
+     <p style="color:#8b949e;font-size:.78rem;margin-bottom:1rem;line-height:1.6">
+      Photos uploaded here automatically appear on your public website gallery (Life at ZEL section).
+     </p>
+     <div style="text-align:center;margin-bottom:.85rem">
+      <div class="pc dark" id="gl-pc" onclick="document.getElementById('gl-pf').click()" style="width:120px;height:120px;border-radius:14px">📷</div>
+      <input type="file" id="gl-pf" accept="image/*" style="display:none" onchange="onGalleryPhoto(event)">
+      <div style="font-size:.7rem;color:#8b949e;margin-top:.3rem">Click to choose photo</div>
+     </div>
+     <input type="text" class="di" id="gl-title" placeholder="Photo title (e.g. 13th Batch Farewell)">
+     <input type="text" class="di" id="gl-caption" placeholder="Short caption (e.g. Memorable graduation moment)">
+     <button class="b-acc" id="bt-gl" onclick="uploadGalleryPhoto()" style="width:100%;padding:.7rem">📤 Upload to Gallery</button>
+    </div>
+    <div class="dc">
+     <h3>Current Gallery Photos</h3>
+     <div id="gl-list"><div style="color:#8b949e;font-size:.8rem">Loading...</div></div>
+    </div>
    </div>
 
    <!-- ADD STUDENT -->
@@ -930,6 +954,78 @@ window.doLogin = async () => {
     alertMsg('la', m);
   }
   btn.innerHTML = 'Sign In'; btn.disabled = false;
+};
+
+let galleryPhoto = null;
+
+window.onGalleryPhoto = async (e) => {
+  const f = e.target.files[0]; if(!f) return;
+  const c = $('gl-pc');
+  c.innerHTML = '⏳';
+  try {
+    galleryPhoto = await resizeImg(f, 1000, 0.8);
+    c.innerHTML = `<img src="${galleryPhoto}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
+    c.style.borderColor = 'var(--accent)';
+    c.style.borderStyle = 'solid';
+  } catch(err){
+    c.innerHTML = '📷';
+    alert('Could not process image.');
+  }
+};
+
+window.uploadGalleryPhoto = async () => {
+  const title = $('gl-title').value.trim();
+  const caption = $('gl-caption').value.trim();
+  const btn = $('bt-gl');
+  if(!galleryPhoto){ alertMsg('gl-al', 'Please choose a photo.'); return; }
+  if(!title){ alertMsg('gl-al', 'Please enter a title.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Uploading...'; btn.disabled = true;
+  try {
+    await addDoc(collection(db,'gallery'), {
+      title, caption: caption || '',
+      photo: galleryPhoto,
+      uploadedBy: CU.email,
+      createdAt: serverTimestamp()
+    });
+    alertMsg('gl-al', '\u2705 Photo added to gallery!', 'ok');
+    $('gl-title').value = ''; $('gl-caption').value = '';
+    galleryPhoto = null;
+    $('gl-pc').innerHTML = '📷';
+    $('gl-pc').style.borderColor = '';
+    $('gl-pc').style.borderStyle = '';
+    loadGalleryList();
+  } catch(e){
+    alertMsg('gl-al', 'Failed: ' + e.message);
+  }
+  btn.innerHTML = '📤 Upload to Gallery'; btn.disabled = false;
+};
+
+async function loadGalleryList(){
+  const el = $('gl-list');
+  if(!el) return;
+  try {
+    const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
+    if(snap.empty){
+      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
+      return;
+    }
+    el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
+    snap.forEach(d => {
+      const g = d.data();
+      el.innerHTML += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;position:relative"><img src="${g.photo}" style="width:100%;height:120px;object-fit:cover;display:block"><div style="padding:.55rem .65rem"><div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'')}</div><div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div><button class="b-del" style="width:100%;font-size:.68rem" onclick="deleteGalleryPhoto('${d.id}')">🗑 Remove</button></div></div>`;
+    });
+    el.innerHTML += '</div>';
+  } catch(e){
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`;
+  }
+}
+
+window.deleteGalleryPhoto = async (id) => {
+  if(!confirm('Remove this photo from the gallery?')) return;
+  try {
+    await deleteDoc(doc(db,'gallery', id));
+    loadGalleryList();
+  } catch(e){ alert('Failed: ' + e.message); }
 };
 
 window.doLogout = async () => {
@@ -1884,6 +1980,9 @@ function admTab(sec, btn){
   $$('as-' + sec).classList.add('active');
   if(sec === 'batches' && typeof showBatchList === 'function'){
     showBatchList();
+  }
+  if(sec === 'gallery' && typeof loadGalleryList === 'function'){
+    loadGalleryList();
   }
 }
 window.admTab = admTab;
