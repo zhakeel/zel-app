@@ -419,7 +419,7 @@ textarea.di{min-height:78px;resize:vertical}
   <div class="topbar">
    <div class="tb-brand"><span class="dot"></span> ZEL</div>
    <div class="tb-right">
-    <div class="av" id="d-av">S</div>
+    <div class="av" id="d-av" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
     <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
    </div>
   </div>
@@ -456,7 +456,7 @@ textarea.di{min-height:78px;resize:vertical}
       <span class="id-badge" id="d-sid2">ZEL-0000</span>
      </div>
      <div class="id-row">
-      <div class="id-photo" id="d-ph">S</div>
+      <div class="id-photo" id="d-ph" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
       <div>
        <div style="font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ocean-dark);margin-bottom:.22rem" id="d-nm-big">—</div>
        <div style="font-size:.82rem;color:var(--muted)" id="d-ba2">—</div>
@@ -1487,7 +1487,7 @@ window.openStudentDetail = async uid => {
   el.innerHTML = `
     <div class="det">
       <div class="d-row">
-        <div class="d-photo">${ph}</div>
+        <div class="d-photo" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">${ph}</div>
         <div>
           <div class="d-name">${esc(s.name||'—')}</div>
           <span class="d-id">${esc(s.studentId||'N/A')}</span>
@@ -2045,6 +2045,30 @@ window.doGrant = async () => {
 // ── Navigation (non-module, plain script) ──
 function $$(id){ return document.getElementById(id); }
 
+// ══ PHOTO ZOOM ══
+window.zoomPhoto = function(el){
+  if(!el) return;
+  const img = el.querySelector('img');
+  if(!img || !img.src){
+    // No photo to zoom (just initial letter) - do nothing
+    return;
+  }
+  document.getElementById('zoom-img').src = img.src;
+  document.getElementById('zoom-ovl').classList.add('show');
+};
+
+window.closeZoom = function(){
+  document.getElementById('zoom-ovl').classList.remove('show');
+};
+
+// Close zoom on Escape
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    var ovl = document.getElementById('zoom-ovl');
+    if(ovl && ovl.classList.contains('show')) ovl.classList.remove('show');
+  }
+});
+
 function loginTab(tab){
   $$('pg-in').style.display = tab === 'in' ? 'block' : 'none';
   $$('pg-rg').style.display = tab === 'rg' ? 'block' : 'none';
@@ -2076,5 +2100,16 @@ function admTab(sec, btn){
 }
 window.admTab = admTab;
 </script>
+
+<!-- PHOTO ZOOM OVERLAY -->
+<div id="zoom-ovl" onclick="closeZoom()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out;backdrop-filter:blur(8px)">
+  <span style="position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2.2rem;cursor:pointer;background:rgba(255,255,255,.1);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1" onclick="event.stopPropagation();closeZoom()">&times;</span>
+  <img id="zoom-img" src="" style="max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:zoomIn .3s ease both">
+</div>
+<style>
+@keyframes zoomIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+#zoom-ovl.show{display:flex!important}
+</style>
+
 </body>
 </html>
