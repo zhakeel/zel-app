@@ -368,7 +368,7 @@ textarea.di{min-height:78px;resize:vertical}
 
   <!-- SIGN IN -->
   <div id="pg-in">
-   <div class="fg"><label>Email Address</label><input type="email" id="li-em" placeholder="your@email.com" autocomplete="email"></div>
+   <div class="fg"><label>Email or Student ID</label><input type="text" id="li-em" placeholder="your@email.com or ZEL-2026-001" autocomplete="username"></div>
    <div class="fg"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" autocomplete="current-password"></div>
    <button class="btn" id="bt-li" onclick="doLogin()">Sign In</button>
   </div>
@@ -381,7 +381,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -901,6 +901,7 @@ onAuthStateChanged(auth, async user => {
   CU = user;
   if(!user){
     CUD = null;
+    stopDisabledWatcher();
     showScreen('scr-login');
     loadBatchOptions(); // refresh in case
     return;
@@ -918,19 +919,40 @@ onAuthStateChanged(auth, async user => {
     loadFees(true);
     if(isSuperAdmin) loadAdminsList();
   } else {
-    // Load student data
-    try {
-      const s = await getDoc(doc(db, 'students', user.uid));
-      CUD = s.exists() ? s.data() : null;
-    } catch(e){ CUD = null; }
+    // Load student data with retry logic
+    // (handles timing issue when student just registered and setDoc may not have completed)
+    CUD = null;
+    for(let attempt = 0; attempt < 5; attempt++){
+      try {
+        const s = await getDoc(doc(db, 'students', user.uid));
+        if(s.exists()){
+          CUD = s.data();
+          break;
+        }
+      } catch(e){ /* keep trying */ }
+      // Wait 600ms before retrying
+      await new Promise(r => setTimeout(r, 600));
+    }
     showScreen('scr-dash');
     if(CUD){
       renderStudent();
       loadStudentNotices();
       loadStudentAtt();
       loadStudentFees();
+      // Start watching for admin removal
+      startDisabledWatcher(user.uid);
     } else {
-      // Profile missing — show empty UI but at least the screen
+      // Profile missing — could mean the student was just removed by admin
+      // Check if they're in the disabled list
+      try {
+        const dis = await getDoc(doc(db,'disabled', user.uid));
+        if(dis.exists()){
+          try { await deleteDoc(doc(db,'disabled', user.uid)); } catch(_){}
+          await signOut(auth);
+          alert('Your account has been removed by the administrator.');
+          return;
+        }
+      } catch(_){}
       $('d-welcome').textContent = 'Welcome! 👋';
       alert('Your student profile was not found. Please contact admin.');
     }
@@ -939,18 +961,37 @@ onAuthStateChanged(auth, async user => {
 
 // ══ AUTH ══
 window.doLogin = async () => {
-  const email = $('li-em').value.trim();
+  const input = $('li-em').value.trim();
   const pass = $('li-pw').value;
   const btn = $('bt-li');
-  if(!email || !pass){ alertMsg('la', 'Please fill in all fields.'); return; }
+  if(!input || !pass){ alertMsg('la', 'Please fill in all fields.'); return; }
   btn.innerHTML = '<span class="spin"></span>Signing in...'; btn.disabled = true;
   try {
+    let email = input;
+    // If user entered a Student ID (e.g. ZEL-2026-001) instead of email, look up the email
+    if(input.toUpperCase().startsWith('ZEL-')){
+      const sid = input.toUpperCase();
+      const q = query(collection(db,'students'), where('studentId','==', sid), limit(1));
+      const snap = await getDocs(q);
+      if(snap.empty){
+        alertMsg('la', 'No account found with that Student ID.');
+        btn.innerHTML = 'Sign In'; btn.disabled = false;
+        return;
+      }
+      email = snap.docs[0].data().email;
+      if(!email){
+        alertMsg('la', 'This Student ID has no email registered. Please contact admin.');
+        btn.innerHTML = 'Sign In'; btn.disabled = false;
+        return;
+      }
+    }
     await signInWithEmailAndPassword(auth, email, pass);
   } catch(e){
     let m = 'Login failed.';
-    if(e.code === 'auth/user-not-found') m = 'No account found with this email.';
-    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Incorrect email or password.';
+    if(e.code === 'auth/user-not-found') m = 'No account found.';
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Incorrect login or password.';
     if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait.';
+    if(e.code === 'auth/invalid-email') m = 'Please enter a valid email or Student ID.';
     alertMsg('la', m);
   }
   btn.innerHTML = 'Sign In'; btn.disabled = false;
@@ -1029,6 +1070,7 @@ window.deleteGalleryPhoto = async (id) => {
 };
 
 window.doLogout = async () => {
+  stopDisabledWatcher();
   await signOut(auth);
 };
 
@@ -1219,6 +1261,39 @@ async function loadStudentFees(){
       el.innerHTML += `<div class="fee-row"><div><div class="mon">${esc(r.month||'—')}</div><div class="sub">Rs ${r.amount||0} · Due ${esc(r.dueDate||'—')}</div></div><span class="pill ${r.status}">${r.status}</span></div>`;
     });
   } catch(e){ console.error(e); }
+}
+
+// ══ AUTO-LOGOUT WATCHER ══
+// Watches the 'disabled' collection — if this user's UID appears there,
+// they get logged out immediately. Called when a student logs in.
+let disabledWatcher = null;
+
+function startDisabledWatcher(uid){
+  // Stop any existing watcher
+  stopDisabledWatcher();
+  // Poll every 4 seconds
+  disabledWatcher = setInterval(async () => {
+    if(!CU || !uid) return stopDisabledWatcher();
+    try {
+      const snap = await getDoc(doc(db,'disabled', uid));
+      if(snap.exists()){
+        // Account has been disabled by admin
+        stopDisabledWatcher();
+        // Clean up the disabled flag (best-effort) and force logout
+        try { await deleteDoc(doc(db,'disabled', uid)); } catch(_){}
+        await signOut(auth);
+        alert('Your account has been removed by the administrator. You have been logged out.');
+        location.reload();
+      }
+    } catch(_){}
+  }, 4000);
+}
+
+function stopDisabledWatcher(){
+  if(disabledWatcher){
+    clearInterval(disabledWatcher);
+    disabledWatcher = null;
+  }
 }
 
 window.changePW = async () => {
@@ -1450,11 +1525,25 @@ window.quickJump = (kind, uid, sid, name) => {
 };
 
 window.deleteStudent = async uid => {
-  if(!confirm('Remove this student from the database?')) return;
-  await deleteDoc(doc(db,'students',uid));
-  try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(e){}
-  showBatchList();
-  loadBatches();
+  if(!confirm('Remove this student?\n\n• Their data will be deleted\n• They will be logged out automatically\n• They will no longer be able to log in')) return;
+  try {
+    // Step 1: Mark as disabled FIRST so the student's app picks it up and logs out
+    await setDoc(doc(db,'disabled', uid), {
+      disabledAt: serverTimestamp(),
+      disabledBy: CU.email
+    });
+    // Step 2: Wait a moment so any logged-in student sees the flag
+    await new Promise(r => setTimeout(r, 500));
+    // Step 3: Delete the student record
+    await deleteDoc(doc(db,'students', uid));
+    // Step 4: Decrement counter
+    try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(e){}
+    showBatchList();
+    loadBatches();
+    alert('\u2705 Student removed and logged out automatically.');
+  } catch(e){
+    alert('Failed to remove student: ' + e.message);
+  }
 };
 
 // ══ MANAGE BATCHES ══
