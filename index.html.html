@@ -1419,17 +1419,36 @@ window.loadBatches = async () => {
   const grid = $('b-grid');
   grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div>';
   try {
-    // Get real count from collection (counter can become stale)
+    // Recalculate ALL stats from real data (don't trust the counter)
     const total = await getCountFromServer(collection(db,'students'));
     const realCount = total.data().count;
     $('st-stu').textContent = realCount;
     $('st-ba').textContent = allBatches.length;
-    // Sync the counter back to real value (so new student IDs are correct)
+
+    // Recalculate total paid from real fees collection
+    let realTotalPaid = 0;
+    try {
+      const feesAll = await getDocs(collection(db,'fees'));
+      feesAll.forEach(d => {
+        const f = d.data();
+        if(f.status === 'Paid') realTotalPaid += Number(f.amount||0);
+        else if(f.status === 'Partial') realTotalPaid += Number(f.amount||0)/2;
+      });
+      $('st-fe').textContent = 'Rs ' + realTotalPaid;
+    } catch(_){}
+
+    // Sync counters back to real values
     try {
       const counterRef = doc(db,'meta','counters');
       const counterSnap = await getDoc(counterRef);
-      if(counterSnap.exists() && counterSnap.data().studentCount !== realCount){
-        await updateDoc(counterRef, { studentCount: realCount });
+      if(counterSnap.exists()){
+        const cur = counterSnap.data();
+        const updates = {};
+        if(cur.studentCount !== realCount) updates.studentCount = realCount;
+        if(cur.totalPaid !== realTotalPaid) updates.totalPaid = realTotalPaid;
+        if(Object.keys(updates).length > 0) await updateDoc(counterRef, updates);
+      } else {
+        await setDoc(counterRef, { studentCount: realCount, totalPaid: realTotalPaid });
       }
     } catch(_){}
     grid.innerHTML = '';
