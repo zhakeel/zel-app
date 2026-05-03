@@ -1044,22 +1044,52 @@ window.uploadGalleryPhoto = async () => {
 async function loadGalleryList(){
   const el = $('gl-list');
   if(!el) return;
+  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading photos...</div>';
   try {
-    const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
+    // Fetch without orderBy to avoid index requirement; sort in memory
+    const snap = await getDocs(collection(db,'gallery'));
     if(snap.empty){
       el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
       return;
     }
-    el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
-    snap.forEach(d => {
-      const g = d.data();
-      el.innerHTML += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;position:relative"><img src="${g.photo}" style="width:100%;height:120px;object-fit:cover;display:block"><div style="padding:.55rem .65rem"><div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'')}</div><div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div><button class="b-del" style="width:100%;font-size:.68rem" onclick="deleteGalleryPhoto('${d.id}')">🗑 Remove</button></div></div>`;
+    // Build sorted list (newest first)
+    const items = [];
+    snap.forEach(d => items.push({...d.data(), id: d.id}));
+    items.sort((a, b) => {
+      const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+      const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+      return tb - ta;
     });
-    el.innerHTML += '</div>';
+    let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
+    items.forEach(g => {
+      const photoSrc = g.photo || '';
+      html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;position:relative">
+        <img src="${photoSrc}" style="width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in" onclick="zoomPhotoSrc('${photoSrc}')">
+        <div style="padding:.55rem .65rem">
+          <div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'Untitled')}</div>
+          <div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div>
+          <button class="b-del" style="width:100%;font-size:.68rem" onclick="deleteGalleryPhoto('${g.id}')">🗑 Remove</button>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    el.innerHTML = html;
   } catch(e){
-    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`;
+    console.error('Gallery load error:', e);
+    let msg = e.message || String(e);
+    if(e.code === 'permission-denied'){
+      msg = 'Permission denied. Check Firestore rules allow read access to "gallery" collection.';
+    }
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
   }
 }
+
+// Zoom from a direct image src (used in gallery thumbnails)
+window.zoomPhotoSrc = function(src){
+  if(!src) return;
+  document.getElementById('zoom-img').src = src;
+  document.getElementById('zoom-ovl').classList.add('show');
+};
 
 window.deleteGalleryPhoto = async (id) => {
   if(!confirm('Remove this photo from the gallery?')) return;
