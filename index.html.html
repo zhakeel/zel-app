@@ -719,13 +719,12 @@ textarea.di{min-height:78px;resize:vertical}
    <div class="stats">
     <div class="stat"><div class="n" id="st-stu">0</div><div class="l">Students</div></div>
     <div class="stat"><div class="n" id="st-ba">0</div><div class="l">Batches</div></div>
-    <div class="stat"><div class="n" id="st-fe">Rs 0</div><div class="l">Total Paid</div></div>
+    <div class="stat" style="cursor:pointer" id="st-fee-box" title="Click a batch to see its total"><div class="n" id="st-fe" style="font-size:1.1rem">—</div><div class="l" id="st-fe-lbl">Batch Paid</div></div>
     <div class="stat"><div class="n" id="st-no">0</div><div class="l">Notices</div></div>
    </div>
    <div class="adm-tabs">
     <button class="active" onclick="admTab('batches',this)">📚 Batches</button>
     <button onclick="admTab('att',this)">📋 Attendance</button>
-    <button onclick="admTab('fees',this)">💳 Fees</button>
     <button onclick="admTab('notices',this)">📢 Notices</button>
     <button onclick="admTab('gallery',this)">📸 Gallery</button>
     <button onclick="admTab('add',this)">➕ Add Student</button>
@@ -734,6 +733,8 @@ textarea.di{min-height:78px;resize:vertical}
 
    <!-- BATCHES -->
    <div class="sec active" id="as-batches">
+
+    <!-- VIEW: Batch List -->
     <div id="b-list">
      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
       <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem">All Batches</span>
@@ -742,14 +743,10 @@ textarea.di{min-height:78px;resize:vertical}
        <button class="b-acc" onclick="loadBatches()">🔄 Refresh</button>
       </div>
      </div>
-
-     <!-- Batch Manager (toggleable) -->
+     <!-- Batch Manager -->
      <div class="dc" id="b-mgr" style="display:none">
       <h3>📚 Manage Batches</h3>
-      <p style="color:#8b949e;font-size:.78rem;margin-bottom:.85rem;line-height:1.55">
-        Add new batches here. They appear automatically in the Register dropdown and Add Student form.
-        Removing a batch does not affect students already in it.
-      </p>
+      <p style="color:#8b949e;font-size:.78rem;margin-bottom:.85rem;line-height:1.55">Add new batches here. They appear automatically in the Register dropdown and Add Student form. Removing a batch does not affect students already in it.</p>
       <div id="bm-al" class="alert"></div>
       <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
        <input type="text" class="di" id="bm-name" placeholder="e.g. Batch 25" style="flex:1;margin-bottom:0">
@@ -757,24 +754,79 @@ textarea.di{min-height:78px;resize:vertical}
       </div>
       <div id="bm-list"><div style="color:#8b949e;font-size:.78rem">Loading...</div></div>
      </div>
-
      <div class="b-grid" id="b-grid"><div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div></div>
     </div>
 
-    <!-- Students of a batch -->
+    <!-- VIEW: Students in batch -->
     <div id="b-stus" style="display:none">
-     <button class="back" onclick="showBatchList()">← Back to Batches</button>
-     <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem;margin-bottom:.95rem" id="bs-title">Batch</div>
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+      <div>
+       <button class="back" onclick="showBatchList()" style="margin-bottom:.3rem">← Back to Batches</button>
+       <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem" id="bs-title">Batch</div>
+      </div>
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.55rem .9rem;text-align:center">
+       <div style="font-size:.65rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em">Total Paid</div>
+       <div style="color:var(--accent);font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500" id="bs-total-paid">Rs —</div>
+      </div>
+     </div>
      <input type="text" class="di" id="bs-search" placeholder="🔍 Search by name or ID..." oninput="filterStus()">
      <div id="bs-list"></div>
      <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
     </div>
 
-    <!-- Student detail -->
+    <!-- VIEW: Student detail with fees -->
     <div id="b-det" style="display:none">
      <button class="back" onclick="backToStus()">← Back to Students</button>
      <div id="b-det-c"></div>
+
+     <!-- Inline fee management section (shown below student card) -->
+     <div id="b-fee-section" style="display:none">
+      <div class="dc" style="margin-top:.85rem">
+       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+        <h3 style="margin-bottom:0">💳 Fee Records</h3>
+        <button class="b-acc" style="font-size:.73rem;padding:.38rem .8rem" onclick="toggleAddFeeForm()">＋ Add Fee</button>
+       </div>
+
+       <!-- Add fee form (collapsible) -->
+       <div id="b-fee-form" style="display:none;margin-bottom:1rem">
+        <div id="b-fe-al" class="alert"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem">
+         <input type="text" class="di" id="b-fe-mo" placeholder="Month (e.g. May 2026)" style="margin-bottom:0">
+         <input type="number" class="di" id="b-fe-am" placeholder="Amount (Rs)" style="margin-bottom:0">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.65rem">
+         <input type="date" class="di" id="b-fe-du" style="margin-bottom:0">
+         <select class="ds" id="b-fe-st" style="margin-bottom:0">
+          <option value="Unpaid">Unpaid</option>
+          <option value="Partial">Partial</option>
+          <option value="Paid">Paid</option>
+         </select>
+        </div>
+        <button class="b-acc" style="width:100%;padding:.65rem" onclick="addFeeInline()">💾 Save Fee Entry</button>
+       </div>
+
+       <!-- Fee list -->
+       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
+      </div>
+
+      <!-- Fee summary -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.7rem">
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Total</div>
+        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-total">Rs 0</div>
+       </div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Paid</div>
+        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-paid">Rs 0</div>
+       </div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Due</div>
+        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-due">Rs 0</div>
+       </div>
+      </div>
+     </div>
     </div>
+
    </div>
 
    <!-- ATTENDANCE -->
@@ -822,35 +874,32 @@ textarea.di{min-height:78px;resize:vertical}
     </div>
    </div>
 
-   <!-- FEES -->
-   <div class="sec" id="as-fees">
-    <div class="dc">
-     <h3>💳 Add Fee Entry</h3>
-     <div id="fe-al" class="alert"></div>
-     <div class="pkr">
-      <input type="text" class="di" id="fe-pi" placeholder="🔍 Search student..." oninput="searchPicker('fe',this.value)" onfocus="document.getElementById('fe-pr').classList.add('open')">
-      <div class="pkr-res" id="fe-pr"></div>
-     </div>
-     <div id="fe-ch" style="display:none"></div>
-     <input type="text" class="di" id="fe-mo" placeholder="Month (e.g. May 2026)">
-     <input type="number" class="di" id="fe-am" placeholder="Amount (Rs)">
-     <input type="date" class="di" id="fe-du">
-     <select class="ds" id="fe-st">
-      <option value="Unpaid">Unpaid</option>
-      <option value="Partial">Partial</option>
-      <option value="Paid">Paid</option>
-     </select>
-     <button class="b-acc" style="width:100%;padding:.7rem" onclick="addFee()">Add Fee Entry</button>
-    </div>
-    <div class="dc">
-     <h3>All Fee Records</h3>
-     <div id="fe-rec"><div class="empty" style="color:#8b949e">Loading...</div></div>
-     <button class="b-sec" id="fe-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadFees(false)">Load More</button>
-    </div>
-   </div>
+
 
    <!-- NOTICES -->
    <div class="sec" id="as-notices">
+
+    <!-- Update Student Photo quick card -->
+    <div class="dc" style="margin-bottom:1rem">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+      <h3 style="margin-bottom:0">📷 Update Student Photo</h3>
+     </div>
+     <p style="color:#8b949e;font-size:.78rem;margin-bottom:.85rem;line-height:1.55">Search any student and update their profile photo instantly.</p>
+     <div class="pkr">
+      <input type="text" class="di" id="ph-pi" placeholder="🔍 Search student by name or ID..." oninput="searchPicker('ph',this.value)" onfocus="document.getElementById('ph-pr').classList.add('open')">
+      <div class="pkr-res" id="ph-pr"></div>
+     </div>
+     <div id="ph-ch" style="display:none"></div>
+     <div id="ph-preview" style="display:none;text-align:center;margin-bottom:.85rem">
+      <div class="pc dark" id="ph-circle" onclick="document.getElementById('ph-file').click()" style="margin:0 auto .4rem">📷</div>
+      <input type="file" id="ph-file" accept="image/*" style="display:none" onchange="onNoticePhoto(event)">
+      <div style="font-size:.7rem;color:#8b949e">Tap circle to choose photo</div>
+      <div id="ph-al" class="alert" style="margin-top:.5rem"></div>
+      <button class="b-acc" id="bt-ph-save" onclick="saveNoticePhoto()" style="width:100%;padding:.65rem;margin-top:.65rem">💾 Save Photo</button>
+     </div>
+    </div>
+
+    <!-- Post Announcement card -->
     <div class="dc">
      <h3>📢 Post Announcement</h3>
      <input type="text" class="di" id="no-ti" placeholder="Notice title...">
@@ -1839,25 +1888,9 @@ window.loadBatches = async () => {
     $('st-stu').textContent = realCount;
     $('st-ba').textContent = allBatches.length;
 
-    // Recalculate total paid in background (don't block UI)
-    let realTotalPaid = 0;
-    getDocs(collection(db,'fees')).then(feesAll => {
-      feesAll.forEach(d => {
-        const f = d.data();
-        if(f.status === 'Paid') realTotalPaid += Number(f.amount||0);
-        else if(f.status === 'Partial') realTotalPaid += Number(f.amount||0)/2;
-      });
-      $('st-fe').textContent = 'Rs ' + realTotalPaid;
-      // Sync counter in background
-      try {
-        const counterRef = doc(db,'meta','counters');
-        getDoc(counterRef).then(snap => {
-          if(snap.exists() && snap.data().totalPaid !== realTotalPaid){
-            updateDoc(counterRef, { totalPaid: realTotalPaid });
-          }
-        });
-      } catch(_){}
-    }).catch(_=>{});
+    // Total paid is now shown per-batch when a batch is opened
+    $('st-fe').textContent = '—';
+    $('st-fe-lbl') && ($('st-fe-lbl').textContent = 'Batch Paid');
 
 
     grid.innerHTML = '';
@@ -1893,7 +1926,9 @@ window.openBatch = async b => {
   $('bs-title').textContent = b;
   $('bs-search').value = '';
   $('bs-list').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
-  await loadMoreStus();
+  $('bs-total-paid').textContent = 'Rs ...';
+  // Load students and batch total paid in parallel
+  await Promise.all([loadMoreStus(), loadBatchTotalPaid(b)]);
 };
 
 window.showBatchList = () => {
@@ -1957,6 +1992,7 @@ window.openStudentDetail = async uid => {
   $('b-det').style.display = 'block';
   const el = $('b-det-c');
   el.innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  $('b-fee-section').style.display = 'none';
   const snap = await getDoc(doc(db,'students',uid));
   if(!snap.exists()){
     el.innerHTML = '<div class="empty" style="color:var(--danger)">Student not found.</div>';
@@ -1985,25 +2021,179 @@ window.openStudentDetail = async uid => {
     </div>
     <div class="acts">
       <button class="act" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
-      <button class="act" onclick="quickJump('at','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
-      <button class="act" onclick="quickJump('fe','${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">💳 Fees</button>
+      <button class="act" onclick="quickJumpAtt('${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
     </div>
-    <button class="b-del" style="width:100%;padding:.7rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
+    <button class="b-del" style="width:100%;padding:.7rem;margin-top:.4rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
+
+  // Show fee section and load this student's fees
+  $('b-fee-section').style.display = 'block';
+  $('b-fee-form').style.display = 'none';
+  loadStudentFeesAdmin(uid, s.name, s.studentId);
 };
 
-window.quickJump = (kind, uid, sid, name) => {
-  // Switch to the relevant tab
+// Store current student for inline fee ops
+let currentFeeUid = null;
+let currentFeeSid = null;
+let currentFeeName = null;
+
+async function loadStudentFeesAdmin(uid, name, sid){
+  currentFeeUid = uid;
+  currentFeeSid = sid;
+  currentFeeName = name;
+  const el = $('b-fee-list');
+  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
+  try {
+    const snap = await getDocs(query(collection(db,'fees'), where('studentUid','==', uid)));
+    const recs = [];
+    let total=0, paid=0;
+    snap.forEach(d => {
+      const r = {...d.data(), id:d.id};
+      recs.push(r);
+      total += Number(r.amount||0);
+      if(r.status === 'Paid') paid += Number(r.amount||0);
+      else if(r.status === 'Partial') paid += Number(r.amount||0)/2;
+    });
+    recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
+    // Update summary
+    $('b-fs-total').textContent = 'Rs ' + total.toLocaleString();
+    $('b-fs-paid').textContent = 'Rs ' + paid.toLocaleString();
+    $('b-fs-due').textContent = 'Rs ' + (total-paid).toLocaleString();
+    if(!recs.length){
+      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Click "+ Add Fee" to add one.</div>';
+      return;
+    }
+    const today = new Date().toISOString().split('T')[0];
+    el.innerHTML = recs.map(r => {
+      const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
+      const colors = {Paid:'#16a34a', Partial:'#d97706', Unpaid:'#dc2626'};
+      const col = colors[r.status] || '#888';
+      return `<div style="background:#0d1117;border:1px solid #30363d;border-left:3px solid ${col};border-radius:10px;padding:.75rem .9rem;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+          <div>
+            <div style="color:#fff;font-size:.88rem;font-weight:600">${esc(r.month||'—')}</div>
+            <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Rs ${Number(r.amount||0).toLocaleString()} · Due ${esc(r.dueDate||'N/A')}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.4rem">
+            <select style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#fff;padding:.28rem .55rem;font-size:.74rem;font-family:'DM Sans',sans-serif;outline:none" onchange="updateFeeStatusInline('${r.id}',this.value,${r.amount},'${r.status}')">
+              <option ${r.status==='Unpaid'?'selected':''}>Unpaid</option>
+              <option ${r.status==='Partial'?'selected':''}>Partial</option>
+              <option ${r.status==='Paid'?'selected':''}>Paid</option>
+            </select>
+            <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e){
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`;
+  }
+}
+
+window.toggleAddFeeForm = () => {
+  const f = $('b-fee-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+};
+
+window.addFeeInline = async () => {
+  if(!currentFeeUid){ alertMsg('b-fe-al','No student selected.'); return; }
+  const month = $('b-fe-mo').value.trim();
+  const amount = $('b-fe-am').value;
+  const due = $('b-fe-du').value;
+  const status = $('b-fe-st').value;
+  if(!month || !amount){ alertMsg('b-fe-al','Please fill Month and Amount.'); return; }
+  try {
+    await addDoc(collection(db,'fees'), {
+      studentUid: currentFeeUid,
+      studentName: currentFeeName,
+      studentId: currentFeeSid,
+      month, amount: Number(amount), dueDate: due, status,
+      createdAt: serverTimestamp()
+    });
+    $('b-fe-mo').value=''; $('b-fe-am').value=''; $('b-fe-du').value='';
+    $('b-fe-st').value='Unpaid';
+    $('b-fee-form').style.display = 'none';
+    loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
+    // Update batch total
+    loadBatchTotalPaid(currentBatch);
+  } catch(e){ alertMsg('b-fe-al','Failed: '+e.message); }
+};
+
+window.updateFeeStatusInline = async (id, ns, amount, os) => {
+  await updateDoc(doc(db,'fees',id), {status:ns});
+  try {
+    const d = feeContrib(ns,amount) - feeContrib(os,amount);
+    if(d!==0) await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});
+  } catch(_){}
+  loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
+  loadBatchTotalPaid(currentBatch);
+};
+
+window.delFeeInline = async (id, amount, status) => {
+  if(!confirm('Delete this fee record?')) return;
+  await deleteDoc(doc(db,'fees',id));
+  try {
+    const d = -feeContrib(status,amount);
+    if(d!==0) await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});
+  } catch(_){}
+  loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Load total paid for current batch and show in stat box
+async function loadBatchTotalPaid(batch){
+  if(!batch) return;
+  try {
+    // Get all students in batch
+    const stuSnap = await getDocs(query(collection(db,'students'), where('course','==',batch)));
+    const uids = [];
+    stuSnap.forEach(d => uids.push(d.id));
+    if(!uids.length){ updateBatchPaidStat(batch, 0); return; }
+    // Get all fees for those students
+    let total = 0;
+    // Firestore 'in' query supports up to 30 items
+    const chunks = [];
+    for(let i=0;i<uids.length;i+=10) chunks.push(uids.slice(i,i+10));
+    for(const chunk of chunks){
+      const fsnap = await getDocs(query(collection(db,'fees'), where('studentUid','in',chunk)));
+      fsnap.forEach(d => {
+        const f = d.data();
+        if(f.status==='Paid') total += Number(f.amount||0);
+        else if(f.status==='Partial') total += Number(f.amount||0)/2;
+      });
+    }
+    updateBatchPaidStat(batch, total);
+  } catch(_){}
+}
+
+function updateBatchPaidStat(batch, total){
+  const el = $('st-fe');
+  const lbl = $('st-fe-lbl');
+  if(el) el.textContent = 'Rs ' + total.toLocaleString();
+  if(lbl) lbl.textContent = batch ? batch.replace('Batch','B.') + ' Paid' : 'Batch Paid';
+  // Also update the bs-total-paid in student list view
+  const bs = $('bs-total-paid');
+  if(bs) bs.textContent = 'Rs ' + total.toLocaleString();
+}
+
+// jump to attendance tab for a specific student
+window.quickJumpAtt = (uid, sid, name) => {
   document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.adm-tabs button')[1].classList.add('active');
+  $('as-att').classList.add('active');
+  selectPicker('at', uid, sid, name);
+};
+
+// quickJump kept for compatibility but fees now inline
+window.quickJump = (kind, uid, sid, name) => {
   if(kind === 'at'){
+    document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.adm-tabs button')[1].classList.add('active');
     $('as-att').classList.add('active');
     selectPicker('at', uid, sid, name);
-  } else {
-    document.querySelectorAll('.adm-tabs button')[2].classList.add('active');
-    $('as-fees').classList.add('active');
-    selectPicker('fe', uid, sid, name);
   }
+  // fees are now inline in student detail — no redirect needed
 };
 
 window.deleteStudent = async uid => {
@@ -2114,9 +2304,66 @@ window.addBatch = async () => {
 };
 
 window.deleteBatch = async (id, name) => {
-  if(!confirm(`Remove batch "${name}"?\n\nStudents already in this batch will not be affected — only the option will disappear from new registrations.`)) return;
+  // Check how many students are in this batch first
+  let stuCount = 0;
   try {
+    const cnt = await getCountFromServer(query(collection(db,'students'), where('course','==', name)));
+    stuCount = cnt.data().count;
+  } catch(_){}
+
+  const msg = stuCount > 0
+    ? `Delete batch "${name}"?\n\n⚠️ This will PERMANENTLY DELETE:\n• ${stuCount} student account${stuCount>1?'s':''} in this batch\n• All their attendance records\n• All their fee records\n• Their login access\n\nThis CANNOT be undone. Type DELETE to confirm:`
+    : `Delete batch "${name}"?\n\nNo students in this batch.\n\nType DELETE to confirm:`;
+
+  const confirm1 = prompt(msg);
+  if(confirm1 !== 'DELETE'){
+    if(confirm1 !== null) alert('Cancelled. You did not type DELETE correctly.');
+    return;
+  }
+
+  alertMsg('bm-al', '⏳ Deleting batch and all students...', 'info', true);
+
+  try {
+    // Get all students in this batch
+    const stuSnap = await getDocs(query(collection(db,'students'), where('course','==', name)));
+    const stuIds = [];
+    stuSnap.forEach(d => stuIds.push(d.id));
+
+    // For each student: mark disabled + delete attendance + fees + profile
+    for(const uid of stuIds){
+      // Mark disabled so they get logged out
+      try { await setDoc(doc(db,'disabled',uid),{disabledAt:serverTimestamp(),disabledBy:CU.email}); } catch(_){}
+      // Delete attendance
+      try {
+        const aSnap = await getDocs(query(collection(db,'attendance'), where('studentUid','==',uid)));
+        await Promise.all(aSnap.docs.map(d=>deleteDoc(doc(db,'attendance',d.id))));
+      } catch(_){}
+      // Delete fees
+      try {
+        const fSnap = await getDocs(query(collection(db,'fees'), where('studentUid','==',uid)));
+        await Promise.all(fSnap.docs.map(d=>deleteDoc(doc(db,'fees',d.id))));
+      } catch(_){}
+      // Delete student profile
+      try { await deleteDoc(doc(db,'students',uid)); } catch(_){}
+    }
+
+    // Update student counter
+    if(stuIds.length > 0){
+      try { await updateDoc(doc(db,'meta','counters'),{studentCount:increment(-stuIds.length)}); } catch(_){}
+    }
+
+    // Wait a moment so disabled flags reach logged-in students
+    if(stuIds.length > 0) await new Promise(r=>setTimeout(r,600));
+
+    // Clean up disabled flags
+    for(const uid of stuIds){
+      setTimeout(async()=>{ try{ await deleteDoc(doc(db,'disabled',uid)); }catch(_){} }, 8000);
+    }
+
+    // Delete the batch document
     await deleteDoc(doc(db,'batches', id));
+
+    alertMsg('bm-al', `✅ Batch "${name}" deleted with ${stuIds.length} student${stuIds.length!==1?'s':''}.`, 'ok');
     await loadBatchesMgr();
     await loadBatchOptions();
     await loadBatches();
@@ -2174,14 +2421,39 @@ function selectPicker(kind, uid, sid, name){
   chip.style.display = 'block';
   chip.innerHTML = `<div class="chip"><span><strong>${esc(sid||'')}</strong>${esc(name||'')}</span><button onclick="clearPicker('${kind}')">✕</button></div>`;
   $(`${kind}-pr`).classList.remove('open');
+  // Show photo preview for the notices-tab photo picker
+  if(kind === 'ph'){
+    noticePhotoUid = uid;
+    noticePhotoData = null;
+    const prev = $('ph-preview');
+    if(prev){ prev.style.display='block'; }
+    const circle = $('ph-circle');
+    if(circle){ circle.innerHTML='📷'; circle.style.borderColor=''; circle.style.borderStyle=''; }
+    const al = $('ph-al'); if(al) al.className='alert';
+    // Try to show existing photo
+    getDoc(doc(db,'students',uid)).then(s=>{
+      if(s.exists() && s.data().photo && circle){
+        circle.innerHTML=`<img src="${s.data().photo}" alt="">`;
+      }
+    }).catch(_=>{});
+  }
 }
 window.selectPicker = selectPicker;
 
 window.clearPicker = kind => {
   pickers[kind] = null;
-  $(`${kind}-pi`).parentElement.style.display = 'block';
-  $(`${kind}-ch`).style.display = 'none';
-  $(`${kind}-pi`).value = '';
+  const piWrap = $(`${kind}-pi`);
+  if(piWrap) piWrap.parentElement.style.display = 'block';
+  const ch = $(`${kind}-ch`);
+  if(ch) ch.style.display = 'none';
+  const pi = $(`${kind}-pi`);
+  if(pi) pi.value = '';
+  // Hide photo preview when clearing photo picker
+  if(kind === 'ph'){
+    noticePhotoUid = null; noticePhotoData = null;
+    const prev = $('ph-preview');
+    if(prev) prev.style.display = 'none';
+  }
 };
 
 document.addEventListener('click', e => {
@@ -2358,6 +2630,42 @@ window.delFee = async (id, amount, status) => {
 };
 
 // ══ NOTICES ══
+// ── Notice tab photo update ──
+let noticePhotoData = null;
+let noticePhotoUid = null;
+
+window.onNoticePhoto = async (e) => {
+  const f = e.target.files[0]; if(!f) return;
+  if(f.size > 5 * 1024 * 1024){ alertMsg('ph-al','Photo must be under 5MB.','err'); return; }
+  const c = $('ph-circle');
+  c.innerHTML = '⏳';
+  try {
+    noticePhotoData = await resizeImg(f);
+    c.innerHTML = `<img src="${noticePhotoData}" alt="">`;
+    c.style.borderColor='var(--accent)';c.style.borderStyle='solid';
+    alertMsg('ph-al','✅ Ready — tap Save Photo','ok');
+  } catch(err){ c.innerHTML='📷'; alertMsg('ph-al','Could not process image.','err'); }
+};
+
+window.saveNoticePhoto = async () => {
+  const btn = $('bt-ph-save');
+  if(!noticePhotoData){ alertMsg('ph-al','Please choose a photo first.'); return; }
+  if(!noticePhotoUid){ alertMsg('ph-al','No student selected.'); return; }
+  btn.innerHTML='<span class="spin"></span>Saving...'; btn.disabled=true;
+  try {
+    await updateDoc(doc(db,'students',noticePhotoUid),{photo:noticePhotoData});
+    alertMsg('ph-al','✅ Photo saved!','ok');
+    noticePhotoData=null;
+    // Reset circle to show the new photo
+    $('ph-circle').innerHTML=`<img src="${await (async()=>{const s=await getDoc(doc(db,'students',noticePhotoUid));return s.exists()?s.data().photo||'📷':'📷';})()}" alt="">`;
+  } catch(e){
+    let m='Save failed: '+e.message;
+    if(e.code==='permission-denied') m='Permission denied — check Firestore rules.';
+    alertMsg('ph-al',m,'err',true);
+  }
+  btn.innerHTML='💾 Save Photo'; btn.disabled=false;
+};
+
 window.postNotice = async () => {
   const title = $('no-ti').value.trim();
   const body = $('no-bo').value.trim();
