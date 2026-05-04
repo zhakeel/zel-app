@@ -864,42 +864,29 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
     </div>
 
-   <!-- VIEW: Student detail with fees -->
-    <div id="b-det" style="display:none">
-     <button class="back" onclick="backToStus()">← Back to Students</button>
-     <div id="b-det-c"></div>
- 
-     <!-- Fee Panel (shown below student card) -->
-     <div id="b-fee-section" style="display:none;margin-top:.85rem">
- 
-      <!-- Overall summary strip -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
-        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Course Fee</div>
-        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-total">Rs 0</div>
+  <!-- Fee list -->
+       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
+      </div>
+
+      <!-- Fee summary -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.7rem">
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Total</div>
+        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-total">Rs 0</div>
        </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
-        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Paid</div>
-        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-paid">Rs 0</div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Paid</div>
+        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-paid">Rs 0</div>
        </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
-        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Remaining</div>
-        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
+        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Due</div>
+        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-due">Rs 0</div>
        </div>
       </div>
- 
-      <!-- Set Course Fee form (shown when no fee record exists) -->
-      <div class="new-fee-form" id="b-new-fee-form">
-       <div style="color:#fff;font-size:.82rem;font-weight:600;margin-bottom:.55rem">💳 Set Course Fee</div>
-       <div id="b-fe-al" class="alert"></div>
-       <input type="text" class="di" id="b-fe-mo" placeholder="Description (e.g. English Course 2026)">
-       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *">
-       <div class="nf-row">
-        <input type="date" class="di" id="b-fe-du" placeholder="Due date">
-        <input type="number" class="di" id="b-fe-first" placeholder="First payment (Rs, optional)">
-       </div>
-       <button class="b-acc" onclick="createFeeRecord()">✅ Create Fee Record</button>
-      </div>
+     </div>
+    </div>
+
+   </div>
  
       <!-- Fee tracker list (shown when fee records exist) -->
       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
