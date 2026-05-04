@@ -545,14 +545,6 @@ textarea.di{min-height:78px;resize:vertical}
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
     <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-     <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-     </select>
-    </div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -575,6 +567,16 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
+     </select>
+    </div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to say">Prefer not to say</option>
      </select>
     </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
@@ -624,7 +626,7 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="card acc-top" style="margin-top:.25rem">
      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem">
       <span style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark)">🪪 Student ID</span>
-      <span class="id-badge" id="d-sid2">ZEL0000</span>
+      <span class="id-badge" id="d-sid2">ZEL-0000</span>
      </div>
      <div class="id-row">
       <div class="id-photo" id="d-ph" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
@@ -877,16 +879,6 @@ textarea.di{min-height:78px;resize:vertical}
 
     <!-- VIEW: Student detail with fees -->
     <div id="b-det" style="display:none">
-     <div class="id-grid">
-      <div class="id-field"><label>Full Name</label><span id="d-nm">—</span></div>
-      <div class="id-field"><label>Phone</label><span id="d-phone">—</span></div>
-      <div class="id-field"><label>Date of Birth</label><span id="d-dob">—</span></div>
-      <div class="id-field"><label>Gender</label><span id="d-gender">—</span></div>
-      <div class="id-field full"><label>Email</label><span id="d-em">—</span></div>
-      <div class="id-field"><label>Status</label><span style="color:var(--success);font-weight:600">✅ Active</span></div>
-      <div class="id-field"><label>Enrolled</label><span id="d-en">—</span></div>
-      <div class="id-field full"><label>Student ID</label><span style="font-weight:700;color:var(--ocean-dark);letter-spacing:.06em" id="d-sid3">—</span></div>
-     </div>
      <button class="back" onclick="backToStus()">← Back to Students</button>
      <div id="b-det-c"></div>
 
