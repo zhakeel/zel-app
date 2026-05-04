@@ -890,15 +890,16 @@ textarea.di{min-height:78px;resize:vertical}
 
       <!-- Set Course Fee form (shown when no fee record exists) -->
       <div class="new-fee-form" id="b-new-fee-form" style="display:none">
-       <div style="color:#fff;font-size:.82rem;font-weight:600;margin-bottom:.55rem">💳 Set Course Fee</div>
+       <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">💳 Set Course Fee</div>
        <div id="b-fe-al" class="alert"></div>
-       <input type="text" class="di" id="b-fe-mo" placeholder="Description (e.g. English Course 2026)">
-       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *">
+       <input type="text" class="di" id="b-fe-mo" placeholder="Course Name / Description (e.g. English Course 2026) *">
+       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *" min="1">
        <div class="nf-row">
-        <input type="date" class="di" id="b-fe-du" placeholder="Due date">
-        <input type="number" class="di" id="b-fe-first" placeholder="First payment (Rs, optional)">
+        <input type="date" class="di" id="b-fe-du" title="Due date (optional)">
+        <input type="number" class="di" id="b-fe-first" placeholder="Initial payment (Rs, optional)" min="0">
        </div>
-       <button class="b-acc" onclick="createFeeRecord()">✅ Create Fee Record</button>
+       <p style="color:#8b949e;font-size:.72rem;margin-bottom:.5rem;line-height:1.55">Set the total course fee first. You can record an initial payment now, or add payments later after saving.</p>
+       <button class="b-acc" onclick="createFeeRecord()" style="width:100%;padding:.65rem">✅ Create Fee Record</button>
       </div>
 
       <!-- Fee tracker list (shown when fee records exist) -->
@@ -2110,7 +2111,7 @@ window.openStudentDetail = async uid => {
 
   // Show fee section and load this student's fees
   $('b-fee-section').style.display = 'block';
-  $('b-fee-form').style.display = 'none';
+  if($('b-new-fee-form')) $('b-new-fee-form').style.display = 'none';
   loadStudentFeesAdmin(uid, s.name, s.studentId);
 };
 
@@ -2144,7 +2145,21 @@ function loadStudentFeesAdmin(uid, name, sid){
       $('b-fs-due').textContent   = 'Rs ' + (grandTotal-grandPaid).toLocaleString();
       // Show/hide the "Set Course Fee" form
       const newForm = $('b-new-fee-form');
-      if(newForm) newForm.style.display = recs.length ? 'none' : 'block';
+      if(newForm){
+        newForm.style.display = recs.length ? 'none' : 'block';
+        // Add "Add another fee record" button after the fee list if there are existing records
+        let addBtn = $('b-fee-add-btn');
+        if(!addBtn){
+          addBtn = document.createElement('div');
+          addBtn.id = 'b-fee-add-btn';
+          listEl.parentNode.insertBefore(addBtn, listEl.nextSibling);
+        }
+        if(recs.length){
+          addBtn.innerHTML = `<button class="b-sec" style="width:100%;margin-top:.4rem;padding:.6rem;font-size:.78rem" onclick="toggleNewFeeForm()">➕ Add Another Fee Record</button>`;
+        } else {
+          addBtn.innerHTML = '';
+        }
+      }
       if(!recs.length){ listEl.innerHTML=''; return; }
       // Render each fee tracker card
       listEl.innerHTML = recs.map(r => renderFeeTracker(r)).join('');
@@ -2173,35 +2188,45 @@ function renderFeeTracker(r){
       <div class="ft-pay-date">${p.date||''}</div>
       <button class="ft-pay-del" onclick="deletePayment('${r.id}',${i})" title="Remove this payment">✕</button>
     </div>`).join('') || '<div style="color:#8b949e;font-size:.76rem;padding:.3rem 0">No payments recorded yet.</div>';
+  const todayStr = new Date().toISOString().split('T')[0];
   return `
     <div class="fee-tracker ${settled?'settled':''}">
       <div class="ft-header">
         <div>
           <div class="ft-title">${esc(r.month||'Course Fee')}</div>
-          <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Total: Rs ${cf.toLocaleString()} · Due: ${esc(r.dueDate||'N/A')}</div>
+          <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Course Fee: Rs ${cf.toLocaleString()}${r.dueDate ? ' · Due: '+esc(r.dueDate) : ''}</div>
         </div>
         ${badge}
       </div>
       <div class="ft-progress">
-        <div class="ft-prog-bar"><div class="ft-prog-fill" style="width:${pct}%"></div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.5rem;text-align:center">
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Course Fee</div><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${cf.toLocaleString()}</div></div>
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Paid</div><div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${pt.toLocaleString()}</div></div>
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Remaining</div><div style="color:${settled?'#16a34a':'#dc2626'};font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${rem>0?rem.toLocaleString():'0'}</div></div>
+        </div>
+        <div class="ft-prog-bar"><div class="ft-prog-fill" style="width:${pct}%${settled?';background:linear-gradient(90deg,#16a34a,#16a34a)':''}"></div></div>
         <div class="ft-prog-nums">
-          <span class="ft-prog-paid">Paid: Rs ${pt.toLocaleString()} (${pct}%)</span>
-          <span class="ft-prog-rem">Remaining: Rs ${rem>0?rem.toLocaleString():'0'}</span>
+          <span class="ft-prog-paid">Paid: ${pct}%</span>
+          <span class="ft-prog-rem">${settled ? '✅ Settled' : 'Remaining: Rs '+rem.toLocaleString()}</span>
         </div>
       </div>
       <div class="ft-payments">
-        <div class="ft-pay-title">Payment History</div>
+        <div class="ft-pay-title">Payment History (${payments.length} payment${payments.length!==1?'s':''})</div>
         ${payRows}
       </div>
-      ${settled?'':` 
+      ${settled?`
+      <div style="padding:.65rem 1rem;background:#0a1f0a;border-top:1px solid #166534;text-align:center">
+        <span style="color:#86efac;font-size:.82rem;font-weight:600">🎉 Course fee fully settled — no balance remaining!</span>
+      </div>`:` 
       <div class="ft-add">
-        <div style="color:#8b949e;font-size:.7rem;margin-bottom:.4rem">Add Payment</div>
+        <div style="color:#8b949e;font-size:.7rem;margin-bottom:.5rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em">➕ Add Payment</div>
         <div class="ft-add-row">
-          <input type="number" class="di" id="fp-amt-${r.id}" placeholder="Amount (Rs)">
-          <input type="date" class="di" id="fp-dt-${r.id}">
-          <input type="text" class="di" id="fp-note-${r.id}" placeholder="Note (optional)">
+          <input type="number" class="di" id="fp-amt-${r.id}" placeholder="Amount (Rs) *" min="1" max="${rem}">
+          <input type="date" class="di" id="fp-dt-${r.id}" value="${todayStr}">
+          <input type="text" class="di" id="fp-note-${r.id}" placeholder="Note (optional, e.g. Cash)">
           <button class="ft-add-btn" onclick="addPayment('${r.id}',${cf},${pt})">＋ Pay</button>
         </div>
+        <div style="font-size:.68rem;color:#8b949e;margin-top:.3rem">Remaining balance: Rs ${rem.toLocaleString()}</div>
       </div>`}
       <div style="padding:.4rem .8rem .6rem;display:flex;justify-content:flex-end">
         <button class="ft-del-fee" onclick="delFeeRecord('${r.id}',${pt})">🗑 Delete Record</button>
@@ -2291,6 +2316,14 @@ window.updateFeeStatusInline = async()=>{};
 window.setFeeStatus = async()=>{};
 window.delFeeInline = window.delFeeRecord;
 
+window.toggleNewFeeForm = () => {
+  const f = $('b-new-fee-form');
+  if(!f) return;
+  const shown = f.style.display === 'block';
+  f.style.display = shown ? 'none' : 'block';
+  if(!shown){ f.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+};
+
 // Load total paid for current batch and show in stat box
 async function loadBatchTotalPaid(batch){
   if(!batch) return;
@@ -2309,7 +2342,9 @@ async function loadBatchTotalPaid(batch){
       const fsnap = await getDocs(query(collection(db,'fees'), where('studentUid','in',chunk)));
       fsnap.forEach(d => {
         const f = d.data();
-        if(f.status==='Paid') total += Number(f.amount||0);
+        // Use paidTotal (new structure) or fall back to old status-based estimate
+        if(typeof f.paidTotal === 'number') total += f.paidTotal;
+        else if(f.status==='Paid') total += Number(f.amount||0);
         else if(f.status==='Partial') total += Number(f.amount||0)/2;
       });
     }
