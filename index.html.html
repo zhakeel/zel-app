@@ -1011,7 +1011,8 @@ import {
   getFirestore, doc, setDoc, getDoc, updateDoc,
   collection, getDocs, addDoc, deleteDoc,
   query, orderBy, where, serverTimestamp,
-  limit, startAfter, getCountFromServer, increment
+  limit, startAfter, getCountFromServer, increment,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app = initializeApp({
@@ -1290,30 +1291,28 @@ window.uploadGalleryPhoto = async () => {
   btn.innerHTML = '📤 Upload to Gallery'; btn.disabled = false;
 };
 
-async function loadGalleryList(){
+function loadGalleryList(){
   const el = $('gl-list');
   if(!el) return;
-  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading photos...</div>';
-  try {
-    // Fetch without orderBy to avoid index requirement; sort in memory
-    const snap = await getDocs(collection(db,'gallery'));
+  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading...</div>';
+  // Real-time — new photos appear/disappear instantly
+  onSnapshot(collection(db,'gallery'), snap => {
     if(snap.empty){
       el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
       return;
     }
-    // Build sorted list (newest first)
     const items = [];
-    snap.forEach(d => items.push({...d.data(), id: d.id}));
-    items.sort((a, b) => {
+    snap.forEach(d => items.push({...d.data(), id:d.id}));
+    items.sort((a,b) => {
       const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
       const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
       return tb - ta;
     });
     let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
     items.forEach(g => {
-      const photoSrc = g.photo || '';
-      html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;position:relative">
-        <img src="${photoSrc}" style="width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in" onclick="zoomPhotoSrc('${photoSrc}')">
+      const ps = g.photo || '';
+      html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden">
+        <img src="${ps}" style="width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in" onclick="zoomPhotoSrc('${ps}')">
         <div style="padding:.55rem .65rem">
           <div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'Untitled')}</div>
           <div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div>
@@ -1321,16 +1320,12 @@ async function loadGalleryList(){
         </div>
       </div>`;
     });
-    html += '</div>';
-    el.innerHTML = html;
-  } catch(e){
-    console.error('Gallery load error:', e);
-    let msg = e.message || String(e);
-    if(e.code === 'permission-denied'){
-      msg = 'Permission denied. Check Firestore rules allow read access to "gallery" collection.';
-    }
+    el.innerHTML = html + '</div>';
+  }, e => {
+    let msg = e.message||String(e);
+    if(e.code==='permission-denied') msg='Permission denied — check Firestore rules.';
     el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
-  }
+  });
 }
 
 // Zoom from a direct image src (used in gallery thumbnails)
@@ -1350,6 +1345,9 @@ window.deleteGalleryPhoto = async (id) => {
 
 window.doLogout = async () => {
   stopDisabledWatcher();
+  // Stop all real-time listeners
+  if(typeof batchStudentsListener === 'function'){ try{batchStudentsListener();}catch(_){} batchStudentsListener = null; }
+  if(typeof studentFeeListener === 'function'){ try{studentFeeListener();}catch(_){} studentFeeListener = null; }
   await signOut(auth);
 };
 
@@ -1460,11 +1458,12 @@ function renderStudent(){
   }
 }
 
-async function loadStudentNotices(){
+function loadStudentNotices(){
   const el = $('d-not');
-  try {
-    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
-    const snap = await getDocs(q);
+  el.innerHTML = '<div class="empty">📭 Loading...</div>';
+  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
+  // Real-time listener — updates instantly when admin posts a notice
+  onSnapshot(q, snap => {
     if(snap.empty){
       el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
       return;
@@ -1475,19 +1474,19 @@ async function loadStudentNotices(){
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
       el.innerHTML += `<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div></div>`;
     });
-  } catch(e){
+  }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
-  }
+  });
 }
 
-let attAllRecs = []; // all student attendance records
-let attCurrentMonth = ''; // currently viewed month
+let attAllRecs = [];
+let attCurrentMonth = '';
 
-async function loadStudentAtt(){
+function loadStudentAtt(){
   if(!CU) return;
-  try {
-    const q = query(collection(db,'attendance'), where('studentUid','==', CU.uid));
-    const snap = await getDocs(q);
+  const q = query(collection(db,'attendance'), where('studentUid','==', CU.uid));
+  // Real-time — updates instantly when admin marks attendance
+  onSnapshot(q, snap => {
     let present=0, absent=0, late=0;
     attAllRecs = [];
     snap.forEach(d => {
@@ -1499,38 +1498,30 @@ async function loadStudentAtt(){
     });
     const total = present + absent + late;
     const pct = total === 0 ? 0 : Math.round(((present + late*0.5) / total) * 100);
-
-    // Update stat boxes
     $('d-att-p').textContent = present;
     $('d-att-a').textContent = absent;
     $('d-att-l').textContent = late;
     $('d-att-pct').textContent = pct + '%';
     $('d-att-bar').style.width = pct + '%';
 
-    // Build month tabs from unique months in records
     const monthSet = new Set();
     attAllRecs.forEach(r => { if(r.date) monthSet.add(r.date.substring(0,7)); });
     const months = [...monthSet].sort().reverse();
-
-    // Always add current month if no records
     const nowMonth = new Date().toISOString().substring(0,7);
     if(!monthSet.has(nowMonth)) months.unshift(nowMonth);
 
     const tabsEl = $('d-att-months');
+    const prevMonth = attCurrentMonth;
     tabsEl.innerHTML = months.map(m => {
       const [y,mo] = m.split('-');
-      const label = new Date(y, mo-1).toLocaleString('en-GB', {month:'short', year:'2-digit'});
-      return `<button class="att-mtab" onclick="showAttMonth('${m}',this)">${label}</button>`;
+      const label = new Date(y, mo-1).toLocaleString('en-GB',{month:'short',year:'2-digit'});
+      return `<button class="att-mtab ${m===prevMonth?'active':''}" onclick="showAttMonth('${m}',this)">${label}</button>`;
     }).join('');
 
-    // Show most recent month with data, or current month
-    const defaultMonth = months[0];
+    const defaultMonth = prevMonth && months.includes(prevMonth) ? prevMonth : months[0];
     attCurrentMonth = defaultMonth;
-    const firstTab = tabsEl.querySelector('.att-mtab');
-    if(firstTab) { firstTab.classList.add('active'); showAttMonth(defaultMonth, firstTab); }
-    else renderAttCalendar(defaultMonth);
-
-  } catch(e){ console.error(e); }
+    renderAttCalendar(defaultMonth);
+  }, e=>console.error(e));
 }
 
 window.showAttMonth = function(month, btn){
@@ -1567,11 +1558,11 @@ function renderAttCalendar(month){
 let feePortalRecs = [];
 let feePortalSelected = null;
 
-async function loadStudentFees(){
+function loadStudentFees(){
   if(!CU) return;
-  try {
-    const q = query(collection(db,'fees'), where('studentUid','==', CU.uid));
-    const snap = await getDocs(q);
+  const q = query(collection(db,'fees'), where('studentUid','==', CU.uid));
+  // Real-time — updates instantly when admin adds/changes a fee
+  onSnapshot(q, snap => {
     let total = 0, paid = 0;
     feePortalRecs = [];
     snap.forEach(d => {
@@ -1625,7 +1616,7 @@ async function loadStudentFees(){
 
     $('d-select-btn').style.display = 'block';
     goFeeStep(1);
-  } catch(e){ console.error(e); }
+  }, e => console.error(e));
 }
 
 // ── Fee Portal Navigation ──
@@ -1932,33 +1923,33 @@ window.openBatch = async b => {
 };
 
 window.showBatchList = () => {
+  // Stop real-time listeners when leaving batch view
+  if(typeof batchStudentsListener === 'function'){ batchStudentsListener(); batchStudentsListener = null; }
+  if(typeof studentFeeListener === 'function'){ studentFeeListener(); studentFeeListener = null; }
   $('b-list').style.display = 'block';
   $('b-stus').style.display = 'none';
   $('b-det').style.display = 'none';
 };
 
+let batchStudentsListener = null; // unsubscribe fn for batch student list
+
 window.loadMoreStus = async () => {
-  try {
-    let q;
-    if(batchCursor){
-      q = query(collection(db,'students'), where('course','==', currentBatch), orderBy('name'), startAfter(batchCursor), limit(PAGE));
-    } else {
-      q = query(collection(db,'students'), where('course','==', currentBatch), orderBy('name'), limit(PAGE));
-    }
-    const snap = await getDocs(q);
-    if(snap.empty && batchLoaded.length === 0){
-      $('bs-list').innerHTML = '<div class="empty" style="color:#8b949e">No students in this batch yet.</div>';
-      $('bs-more').style.display = 'none';
-      return;
-    }
-    if(batchLoaded.length === 0) $('bs-list').innerHTML = '';
-    snap.forEach(d => batchLoaded.push({...d.data(), id: d.id}));
-    if(snap.docs.length) batchCursor = snap.docs[snap.docs.length-1];
-    $('bs-more').style.display = snap.size === PAGE ? 'block' : 'none';
-    renderStuRows();
-  } catch(e){
+  if(!currentBatch) return;
+  // Unsubscribe any previous batch listener
+  if(batchStudentsListener){ batchStudentsListener(); batchStudentsListener = null; }
+  batchLoaded = [];
+  $('bs-list').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  const q = query(collection(db,'students'), where('course','==', currentBatch), orderBy('name'), limit(100));
+  // Real-time — student added/removed shows instantly
+  batchStudentsListener = onSnapshot(q, snap => {
+    batchLoaded = [];
+    snap.forEach(d => batchLoaded.push({...d.data(), id:d.id}));
+    $('bs-more').style.display = 'none'; // real-time covers all, no paging needed
+    const filter = $('bs-search') ? $('bs-search').value.toLowerCase().trim() : '';
+    renderStuRows(filter);
+  }, e => {
     $('bs-list').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
-  }
+  });
 };
 
 function renderStuRows(filter=''){
@@ -1983,6 +1974,8 @@ window.filterStus = () => {
 };
 
 window.backToStus = () => {
+  // Stop real-time fee listener when leaving student detail
+  if(typeof studentFeeListener === 'function'){ studentFeeListener(); studentFeeListener = null; }
   $('b-det').style.display = 'none';
   $('b-stus').style.display = 'block';
 };
@@ -2036,57 +2029,62 @@ let currentFeeUid = null;
 let currentFeeSid = null;
 let currentFeeName = null;
 
-async function loadStudentFeesAdmin(uid, name, sid){
+let studentFeeListener = null; // unsubscribe fn for current student fees
+
+function loadStudentFeesAdmin(uid, name, sid){
   currentFeeUid = uid;
   currentFeeSid = sid;
   currentFeeName = name;
   const el = $('b-fee-list');
   el.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
-  try {
-    const snap = await getDocs(query(collection(db,'fees'), where('studentUid','==', uid)));
-    const recs = [];
-    let total=0, paid=0;
-    snap.forEach(d => {
-      const r = {...d.data(), id:d.id};
-      recs.push(r);
-      total += Number(r.amount||0);
-      if(r.status === 'Paid') paid += Number(r.amount||0);
-      else if(r.status === 'Partial') paid += Number(r.amount||0)/2;
-    });
-    recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
-    // Update summary
-    $('b-fs-total').textContent = 'Rs ' + total.toLocaleString();
-    $('b-fs-paid').textContent = 'Rs ' + paid.toLocaleString();
-    $('b-fs-due').textContent = 'Rs ' + (total-paid).toLocaleString();
-    if(!recs.length){
-      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Click "+ Add Fee" to add one.</div>';
-      return;
-    }
-    const today = new Date().toISOString().split('T')[0];
-    el.innerHTML = recs.map(r => {
-      const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
-      const colors = {Paid:'#16a34a', Partial:'#d97706', Unpaid:'#dc2626'};
-      const col = colors[r.status] || '#888';
-      return `<div style="background:#0d1117;border:1px solid #30363d;border-left:3px solid ${col};border-radius:10px;padding:.75rem .9rem;margin-bottom:.5rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
-          <div>
-            <div style="color:#fff;font-size:.88rem;font-weight:600">${esc(r.month||'—')}</div>
-            <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Rs ${Number(r.amount||0).toLocaleString()} · Due ${esc(r.dueDate||'N/A')}</div>
+  // Unsubscribe previous listener if switching students
+  if(studentFeeListener){ studentFeeListener(); studentFeeListener = null; }
+  // Real-time — fee status changes reflect instantly
+  studentFeeListener = onSnapshot(
+    query(collection(db,'fees'), where('studentUid','==', uid)),
+    snap => {
+      const recs = [];
+      let total=0, paid=0;
+      snap.forEach(d => {
+        const r = {...d.data(), id:d.id};
+        recs.push(r);
+        total += Number(r.amount||0);
+        if(r.status==='Paid') paid += Number(r.amount||0);
+        else if(r.status==='Partial') paid += Number(r.amount||0)/2;
+      });
+      recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
+      $('b-fs-total').textContent = 'Rs ' + total.toLocaleString();
+      $('b-fs-paid').textContent = 'Rs ' + paid.toLocaleString();
+      $('b-fs-due').textContent = 'Rs ' + (total-paid).toLocaleString();
+      if(!recs.length){
+        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Click "+ Add Fee" to add one.</div>';
+        return;
+      }
+      const today = new Date().toISOString().split('T')[0];
+      el.innerHTML = recs.map(r => {
+        const isOverdue = r.status!=='Paid' && r.dueDate && r.dueDate < today;
+        const colors = {Paid:'#16a34a', Partial:'#d97706', Unpaid:'#dc2626'};
+        const col = isOverdue ? '#dc2626' : (colors[r.status]||'#888');
+        return `<div style="background:#0d1117;border:1px solid #30363d;border-left:3px solid ${col};border-radius:10px;padding:.75rem .9rem;margin-bottom:.5rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+            <div>
+              <div style="color:#fff;font-size:.88rem;font-weight:600">${esc(r.month||'—')}</div>
+              <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Rs ${Number(r.amount||0).toLocaleString()} · Due ${esc(r.dueDate||'N/A')}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.4rem">
+              <select style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#fff;padding:.28rem .55rem;font-size:.74rem;font-family:'DM Sans',sans-serif;outline:none" onchange="updateFeeStatusInline('${r.id}',this.value,${r.amount},'${r.status}')">
+                <option ${r.status==='Unpaid'?'selected':''}>Unpaid</option>
+                <option ${r.status==='Partial'?'selected':''}>Partial</option>
+                <option ${r.status==='Paid'?'selected':''}>Paid</option>
+              </select>
+              <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')">🗑</button>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:.4rem">
-            <select style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#fff;padding:.28rem .55rem;font-size:.74rem;font-family:'DM Sans',sans-serif;outline:none" onchange="updateFeeStatusInline('${r.id}',this.value,${r.amount},'${r.status}')">
-              <option ${r.status==='Unpaid'?'selected':''}>Unpaid</option>
-              <option ${r.status==='Partial'?'selected':''}>Partial</option>
-              <option ${r.status==='Paid'?'selected':''}>Paid</option>
-            </select>
-            <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')">🗑</button>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  } catch(e){
-    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`;
-  }
+        </div>`;
+      }).join('');
+    },
+    e => { el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`; }
+  );
 }
 
 window.toggleAddFeeForm = () => {
@@ -2680,11 +2678,11 @@ window.postNotice = async () => {
   }
 };
 
-async function loadNotices(){
+function loadNotices(){
   const el = $('no-list');
-  try {
-    const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
-    const snap = await getDocs(q);
+  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
+  // Real-time — new notices appear instantly without refresh
+  onSnapshot(q, snap => {
     $('st-no').textContent = snap.size;
     if(snap.empty){
       el.innerHTML = '<div class="empty" style="color:#8b949e">No notices yet.</div>';
@@ -2695,7 +2693,7 @@ async function loadNotices(){
       const n = d.data();
       el.innerHTML += `<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem"><div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div><button class="b-del" onclick="delNotice('${d.id}')">🗑</button></div><div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div></div>`;
     });
-  } catch(e){ console.error(e); }
+  }, e => console.error(e));
 }
 
 window.delNotice = async id => {
