@@ -864,51 +864,45 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
     </div>
 
-     <!-- Inline fee management section (shown below student card) -->
-     <div id="b-fee-section" style="display:none">
-      <div class="dc" style="margin-top:.85rem">
-       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
-        <h3 style="margin-bottom:0">💳 Fee Records</h3>
-        <button class="b-acc" style="font-size:.73rem;padding:.38rem .8rem" onclick="toggleAddFeeForm()">＋ Add Fee</button>
-       </div>
+    <!-- VIEW: Student detail with fees -->
+    <div id="b-det" style="display:none">
+     <button class="back" onclick="backToStus()">← Back to Students</button>
+     <div id="b-det-c"></div>
 
-       <!-- Add fee form (collapsible) -->
-       <div id="b-fee-form" style="display:none;margin-bottom:1rem">
-        <div id="b-fe-al" class="alert"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem">
-         <input type="text" class="di" id="b-fe-mo" placeholder="Month (e.g. May 2026)" style="margin-bottom:0">
-         <input type="number" class="di" id="b-fe-am" placeholder="Amount (Rs)" style="margin-bottom:0">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.65rem">
-         <input type="date" class="di" id="b-fe-du" style="margin-bottom:0">
-         <select class="ds" id="b-fe-st" style="margin-bottom:0">
-          <option value="Unpaid">Unpaid</option>
-          <option value="Partial">Partial</option>
-          <option value="Paid">Paid</option>
-         </select>
-        </div>
-        <button class="b-acc" style="width:100%;padding:.65rem" onclick="addFeeInline()">💾 Save Fee Entry</button>
-       </div>
+     <!-- Fee Panel (shown below student card) -->
+     <div id="b-fee-section" style="display:none;margin-top:.85rem">
 
-       <!-- Fee list -->
-       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
+      <!-- Overall summary strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Course Fee</div>
+        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-total">Rs 0</div>
+       </div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Paid</div>
+        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-paid">Rs 0</div>
+       </div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Remaining</div>
+        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
+       </div>
       </div>
 
-      <!-- Fee summary -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.7rem">
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Total</div>
-        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-total">Rs 0</div>
+      <!-- Set Course Fee form (shown when no fee record exists) -->
+      <div class="new-fee-form" id="b-new-fee-form">
+       <div style="color:#fff;font-size:.82rem;font-weight:600;margin-bottom:.55rem">💳 Set Course Fee</div>
+       <div id="b-fe-al" class="alert"></div>
+       <input type="text" class="di" id="b-fe-mo" placeholder="Description (e.g. English Course 2026)">
+       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *">
+       <div class="nf-row">
+        <input type="date" class="di" id="b-fe-du" placeholder="Due date">
+        <input type="number" class="di" id="b-fe-first" placeholder="First payment (Rs, optional)">
        </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Paid</div>
-        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-paid">Rs 0</div>
-       </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Due</div>
-        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-due">Rs 0</div>
-       </div>
+       <button class="b-acc" onclick="createFeeRecord()">✅ Create Fee Record</button>
       </div>
+
+      <!-- Fee tracker list (shown when fee records exist) -->
+      <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
      </div>
     </div>
 
