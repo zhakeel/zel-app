@@ -349,6 +349,79 @@ textarea.di{min-height:78px;resize:vertical}
   .acts{grid-template-columns:1fr}
   .otp-box{width:42px;height:50px;font-size:1.2rem}
 }
+
+/* ── PAYMENT PORTAL (ESOFT style) ── */
+.portal-steps{display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;gap:0}
+.step-item{display:flex;flex-direction:column;align-items:center;position:relative}
+.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;border:2px solid var(--border);background:#fff;color:var(--muted);z-index:1;transition:all .3s}
+.step-circle.done{background:var(--success);border-color:var(--success);color:#fff}
+.step-circle.active{background:var(--ocean);border-color:var(--ocean);color:#fff}
+.step-lbl{font-size:.6rem;color:var(--muted);text-align:center;margin-top:.3rem;line-height:1.3;width:64px}
+.step-lbl.active{color:var(--ocean);font-weight:600}
+.step-line{width:48px;height:2px;background:var(--border);margin-bottom:18px;transition:background .3s}
+.step-line.done{background:var(--success)}
+
+.upcoming-card{background:var(--sky);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem}
+.upcoming-card h4{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem}
+.fee-portal-item{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1rem;margin-bottom:.55rem;position:relative;overflow:hidden;transition:border-color .2s}
+.fee-portal-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ocean)}
+.fee-portal-item.overdue::before{background:var(--danger)}
+.fee-portal-item.paid::before{background:var(--success)}
+.fee-portal-item .fi-name{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:.3rem}
+.fee-portal-item .fi-amount{font-size:1.25rem;font-weight:700;color:var(--ocean);font-family:'Cormorant Garamond',serif}
+.fee-portal-item .fi-amount.overdue{color:var(--danger)}
+.fee-portal-item .fi-amount.paid{color:var(--success)}
+.fee-portal-item .fi-due{font-size:.72rem;color:var(--muted);margin-top:.2rem;display:flex;align-items:center;gap:.3rem}
+.fee-portal-badge{position:absolute;top:.7rem;right:.8rem;padding:.2rem .6rem;border-radius:50px;font-size:.64rem;font-weight:700;letter-spacing:.05em}
+.fee-portal-badge.Paid{background:#d1fae5;color:#065f46}
+.fee-portal-badge.Partial{background:#fef3c7;color:#92400e}
+.fee-portal-badge.Unpaid{background:#e0f2fe;color:#0369a1}
+.fee-portal-badge.Overdue{background:#fee2e2;color:#991b1b}
+.fee-info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.75rem 1rem;font-size:.78rem;color:#1e40af;display:flex;align-items:flex-start;gap:.5rem;margin-top:.5rem}
+
+.portal-step-content{display:none}.portal-step-content.active{display:block;animation:fade .3s ease both}
+.fee-select-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.6rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
+.fee-select-item:hover,.fee-select-item.selected{border-color:var(--ocean);background:var(--sky)}
+.fee-select-item.selected::after{content:'✓';background:var(--ocean);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.fee-summary-box{background:linear-gradient(135deg,var(--ocean-dark),var(--ocean));color:#fff;border-radius:14px;padding:1.2rem;margin-bottom:1rem}
+.fee-summary-box .lbl{font-size:.7rem;opacity:.75;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+.fee-summary-box .val{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400}
+.portal-nav{display:flex;gap:.6rem;margin-top:1rem}
+.portal-nav .btn{flex:1;padding:.7rem;font-size:.78rem}
+.portal-nav .btn-back{background:#fff;color:var(--ocean-dark);border:1.5px solid var(--border)}
+.portal-nav .btn-back:hover{background:var(--sky)}
+
+/* ── SIMPLE ATTENDANCE ── */
+.att-month-tabs{display:flex;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.25rem;margin-bottom:1rem;scrollbar-width:none}
+.att-month-tabs::-webkit-scrollbar{display:none}
+.att-mtab{background:#fff;border:1.5px solid var(--border);border-radius:50px;padding:.38rem .85rem;font-size:.76rem;white-space:nowrap;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;flex-shrink:0}
+.att-mtab.active{background:var(--ocean);border-color:var(--ocean);color:#fff;font-weight:600}
+.att-day-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:.5rem}
+.att-day-hdr{font-size:.6rem;color:var(--muted);text-align:center;font-weight:600;text-transform:uppercase}
+.att-day-cell{aspect-ratio:1;border-radius:8px;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--muted);cursor:default;transition:transform .15s;position:relative}
+.att-day-cell.present{background:var(--success);color:#fff}
+.att-day-cell.absent{background:var(--danger);color:#fff}
+.att-day-cell.late{background:var(--warn);color:#fff}
+.att-day-cell.today{box-shadow:0 0 0 2px var(--ocean)}
+.att-day-cell:hover{transform:scale(1.08)}
+.att-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+.att-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.8rem;text-align:center}
+.att-stat .n{font-family:'Cormorant Garamond',serif;font-size:1.6rem;line-height:1}
+.att-stat .l{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.att-stat.p .n{color:var(--success)}
+.att-stat.a .n{color:var(--danger)}
+.att-stat.lt .n{color:var(--warn)}
+
+/* ── ADMIN ATTENDANCE QUICK MARK ── */
+.qmark-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.5rem}
+.qmark-btn{border:none;border-radius:10px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:.25rem}
+.qmark-btn.present{background:#d1fae5;color:#065f46}
+.qmark-btn.present:hover,.qmark-btn.present.sel{background:var(--success);color:#fff}
+.qmark-btn.absent{background:#fee2e2;color:#991b1b}
+.qmark-btn.absent:hover,.qmark-btn.absent.sel{background:var(--danger);color:#fff}
+.qmark-btn.late{background:#fef3c7;color:#92400e}
+.qmark-btn.late:hover,.qmark-btn.late.sel{background:var(--warn);color:#fff}
+
 </style>
 </head>
 <body>
@@ -381,7 +454,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -476,37 +549,115 @@ textarea.di{min-height:78px;resize:vertical}
    <!-- ATT -->
    <div class="sub" id="ss-att">
     <div class="title">📋 My Attendance</div>
-    <div class="card">
-     <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem">Attendance Rate</div>
-     <div class="pct-num" id="d-att-pct">0%</div>
-     <div style="font-size:.74rem;color:var(--muted);margin-top:.2rem" id="d-att-sm">No records yet</div>
+
+    <!-- Stats row -->
+    <div class="att-stat-row">
+     <div class="att-stat p"><div class="n" id="d-att-p">0</div><div class="l">Present</div></div>
+     <div class="att-stat a"><div class="n" id="d-att-a">0</div><div class="l">Absent</div></div>
+     <div class="att-stat lt"><div class="n" id="d-att-l">0</div><div class="l">Late</div></div>
+    </div>
+
+    <!-- Rate bar -->
+    <div class="card" style="margin-bottom:.85rem;padding:.9rem 1.1rem">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
+      <span style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Attendance Rate</span>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ocean-dark)" id="d-att-pct">0%</span>
+     </div>
      <div class="pct-bar"><div class="pct-fill" id="d-att-bar" style="width:0%"></div></div>
     </div>
-    <div class="card">
-     <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.65rem">Recent History</div>
-     <div style="display:flex;gap:.6rem;font-size:.66rem;color:var(--muted);margin-bottom:.4rem">
-      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--success);border-radius:2px;display:inline-block"></span>Present</span>
-      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--danger);border-radius:2px;display:inline-block"></span>Absent</span>
-      <span style="display:flex;align-items:center;gap:.25rem"><span style="width:9px;height:9px;background:var(--warn);border-radius:2px;display:inline-block"></span>Late</span>
+
+    <!-- Month tabs -->
+    <div class="att-month-tabs" id="d-att-months"></div>
+
+    <!-- Calendar view -->
+    <div class="card" id="d-att-cal">
+     <div class="att-day-row">
+      <div class="att-day-hdr">Sun</div><div class="att-day-hdr">Mon</div><div class="att-day-hdr">Tue</div>
+      <div class="att-day-hdr">Wed</div><div class="att-day-hdr">Thu</div><div class="att-day-hdr">Fri</div><div class="att-day-hdr">Sat</div>
      </div>
-     <div id="d-att-grid"><div class="empty">No records yet</div></div>
+     <div id="d-att-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">
+      <div class="empty" style="grid-column:1/-1">No records yet</div>
+     </div>
+    </div>
+
+    <!-- Legend -->
+    <div style="display:flex;gap:.9rem;font-size:.7rem;color:var(--muted);justify-content:center;margin-top:.5rem">
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--success);border-radius:3px;display:inline-block"></span>Present</span>
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--danger);border-radius:3px;display:inline-block"></span>Absent</span>
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--warn);border-radius:3px;display:inline-block"></span>Late</span>
     </div>
    </div>
 
    <!-- FEES -->
    <div class="sub" id="ss-fees">
     <div class="title">💳 My Fees</div>
-    <div class="fee-sum">
-     <div class="fee-box t"><div class="lbl">Total</div><div class="amt" id="d-ft">Rs 0</div></div>
-     <div class="fee-box p"><div class="lbl">Paid</div><div class="amt" id="d-fp">Rs 0</div></div>
-     <div class="fee-box d"><div class="lbl">Due</div><div class="amt" id="d-fd">Rs 0</div></div>
+
+    <!-- Step indicator -->
+    <div class="portal-steps">
+     <div class="step-item">
+      <div class="step-circle active" id="ps1">1</div>
+      <div class="step-lbl active" id="ps1l">View<br>Fees</div>
+     </div>
+     <div class="step-line" id="sl1"></div>
+     <div class="step-item">
+      <div class="step-circle" id="ps2">2</div>
+      <div class="step-lbl" id="ps2l">Select<br>Fee</div>
+     </div>
+     <div class="step-line" id="sl2"></div>
+     <div class="step-item">
+      <div class="step-circle" id="ps3">3</div>
+      <div class="step-lbl" id="ps3l">Fee<br>Details</div>
+     </div>
     </div>
-    <div id="d-fl"><div class="empty">💳 No fee records yet</div></div>
+
+    <!-- STEP 1: Overview -->
+    <div class="portal-step-content active" id="pstep1">
+     <!-- Summary -->
+     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem">
+      <div class="att-stat"><div class="n" id="d-ft" style="color:var(--ocean-dark)">Rs 0</div><div class="l">Total</div></div>
+      <div class="att-stat p"><div class="n" id="d-fp">Rs 0</div><div class="l">Paid</div></div>
+      <div class="att-stat a"><div class="n" id="d-fd">Rs 0</div><div class="l">Due</div></div>
+     </div>
+
+     <!-- Upcoming fees -->
+     <div class="upcoming-card" id="d-upcoming" style="display:none">
+      <h4>⏰ Upcoming Payments</h4>
+      <div id="d-upcoming-list"></div>
+      <div class="fee-info-box">ℹ️ These payments will become due on the specified dates</div>
+     </div>
+
+     <!-- All fees list -->
+     <div id="d-fl"><div class="empty">💳 No fee records yet</div></div>
+
+     <!-- View details button -->
+     <button class="btn" id="d-select-btn" onclick="goFeeStep2()" style="display:none;margin-top:.7rem">Select a Fee to View Details →</button>
+    </div>
+
+    <!-- STEP 2: Select fee -->
+    <div class="portal-step-content" id="pstep2">
+     <div style="font-size:.82rem;color:var(--muted);margin-bottom:.85rem">Select a fee entry to view details:</div>
+     <div id="d-fee-select-list"></div>
+     <div class="portal-nav">
+      <button class="btn portal-nav btn-back" onclick="goFeeStep(1)">← Back</button>
+     </div>
+    </div>
+
+    <!-- STEP 3: Fee detail -->
+    <div class="portal-step-content" id="pstep3">
+     <div id="d-fee-detail-card"></div>
+     <div class="portal-nav">
+      <button class="btn portal-nav btn-back" onclick="goFeeStep(2)">← Back</button>
+      <button class="btn btn-main portal-nav" onclick="goFeeStep(1)">✅ Done</button>
+     </div>
+    </div>
+
    </div>
 
    <!-- SETTINGS -->
    <div class="sub" id="ss-set">
     <div class="title">⚙️ Settings</div>
+
+    <!-- Change Password -->
     <div class="card acc-top">
      <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark);margin-bottom:.85rem">🔐 Change Password</div>
      <div id="pw-al" class="alert"></div>
@@ -515,7 +666,31 @@ textarea.di{min-height:78px;resize:vertical}
      <div class="fg"><label>Confirm New Password</label><input type="password" id="pw-2"></div>
      <button class="btn" id="bt-pw" onclick="changePW()">Update Password</button>
     </div>
-    <button class="btn" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3)">Sign Out</button>
+
+    <!-- Privacy & Safety -->
+    <div class="card acc-top">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark);margin-bottom:.6rem">🛡️ Privacy &amp; Safety</div>
+     <div style="font-size:.82rem;color:var(--muted);line-height:1.65">
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">What we collect:</strong> name, phone, email, profile photo, batch, attendance records, fee records.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">How we use it:</strong> only to manage your enrollment, attendance and fees at ZEL. Your data is never shared, sold, or used for advertising.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">Who can see it:</strong> only you and authorised ZEL admins.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">Security:</strong> your password is encrypted, all data is transmitted over HTTPS, and stored on Google Firebase secure servers.</p>
+      <p><strong style="color:var(--ink)">Your rights:</strong> you can change your password anytime, and you can permanently delete your account using the button below.</p>
+     </div>
+    </div>
+
+    <!-- Sign Out -->
+    <button class="btn" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3);margin-bottom:.7rem">Sign Out</button>
+
+    <!-- Delete Account -->
+    <div class="card" style="border-color:#fecaca;background:#fef2f2">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:#b91c1c;margin-bottom:.5rem">⚠️ Delete My Account</div>
+     <div style="font-size:.78rem;color:var(--muted);margin-bottom:.85rem;line-height:1.6">
+      Permanently remove your account, photo, attendance and fee records from ZEL. This cannot be undone.
+     </div>
+     <button onclick="deleteMyAccount()" style="background:#fff;border:1.5px solid #dc2626;color:#dc2626;border-radius:50px;padding:.6rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;width:100%">🗑️ Permanently Delete My Account</button>
+    </div>
+
    </div>
 
   </div>
@@ -604,27 +779,43 @@ textarea.di{min-height:78px;resize:vertical}
 
    <!-- ATTENDANCE -->
    <div class="sec" id="as-att">
+    <!-- Quick Mark Card -->
     <div class="dc">
      <h3>📋 Mark Attendance</h3>
      <div id="at-al" class="alert"></div>
+     <!-- Student picker -->
      <div class="pkr">
-      <input type="text" class="di" id="at-pi" placeholder="🔍 Search student..." oninput="searchPicker('at',this.value)" onfocus="document.getElementById('at-pr').classList.add('open')">
+      <input type="text" class="di" id="at-pi" placeholder="🔍 Search student by name or ID..." oninput="searchPicker('at',this.value)" onfocus="document.getElementById('at-pr').classList.add('open')">
       <div class="pkr-res" id="at-pr"></div>
      </div>
      <div id="at-ch" style="display:none"></div>
+     <!-- Date -->
      <input type="date" class="di" id="at-dt">
-     <select class="ds" id="at-st">
-      <option value="">Select status...</option>
-      <option value="present">✅ Present</option>
-      <option value="absent">❌ Absent</option>
-      <option value="late">⏰ Late</option>
-     </select>
-     <button class="b-acc" style="width:100%;padding:.7rem" onclick="markAtt()">Save Attendance</button>
+     <!-- Quick tap status buttons -->
+     <div style="font-size:.72rem;color:#8b949e;margin-bottom:.4rem">Tap to select status:</div>
+     <div class="qmark-grid">
+      <button class="qmark-btn present" id="qm-present" onclick="selectAttStatus('present')">
+       <span style="font-size:1.4rem">✅</span>Present
+      </button>
+      <button class="qmark-btn absent" id="qm-absent" onclick="selectAttStatus('absent')">
+       <span style="font-size:1.4rem">❌</span>Absent
+      </button>
+      <button class="qmark-btn late" id="qm-late" onclick="selectAttStatus('late')">
+       <span style="font-size:1.4rem">⏰</span>Late
+      </button>
+     </div>
+     <input type="hidden" id="at-st" value="">
+     <button class="b-acc" style="width:100%;padding:.72rem;margin-top:.75rem" onclick="markAtt()">💾 Save Attendance</button>
     </div>
+
+    <!-- View Records Card -->
     <div class="dc">
-     <div style="display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap">
-      <input type="month" class="di" id="at-mo" style="flex:1;margin-bottom:0">
-      <button class="b-acc" onclick="loadAttRecs(true)">Filter</button>
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+      <h3 style="margin-bottom:0">View Records</h3>
+      <div style="display:flex;gap:.5rem">
+       <input type="month" class="di" id="at-mo" style="margin-bottom:0;width:auto">
+       <button class="b-acc" onclick="loadAttRecs(true)">Filter</button>
+      </div>
      </div>
      <div id="at-rec"><div class="empty" style="color:#8b949e">Pick a month to view records</div></div>
      <button class="b-sec" id="at-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadAttRecs(false)">Load More</button>
@@ -765,7 +956,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut, onAuthStateChanged, EmailAuthProvider,
-  reauthenticateWithCredential, updatePassword
+  reauthenticateWithCredential, updatePassword, deleteUser
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, updateDoc,
@@ -1009,6 +1200,7 @@ let galleryPhoto = null;
 
 window.onGalleryPhoto = async (e) => {
   const f = e.target.files[0]; if(!f) return;
+  if(f.size > 5 * 1024 * 1024){ alertMsg('gl-al', 'Photo must be smaller than 5MB.', 'err'); e.target.value=''; return; }
   const c = $('gl-pc');
   c.innerHTML = '⏳';
   try {
@@ -1115,6 +1307,7 @@ window.doLogout = async () => {
 // ══ REGISTER PHOTO ══
 window.onRegPhoto = async e => {
   const f = e.target.files[0]; if(!f) return;
+  if(f.size > 5 * 1024 * 1024){ alert('Photo must be smaller than 5MB. Please choose a smaller image.'); e.target.value=''; return; }
   const c = $('rg-pc');
   c.innerHTML = '⏳';
   try {
@@ -1238,38 +1431,92 @@ async function loadStudentNotices(){
   }
 }
 
+let attAllRecs = []; // all student attendance records
+let attCurrentMonth = ''; // currently viewed month
+
 async function loadStudentAtt(){
   if(!CU) return;
   try {
     const q = query(collection(db,'attendance'), where('studentUid','==', CU.uid));
     const snap = await getDocs(q);
-    let total=0, present=0, late=0;
-    const recs = [];
+    let present=0, absent=0, late=0;
+    attAllRecs = [];
     snap.forEach(d => {
       const r = d.data();
-      recs.push(r);
-      total++;
+      attAllRecs.push(r);
       if(r.status === 'present') present++;
-      if(r.status === 'late') late++;
+      else if(r.status === 'absent') absent++;
+      else if(r.status === 'late') late++;
     });
-    recs.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    const total = present + absent + late;
     const pct = total === 0 ? 0 : Math.round(((present + late*0.5) / total) * 100);
+
+    // Update stat boxes
+    $('d-att-p').textContent = present;
+    $('d-att-a').textContent = absent;
+    $('d-att-l').textContent = late;
     $('d-att-pct').textContent = pct + '%';
     $('d-att-bar').style.width = pct + '%';
-    $('d-att-sm').textContent = `${present} present · ${late} late · ${total-present-late} absent (${total} total)`;
-    const grid = $('d-att-grid');
-    if(!recs.length){
-      grid.innerHTML = '<div class="empty">No records yet</div>';
-      return;
-    }
-    let html = '<div class="att-grid">';
-    recs.slice(0,28).forEach(r => {
-      const day = r.date ? r.date.split('-')[2] : '?';
-      html += `<div class="att-cell ${r.status}" title="${esc(r.date)}">${day}</div>`;
-    });
-    grid.innerHTML = html + '</div>';
+
+    // Build month tabs from unique months in records
+    const monthSet = new Set();
+    attAllRecs.forEach(r => { if(r.date) monthSet.add(r.date.substring(0,7)); });
+    const months = [...monthSet].sort().reverse();
+
+    // Always add current month if no records
+    const nowMonth = new Date().toISOString().substring(0,7);
+    if(!monthSet.has(nowMonth)) months.unshift(nowMonth);
+
+    const tabsEl = $('d-att-months');
+    tabsEl.innerHTML = months.map(m => {
+      const [y,mo] = m.split('-');
+      const label = new Date(y, mo-1).toLocaleString('en-GB', {month:'short', year:'2-digit'});
+      return `<button class="att-mtab" onclick="showAttMonth('${m}',this)">${label}</button>`;
+    }).join('');
+
+    // Show most recent month with data, or current month
+    const defaultMonth = months[0];
+    attCurrentMonth = defaultMonth;
+    const firstTab = tabsEl.querySelector('.att-mtab');
+    if(firstTab) { firstTab.classList.add('active'); showAttMonth(defaultMonth, firstTab); }
+    else renderAttCalendar(defaultMonth);
+
   } catch(e){ console.error(e); }
 }
+
+window.showAttMonth = function(month, btn){
+  attCurrentMonth = month;
+  // Update tab active state
+  document.querySelectorAll('.att-mtab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderAttCalendar(month);
+};
+
+function renderAttCalendar(month){
+  const [year, mo] = month.split('-').map(Number);
+  const today = new Date().toISOString().split('T')[0];
+  const firstDay = new Date(year, mo-1, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, mo, 0).getDate();
+  // Build lookup
+  const byDate = {};
+  attAllRecs.forEach(r => { if(r.date && r.date.startsWith(month)) byDate[r.date] = r.status; });
+  // Render grid
+  let html = '';
+  // Empty cells for days before 1st
+  for(let i=0; i<firstDay; i++) html += '<div></div>';
+  // Day cells
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = month + '-' + String(d).padStart(2,'0');
+    const status = byDate[dateStr] || '';
+    const isToday = dateStr === today;
+    html += `<div class="att-day-cell ${status} ${isToday ? 'today' : ''}" title="${status || 'No record'}">${d}</div>`;
+  }
+  $('d-att-grid').innerHTML = html;
+}
+
+// ── Fee Portal State ──
+let feePortalRecs = [];
+let feePortalSelected = null;
 
 async function loadStudentFees(){
   if(!CU) return;
@@ -1277,29 +1524,117 @@ async function loadStudentFees(){
     const q = query(collection(db,'fees'), where('studentUid','==', CU.uid));
     const snap = await getDocs(q);
     let total = 0, paid = 0;
-    const recs = [];
+    feePortalRecs = [];
     snap.forEach(d => {
-      const r = d.data();
-      recs.push(r);
+      const r = {...d.data(), id: d.id};
+      feePortalRecs.push(r);
       total += Number(r.amount || 0);
       if(r.status === 'Paid') paid += Number(r.amount || 0);
       if(r.status === 'Partial') paid += Number(r.amount || 0)/2;
     });
-    recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
-    $('d-ft').textContent = 'Rs ' + total;
-    $('d-fp').textContent = 'Rs ' + paid;
-    $('d-fd').textContent = 'Rs ' + (total-paid);
+    feePortalRecs.sort((a,b) => (b.month||'').localeCompare(a.month||''));
+
+    // Update summary
+    $('d-ft').textContent = 'Rs ' + total.toLocaleString();
+    $('d-fp').textContent = 'Rs ' + paid.toLocaleString();
+    $('d-fd').textContent = 'Rs ' + (total-paid).toLocaleString();
+
     const el = $('d-fl');
-    if(!recs.length){
+    if(!feePortalRecs.length){
       el.innerHTML = '<div class="empty">💳 No fee records yet</div>';
+      $('d-select-btn').style.display = 'none';
       return;
     }
-    el.innerHTML = '';
-    recs.forEach(r => {
-      el.innerHTML += `<div class="fee-row"><div><div class="mon">${esc(r.month||'—')}</div><div class="sub">Rs ${r.amount||0} · Due ${esc(r.dueDate||'—')}</div></div><span class="pill ${r.status}">${r.status}</span></div>`;
-    });
+
+    // Upcoming (Unpaid with dueDate)
+    const today = new Date().toISOString().split('T')[0];
+    const upcoming = feePortalRecs.filter(r => r.status !== 'Paid' && r.dueDate && r.dueDate >= today);
+    const upcomingEl = $('d-upcoming');
+    if(upcoming.length){
+      upcomingEl.style.display = 'block';
+      $('d-upcoming-list').innerHTML = upcoming.map(r => `
+        <div class="fee-portal-item ${r.status === 'Paid' ? 'paid' : ''}">
+          <div class="fee-portal-badge ${r.status}">${r.status}</div>
+          <div class="fi-name">${esc(r.month||'—')}</div>
+          <div class="fi-amount ${r.dueDate < today ? 'overdue' : ''}">Rs ${Number(r.amount||0).toLocaleString()}</div>
+          <div class="fi-due">📅 Due ${esc(r.dueDate||'—')}</div>
+        </div>`).join('');
+    } else {
+      upcomingEl.style.display = 'none';
+    }
+
+    // All fees list
+    el.innerHTML = feePortalRecs.map(r => {
+      const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
+      return `<div class="fee-portal-item ${isOverdue ? 'overdue' : r.status === 'Paid' ? 'paid' : ''}">
+        <div class="fee-portal-badge ${isOverdue ? 'Overdue' : r.status}">${isOverdue ? 'Overdue' : r.status}</div>
+        <div class="fi-name">${esc(r.month||'—')}</div>
+        <div class="fi-amount ${isOverdue ? 'overdue' : r.status === 'Paid' ? 'paid' : ''}">Rs ${Number(r.amount||0).toLocaleString()}</div>
+        <div class="fi-due">📅 Due ${esc(r.dueDate||'N/A')}</div>
+      </div>`;
+    }).join('');
+
+    $('d-select-btn').style.display = 'block';
+    goFeeStep(1);
   } catch(e){ console.error(e); }
 }
+
+// ── Fee Portal Navigation ──
+window.goFeeStep = function(step){
+  [1,2,3].forEach(n => {
+    $('pstep'+n).classList.toggle('active', n === step);
+    const circ = $('ps'+n);
+    const lbl = $('ps'+n+'l');
+    if(n < step){ circ.classList.add('done'); circ.classList.remove('active'); lbl.classList.remove('active'); }
+    else if(n === step){ circ.classList.add('active'); circ.classList.remove('done'); lbl.classList.add('active'); }
+    else { circ.classList.remove('done','active'); lbl.classList.remove('active'); }
+    // Lines
+    if(n < 3){ const line = $('sl'+n); if(line) line.classList.toggle('done', n < step); }
+  });
+};
+
+window.goFeeStep2 = function(){
+  const list = $('d-fee-select-list');
+  list.innerHTML = feePortalRecs.map((r,i) => {
+    const today = new Date().toISOString().split('T')[0];
+    const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
+    return `<div class="fee-select-item" onclick="selectFeeEntry(${i})">
+      <div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--ink)">${esc(r.month||'—')}</div>
+        <div style="font-size:.76rem;color:var(--muted);margin-top:.18rem">Rs ${Number(r.amount||0).toLocaleString()} · Due ${esc(r.dueDate||'N/A')}</div>
+      </div>
+      <span class="pill ${isOverdue ? 'Unpaid' : r.status}" style="flex-shrink:0">${isOverdue ? 'Overdue' : r.status}</span>
+    </div>`;
+  }).join('');
+  goFeeStep(2);
+};
+
+window.selectFeeEntry = function(idx){
+  const r = feePortalRecs[idx];
+  if(!r) return;
+  const today = new Date().toISOString().split('T')[0];
+  const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
+  const statusColor = r.status === 'Paid' ? 'var(--success)' : isOverdue ? 'var(--danger)' : 'var(--ocean)';
+  $('d-fee-detail-card').innerHTML = `
+    <div class="fee-summary-box">
+      <div class="lbl">Fee Entry</div>
+      <div class="val">${esc(r.month||'—')}</div>
+    </div>
+    <div class="card" style="margin-bottom:.6rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+        <div><div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Amount</div>
+         <div style="font-size:1.25rem;font-weight:700;color:var(--ocean-dark);font-family:'Cormorant Garamond',serif">Rs ${Number(r.amount||0).toLocaleString()}</div></div>
+        <div><div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Status</div>
+         <span class="pill ${r.status}" style="font-size:.78rem">${isOverdue ? '⚠️ Overdue' : r.status === 'Paid' ? '✅ Paid' : r.status === 'Partial' ? '⚠️ Partial' : '🔴 Unpaid'}</span></div>
+        <div><div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Due Date</div>
+         <div style="font-size:.9rem;font-weight:500;color:${isOverdue ? 'var(--danger)' : 'var(--ink)'}">${esc(r.dueDate||'Not set')}</div></div>
+        <div><div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Student ID</div>
+         <div style="font-size:.9rem;font-weight:500;color:var(--ink)">${esc(r.studentId||'—')}</div></div>
+      </div>
+    </div>
+    ${r.status !== 'Paid' ? `<div class="fee-info-box">ℹ️ Please contact ZEL admin to complete your payment. Phone: <strong>+94 761 864 245</strong></div>` : `<div class="fee-info-box" style="background:#f0fdf4;border-color:#86efac;color:#15803d">✅ This fee has been paid. Thank you!</div>`}`;
+  goFeeStep(3);
+};
 
 // ══ AUTO-LOGOUT WATCHER ══
 // Watches the 'disabled' collection — if this user's UID appears there,
@@ -1333,6 +1668,84 @@ function stopDisabledWatcher(){
     disabledWatcher = null;
   }
 }
+
+// ══ DELETE MY ACCOUNT (student self-deletion) ══
+window.deleteMyAccount = async () => {
+  if(!CU || !CUD){
+    alert('You are not logged in.');
+    return;
+  }
+  const confirmText = prompt(
+    '⚠️ DELETE YOUR ACCOUNT?\n\n' +
+    'This will permanently remove:\n' +
+    '• Your profile and photo\n' +
+    '• All your attendance records\n' +
+    '• All your fee records\n' +
+    '• Your login access\n\n' +
+    'This CANNOT be undone.\n\n' +
+    'Type DELETE (in capitals) to confirm:'
+  );
+  if(confirmText !== 'DELETE'){
+    if(confirmText !== null) alert('Cancelled. You did not type DELETE correctly.');
+    return;
+  }
+
+  // Re-authentication: ask for password to confirm identity
+  const pw = prompt('For security, please enter your password to confirm:');
+  if(!pw){ alert('Cancelled.'); return; }
+
+  try {
+    // Step 1: Re-auth
+    await reauthenticateWithCredential(CU, EmailAuthProvider.credential(CU.email, pw));
+
+    const myUid = CU.uid;
+    stopDisabledWatcher();
+
+    // Step 2: Delete my attendance records
+    try {
+      const attSnap = await getDocs(query(collection(db,'attendance'), where('studentUid','==', myUid)));
+      const dels = [];
+      attSnap.forEach(d => dels.push(deleteDoc(doc(db,'attendance', d.id))));
+      await Promise.all(dels);
+    } catch(_){}
+
+    // Step 3: Delete my fee records and adjust totalPaid
+    try {
+      const feeSnap = await getDocs(query(collection(db,'fees'), where('studentUid','==', myUid)));
+      let paidLost = 0;
+      const dels = [];
+      feeSnap.forEach(d => {
+        const f = d.data();
+        if(f.status === 'Paid') paidLost += Number(f.amount||0);
+        else if(f.status === 'Partial') paidLost += Number(f.amount||0)/2;
+        dels.push(deleteDoc(doc(db,'fees', d.id)));
+      });
+      await Promise.all(dels);
+      if(paidLost > 0){
+        try { await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(-paidLost) }); } catch(_){}
+      }
+    } catch(_){}
+
+    // Step 4: Delete student profile
+    await deleteDoc(doc(db,'students', myUid));
+
+    // Step 5: Decrement student counter
+    try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(_){}
+
+    // Step 6: Delete the actual auth account (last step)
+    await deleteUser(CU);
+
+    alert('\u2705 Your account has been permanently deleted. Goodbye!');
+    location.reload();
+  } catch(e){
+    let m = 'Failed to delete account: ' + e.message;
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
+      m = 'Wrong password. Account not deleted.';
+    if(e.code === 'auth/requires-recent-login')
+      m = 'For security, please sign out and sign in again, then try deleting.';
+    alert(m);
+  }
+};
 
 window.changePW = async () => {
   const cur = $('pw-c').value;
@@ -1369,6 +1782,7 @@ window.openPhotoModal = uid => {
 
 window.onModalPhoto = async e => {
   const f = e.target.files[0]; if(!f) return;
+  if(f.size > 5 * 1024 * 1024){ alertMsg('mp-al', 'Photo must be smaller than 5MB.', 'err', true); e.target.value=''; return; }
   const c = $('mp-pc');
   c.innerHTML = '⏳';
   alertMsg('mp-al', 'Processing image...', 'info', true);
@@ -1425,43 +1839,44 @@ window.loadBatches = async () => {
     $('st-stu').textContent = realCount;
     $('st-ba').textContent = allBatches.length;
 
-    // Recalculate total paid from real fees collection
+    // Recalculate total paid in background (don't block UI)
     let realTotalPaid = 0;
-    try {
-      const feesAll = await getDocs(collection(db,'fees'));
+    getDocs(collection(db,'fees')).then(feesAll => {
       feesAll.forEach(d => {
         const f = d.data();
         if(f.status === 'Paid') realTotalPaid += Number(f.amount||0);
         else if(f.status === 'Partial') realTotalPaid += Number(f.amount||0)/2;
       });
       $('st-fe').textContent = 'Rs ' + realTotalPaid;
-    } catch(_){}
-
-    // Sync counters back to real values
-    try {
-      const counterRef = doc(db,'meta','counters');
-      const counterSnap = await getDoc(counterRef);
-      if(counterSnap.exists()){
-        const cur = counterSnap.data();
-        const updates = {};
-        if(cur.studentCount !== realCount) updates.studentCount = realCount;
-        if(cur.totalPaid !== realTotalPaid) updates.totalPaid = realTotalPaid;
-        if(Object.keys(updates).length > 0) await updateDoc(counterRef, updates);
-      } else {
-        await setDoc(counterRef, { studentCount: realCount, totalPaid: realTotalPaid });
-      }
-    } catch(_){}
-    grid.innerHTML = '';
-    for(const b of allBatches){
-      let n = 0;
+      // Sync counter in background
       try {
-        const c = await getCountFromServer(query(collection(db,'students'), where('course','==', b)));
-        n = c.data().count;
-      } catch(e){ n = 0; }
-      grid.innerHTML += `<div class="b-card" onclick='openBatch(${JSON.stringify(b)})'><div class="ic">📚</div><div class="nm">${esc(b)}</div><div class="ct"><strong>${n}</strong> student${n===1?'':'s'}</div></div>`;
-    }
+        const counterRef = doc(db,'meta','counters');
+        getDoc(counterRef).then(snap => {
+          if(snap.exists() && snap.data().totalPaid !== realTotalPaid){
+            updateDoc(counterRef, { totalPaid: realTotalPaid });
+          }
+        });
+      } catch(_){}
+    }).catch(_=>{});
+
+
+    grid.innerHTML = '';
     if(allBatches.length === 0){
       grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">No batches yet. Click "📚 Manage Batches" to add one.</div>';
+    } else {
+      // Show batch cards immediately with 0 count, then update counts in parallel
+      allBatches.forEach(b => {
+        grid.innerHTML += `<div class="b-card" onclick='openBatch(${JSON.stringify(b)})' id="bcard-${b.replace(/\s/g,'_')}"><div class="ic">📚</div><div class="nm">${esc(b)}</div><div class="ct"><strong id="bct-${b.replace(/\s/g,'_')}">...</strong> students</div></div>`;
+      });
+      // Fetch all counts in parallel
+      await Promise.all(allBatches.map(async b => {
+        try {
+          const c = await getCountFromServer(query(collection(db,'students'), where('course','==', b)));
+          const n = c.data().count;
+          const el = document.getElementById('bct-'+b.replace(/\s/g,'_'));
+          if(el) el.textContent = n;
+        } catch(e){}
+      }));
     }
   } catch(e){
     grid.innerHTML = `<div class="empty" style="color:var(--danger);grid-column:1/-1">Error: ${esc(e.message)}</div>`;
@@ -1777,6 +2192,16 @@ document.addEventListener('click', e => {
 });
 
 // ══ ATTENDANCE ══
+// ── Quick status selector ──
+window.selectAttStatus = function(status){
+  const el = $('at-st');
+  el.value = status;
+  ['present','absent','late'].forEach(s => {
+    const btn = $('qm-'+s);
+    if(btn) btn.classList.toggle('sel', s === status);
+  });
+};
+
 window.markAtt = async () => {
   const sel = pickers.at;
   const date = $('at-dt').value;
@@ -1790,6 +2215,7 @@ window.markAtt = async () => {
     });
     alertMsg('at-al', '✅ Attendance saved!', 'ok');
     $('at-st').value = '';
+    ['present','absent','late'].forEach(s => { const b = $('qm-'+s); if(b) b.classList.remove('sel'); });
     loadAttRecs(true);
   } catch(e){
     alertMsg('at-al', 'Save failed: ' + e.message);
@@ -1973,6 +2399,7 @@ window.delNotice = async id => {
 // ══ ADD STUDENT (admin) ══
 window.onAddPhoto = async e => {
   const f = e.target.files[0]; if(!f) return;
+  if(f.size > 5 * 1024 * 1024){ alert('Photo must be smaller than 5MB.'); e.target.value=''; return; }
   const c = $('ad-pc');
   c.innerHTML = '⏳';
   try {
