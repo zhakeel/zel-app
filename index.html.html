@@ -422,6 +422,36 @@ textarea.di{min-height:78px;resize:vertical}
 .qmark-btn.late{background:#fef3c7;color:#92400e}
 .qmark-btn.late:hover,.qmark-btn.late.sel{background:var(--warn);color:#fff}
 
+
+/* ── ADMIN FEE CARDS ── */
+.fee-card{background:#0d1117;border:1px solid #30363d;border-radius:12px;
+  padding:.85rem 1rem;margin-bottom:.5rem;transition:border-color .2s}
+.fee-card:hover{border-color:#444}
+.fee-card .fc-top{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.4rem;gap:.5rem;flex-wrap:wrap}
+.fee-card .fc-month{color:#fff;font-size:.9rem;font-weight:600;font-family:'DM Sans',sans-serif}
+.fee-card .fc-amount{color:var(--accent);font-family:'Cormorant Garamond',serif;font-size:1.2rem}
+.fee-card .fc-due{font-size:.7rem;color:#8b949e;margin-top:.18rem}
+.fee-card .fc-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.status-toggle{display:flex;border-radius:8px;overflow:hidden;border:1px solid #30363d}
+.status-toggle button{border:none;padding:.3rem .55rem;font-size:.68rem;font-weight:700;
+  font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;background:#161b22;color:#8b949e}
+.status-toggle button.on-paid{background:#16a34a;color:#fff}
+.status-toggle button.on-partial{background:#d97706;color:#fff}
+.status-toggle button.on-unpaid{background:#dc2626;color:#fff}
+
+/* Quick-add fee row */
+.fee-quick-add{background:#161b22;border:1px solid #30363d;border-radius:12px;
+  padding:.85rem;margin-bottom:.85rem}
+.fee-quick-add .qa-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.4rem}
+.fee-quick-add .di{margin-bottom:0;font-size:.82rem;padding:.6rem .75rem}
+.fee-quick-add .ds{margin-bottom:0;font-size:.82rem;padding:.6rem .75rem}
+.fee-quick-add .qa-save{width:100%;padding:.6rem;background:var(--accent);color:#0d1117;
+  border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;letter-spacing:.04em;margin-top:.4rem}
+.fee-quick-add .qa-save:hover{opacity:.88}
+.fee-quick-add .qa-save:disabled{opacity:.5;cursor:not-allowed}
+
 </style>
 </head>
 <body>
@@ -779,51 +809,50 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="back" onclick="backToStus()">← Back to Students</button>
      <div id="b-det-c"></div>
 
-     <!-- Inline fee management section (shown below student card) -->
-     <div id="b-fee-section" style="display:none">
-      <div class="dc" style="margin-top:.85rem">
-       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
-        <h3 style="margin-bottom:0">💳 Fee Records</h3>
-        <button class="b-acc" style="font-size:.73rem;padding:.38rem .8rem" onclick="toggleAddFeeForm()">＋ Add Fee</button>
-       </div>
+     <!-- Fee Panel (shown below student card) -->
+     <div id="b-fee-section" style="display:none;margin-top:.85rem">
 
-       <!-- Add fee form (collapsible) -->
-       <div id="b-fee-form" style="display:none;margin-bottom:1rem">
-        <div id="b-fe-al" class="alert"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem">
-         <input type="text" class="di" id="b-fe-mo" placeholder="Month (e.g. May 2026)" style="margin-bottom:0">
-         <input type="number" class="di" id="b-fe-am" placeholder="Amount (Rs)" style="margin-bottom:0">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.65rem">
-         <input type="date" class="di" id="b-fe-du" style="margin-bottom:0">
-         <select class="ds" id="b-fe-st" style="margin-bottom:0">
-          <option value="Unpaid">Unpaid</option>
-          <option value="Partial">Partial</option>
-          <option value="Paid">Paid</option>
-         </select>
-        </div>
-        <button class="b-acc" style="width:100%;padding:.65rem" onclick="addFeeInline()">💾 Save Fee Entry</button>
+      <!-- Summary strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Total</div>
+        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-total">Rs 0</div>
        </div>
-
-       <!-- Fee list -->
-       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Paid</div>
+        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-paid">Rs 0</div>
+       </div>
+       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Due</div>
+        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
+       </div>
       </div>
 
-      <!-- Fee summary -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.7rem">
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Total</div>
-        <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-total">Rs 0</div>
+      <!-- Quick add fee (always visible, no toggle needed) -->
+      <div class="fee-quick-add">
+       <div style="color:#fff;font-size:.8rem;font-weight:600;margin-bottom:.6rem">➕ Add New Fee</div>
+       <div id="b-fe-al" class="alert"></div>
+       <div class="qa-row">
+        <input type="text" class="di" id="b-fe-mo" placeholder="Month (e.g. May 2026)">
+        <input type="number" class="di" id="b-fe-am" placeholder="Amount (Rs)">
        </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Paid</div>
-        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-paid">Rs 0</div>
+       <div class="qa-row">
+        <input type="date" class="di" id="b-fe-du">
+        <select class="ds" id="b-fe-st">
+         <option value="Unpaid">🔴 Unpaid</option>
+         <option value="Partial">🟡 Partial</option>
+         <option value="Paid">🟢 Paid</option>
+        </select>
        </div>
-       <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.7rem;text-align:center">
-        <div style="font-size:.62rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Due</div>
-        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.2rem" id="b-fs-due">Rs 0</div>
-       </div>
+       <button class="qa-save" id="bt-fee-add" onclick="addFeeInline()">＋ Add Fee Entry</button>
       </div>
+
+      <!-- Fee records — status changed by clicking coloured buttons -->
+      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between">
+       <span>💳 Fee Records</span>
+       <span id="b-fee-count" style="font-size:.68rem"></span>
+      </div>
+      <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
      </div>
     </div>
 
@@ -1012,7 +1041,7 @@ import {
   collection, getDocs, addDoc, deleteDoc,
   query, orderBy, where, serverTimestamp,
   limit, startAfter, getCountFromServer, increment,
-  onSnapshot
+  onSnapshot, runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app = initializeApp({
@@ -1067,18 +1096,20 @@ function resizeImg(file, maxDim=400, q=0.75){
 }
 
 async function nextStudentId(){
-  // Format: ZEL-0001, ZEL-0002, ZEL-0003... (4-digit padded number)
+  // Atomic transaction — safe for 100 concurrent registrations
+  // No two students will ever get the same ID
   const ref = doc(db, 'meta', 'counters');
-  const snap = await getDoc(ref);
-  let n = 1;
-  if(snap.exists()){
-    n = (snap.data().studentCount || 0) + 1;
-    await updateDoc(ref, { studentCount: increment(1) });
-  } else {
-    const all = await getDocs(collection(db, 'students'));
-    n = all.size + 1;
-    await setDoc(ref, { studentCount: n, totalPaid: 0 });
-  }
+  const n = await runTransaction(db, async tx => {
+    const snap = await tx.get(ref);
+    let next = 1;
+    if(snap.exists()){
+      next = (snap.data().studentCount || 0) + 1;
+      tx.update(ref, { studentCount: increment(1) });
+    } else {
+      tx.set(ref, { studentCount: 1, totalPaid: 0 });
+    }
+    return next;
+  });
   return `ZEL-${String(n).padStart(4,'0')}`;
 }
 
@@ -2054,30 +2085,32 @@ function loadStudentFeesAdmin(uid, name, sid){
       });
       recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
       $('b-fs-total').textContent = 'Rs ' + total.toLocaleString();
-      $('b-fs-paid').textContent = 'Rs ' + paid.toLocaleString();
-      $('b-fs-due').textContent = 'Rs ' + (total-paid).toLocaleString();
+      $('b-fs-paid').textContent  = 'Rs ' + paid.toLocaleString();
+      $('b-fs-due').textContent   = 'Rs ' + (total-paid).toLocaleString();
+      const cnt = $('b-fee-count');
+      if(cnt) cnt.textContent = recs.length ? recs.length + ' record' + (recs.length>1?'s':'') : '';
       if(!recs.length){
-        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Click "+ Add Fee" to add one.</div>';
+        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Add one above.</div>';
         return;
       }
       const today = new Date().toISOString().split('T')[0];
       el.innerHTML = recs.map(r => {
         const isOverdue = r.status!=='Paid' && r.dueDate && r.dueDate < today;
-        const colors = {Paid:'#16a34a', Partial:'#d97706', Unpaid:'#dc2626'};
-        const col = isOverdue ? '#dc2626' : (colors[r.status]||'#888');
-        return `<div style="background:#0d1117;border:1px solid #30363d;border-left:3px solid ${col};border-radius:10px;padding:.75rem .9rem;margin-bottom:.5rem">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+        const borderCol = r.status==='Paid'?'#16a34a': isOverdue?'#ef4444':'#d97706';
+        return `<div class="fee-card" style="border-left:3px solid ${borderCol}">
+          <div class="fc-top">
             <div>
-              <div style="color:#fff;font-size:.88rem;font-weight:600">${esc(r.month||'—')}</div>
-              <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Rs ${Number(r.amount||0).toLocaleString()} · Due ${esc(r.dueDate||'N/A')}</div>
+              <div class="fc-month">${esc(r.month||'—')}</div>
+              <div class="fc-due">Rs ${Number(r.amount||0).toLocaleString()} · Due: ${esc(r.dueDate||'N/A')}${isOverdue?' ⚠️':''}</div>
             </div>
-            <div style="display:flex;align-items:center;gap:.4rem">
-              <select style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#fff;padding:.28rem .55rem;font-size:.74rem;font-family:'DM Sans',sans-serif;outline:none" onchange="updateFeeStatusInline('${r.id}',this.value,${r.amount},'${r.status}')">
-                <option ${r.status==='Unpaid'?'selected':''}>Unpaid</option>
-                <option ${r.status==='Partial'?'selected':''}>Partial</option>
-                <option ${r.status==='Paid'?'selected':''}>Paid</option>
-              </select>
-              <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')">🗑</button>
+            <div class="fc-actions">
+              <!-- One-tap status buttons -->
+              <div class="status-toggle">
+                <button title="Mark Unpaid" class="${r.status==='Unpaid'?'on-unpaid':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Unpaid')">✕</button>
+                <button title="Mark Partial" class="${r.status==='Partial'?'on-partial':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Partial')">½</button>
+                <button title="Mark Paid" class="${r.status==='Paid'?'on-paid':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Paid')">✓</button>
+              </div>
+              <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')" title="Delete">🗑</button>
             </div>
           </div>
         </div>`;
@@ -2087,10 +2120,8 @@ function loadStudentFeesAdmin(uid, name, sid){
   );
 }
 
-window.toggleAddFeeForm = () => {
-  const f = $('b-fee-form');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-};
+// toggleAddFeeForm removed — add fee form is always visible
+
 
 window.addFeeInline = async () => {
   if(!currentFeeUid){ alertMsg('b-fe-al','No student selected.'); return; }
@@ -2107,23 +2138,30 @@ window.addFeeInline = async () => {
       month, amount: Number(amount), dueDate: due, status,
       createdAt: serverTimestamp()
     });
+    // Clear form
     $('b-fe-mo').value=''; $('b-fe-am').value=''; $('b-fe-du').value='';
     $('b-fe-st').value='Unpaid';
-    $('b-fee-form').style.display = 'none';
-    loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
-    // Update batch total
+    // Real-time listener updates the list automatically
     loadBatchTotalPaid(currentBatch);
+    // Brief visual feedback
+    const btn = $('bt-fee-add');
+    if(btn){ btn.textContent='✅ Added!'; setTimeout(()=>{ btn.textContent='＋ Add Fee Entry'; },1500); }
   } catch(e){ alertMsg('b-fe-al','Failed: '+e.message); }
 };
 
 window.updateFeeStatusInline = async (id, ns, amount, os) => {
-  await updateDoc(doc(db,'fees',id), {status:ns});
+  await setFeeStatus(id, amount, os, ns);
+};
+
+window.setFeeStatus = async (id, amount, os, ns) => {
+  if(os === ns) return; // no change
   try {
+    await updateDoc(doc(db,'fees',id), {status:ns});
     const d = feeContrib(ns,amount) - feeContrib(os,amount);
-    if(d!==0) await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});
-  } catch(_){}
-  loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
-  loadBatchTotalPaid(currentBatch);
+    if(d!==0) try{ await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)}); }catch(_){}
+    // real-time listener will re-render automatically
+    loadBatchTotalPaid(currentBatch);
+  } catch(e){ alert('Failed to update: '+e.message); }
 };
 
 window.delFeeInline = async (id, amount, status) => {
