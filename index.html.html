@@ -544,7 +544,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -864,14 +864,14 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
     </div>
 
-    <!-- VIEW: Student detail with fees -->
+   <!-- VIEW: Student detail with fees -->
     <div id="b-det" style="display:none">
      <button class="back" onclick="backToStus()">← Back to Students</button>
      <div id="b-det-c"></div>
-
+ 
      <!-- Fee Panel (shown below student card) -->
      <div id="b-fee-section" style="display:none;margin-top:.85rem">
-
+ 
       <!-- Overall summary strip -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
@@ -887,7 +887,7 @@ textarea.di{min-height:78px;resize:vertical}
         <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
        </div>
       </div>
-
+ 
       <!-- Set Course Fee form (shown when no fee record exists) -->
       <div class="new-fee-form" id="b-new-fee-form">
        <div style="color:#fff;font-size:.82rem;font-weight:600;margin-bottom:.55rem">💳 Set Course Fee</div>
@@ -900,12 +900,12 @@ textarea.di{min-height:78px;resize:vertical}
        </div>
        <button class="b-acc" onclick="createFeeRecord()">✅ Create Fee Record</button>
       </div>
-
+ 
       <!-- Fee tracker list (shown when fee records exist) -->
       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
      </div>
     </div>
-
+ 
    </div>
 
    <!-- ATTENDANCE -->
