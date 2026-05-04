@@ -452,6 +452,66 @@ textarea.di{min-height:78px;resize:vertical}
 .fee-quick-add .qa-save:hover{opacity:.88}
 .fee-quick-add .qa-save:disabled{opacity:.5;cursor:not-allowed}
 
+
+/* ── FEE TRACKER DESIGN ── */
+.fee-tracker{background:#0d1117;border:1px solid #30363d;border-radius:14px;
+  overflow:hidden;margin-bottom:.75rem}
+.fee-tracker.settled{border-color:#16a34a}
+.fee-tracker .ft-header{padding:.85rem 1rem;background:#161b22;
+  display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.fee-tracker .ft-title{color:#fff;font-size:.9rem;font-weight:600}
+.fee-tracker .ft-settled{background:#d1fae5;color:#065f46;font-size:.68rem;font-weight:700;
+  padding:.2rem .6rem;border-radius:50px;letter-spacing:.06em;flex-shrink:0}
+.fee-tracker .ft-unsettled{background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;
+  padding:.2rem .6rem;border-radius:50px;letter-spacing:.06em;flex-shrink:0}
+.fee-tracker .ft-partial{background:#fef3c7;color:#92400e;font-size:.68rem;font-weight:700;
+  padding:.2rem .6rem;border-radius:50px;letter-spacing:.06em;flex-shrink:0}
+
+.fee-tracker .ft-progress{padding:.65rem 1rem;border-bottom:1px solid #30363d}
+.ft-prog-bar{height:8px;background:#30363d;border-radius:4px;overflow:hidden;margin:.4rem 0}
+.ft-prog-fill{height:100%;background:linear-gradient(90deg,#00b4d8,#16a34a);
+  transition:width .5s ease;border-radius:4px}
+.ft-prog-nums{display:flex;justify-content:space-between;font-size:.7rem}
+.ft-prog-paid{color:#16a34a;font-weight:600}
+.ft-prog-rem{color:#dc2626;font-weight:600}
+.ft-prog-total{color:#8b949e}
+
+.fee-tracker .ft-payments{padding:.65rem 1rem}
+.ft-pay-title{font-size:.68rem;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:.45rem}
+.ft-pay-row{display:flex;align-items:center;gap:.6rem;padding:.38rem 0;
+  border-bottom:1px solid #1c2128}
+.ft-pay-row:last-child{border-bottom:none}
+.ft-pay-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);
+  flex-shrink:0;margin-top:1px}
+.ft-pay-amount{color:#fff;font-size:.84rem;font-weight:600}
+.ft-pay-date{color:#8b949e;font-size:.72rem;margin-left:auto;flex-shrink:0}
+.ft-pay-note{color:#8b949e;font-size:.72rem;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ft-pay-del{background:none;border:none;color:#ef4444;cursor:pointer;
+  font-size:.78rem;flex-shrink:0;padding:0 .15rem;opacity:.6}
+.ft-pay-del:hover{opacity:1}
+
+.fee-tracker .ft-add{padding:.6rem 1rem;border-top:1px solid #30363d;background:#0d1117}
+.ft-add-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.35rem;align-items:center}
+.ft-add-row .di{margin-bottom:0;padding:.5rem .65rem;font-size:.78rem}
+.ft-add-btn{background:var(--accent);color:#0d1117;border:none;border-radius:8px;
+  padding:.5rem .75rem;font-size:.78rem;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.ft-add-btn:hover{opacity:.88}
+.ft-add-btn:disabled{opacity:.5;cursor:not-allowed}
+.ft-del-fee{background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;
+  padding:.28rem .55rem;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.4rem}
+.ft-del-fee:hover{background:#ef4444;color:#fff}
+
+/* new course fee form */
+.new-fee-form{background:#161b22;border:1px solid #30363d;border-radius:12px;
+  padding:.85rem;margin-bottom:.75rem}
+.new-fee-form .di{margin-bottom:.45rem}
+.new-fee-form .nf-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.new-fee-form .nf-row .di{margin-bottom:0}
+.new-fee-form .b-acc{width:100%;padding:.6rem;margin-top:.45rem}
+
 </style>
 </head>
 <body>
@@ -812,10 +872,10 @@ textarea.di{min-height:78px;resize:vertical}
      <!-- Fee Panel (shown below student card) -->
      <div id="b-fee-section" style="display:none;margin-top:.85rem">
 
-      <!-- Summary strip -->
+      <!-- Overall summary strip -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
-        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Total</div>
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Course Fee</div>
         <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-total">Rs 0</div>
        </div>
        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
@@ -823,35 +883,25 @@ textarea.di{min-height:78px;resize:vertical}
         <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-paid">Rs 0</div>
        </div>
        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
-        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Due</div>
+        <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Remaining</div>
         <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
        </div>
       </div>
 
-      <!-- Quick add fee (always visible, no toggle needed) -->
-      <div class="fee-quick-add">
-       <div style="color:#fff;font-size:.8rem;font-weight:600;margin-bottom:.6rem">➕ Add New Fee</div>
+      <!-- Set Course Fee form (shown when no fee record exists) -->
+      <div class="new-fee-form" id="b-new-fee-form">
+       <div style="color:#fff;font-size:.82rem;font-weight:600;margin-bottom:.55rem">💳 Set Course Fee</div>
        <div id="b-fe-al" class="alert"></div>
-       <div class="qa-row">
-        <input type="text" class="di" id="b-fe-mo" placeholder="Month (e.g. May 2026)">
-        <input type="number" class="di" id="b-fe-am" placeholder="Amount (Rs)">
+       <input type="text" class="di" id="b-fe-mo" placeholder="Description (e.g. English Course 2026)">
+       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *">
+       <div class="nf-row">
+        <input type="date" class="di" id="b-fe-du" placeholder="Due date">
+        <input type="number" class="di" id="b-fe-first" placeholder="First payment (Rs, optional)">
        </div>
-       <div class="qa-row">
-        <input type="date" class="di" id="b-fe-du">
-        <select class="ds" id="b-fe-st">
-         <option value="Unpaid">🔴 Unpaid</option>
-         <option value="Partial">🟡 Partial</option>
-         <option value="Paid">🟢 Paid</option>
-        </select>
-       </div>
-       <button class="qa-save" id="bt-fee-add" onclick="addFeeInline()">＋ Add Fee Entry</button>
+       <button class="b-acc" onclick="createFeeRecord()">✅ Create Fee Record</button>
       </div>
 
-      <!-- Fee records — status changed by clicking coloured buttons -->
-      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between">
-       <span>💳 Fee Records</span>
-       <span id="b-fee-count" style="font-size:.68rem"></span>
-      </div>
+      <!-- Fee tracker list (shown when fee records exist) -->
       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
      </div>
     </div>
@@ -907,33 +957,26 @@ textarea.di{min-height:78px;resize:vertical}
 
    <!-- NOTICES -->
    <div class="sec" id="as-notices">
-
-    <!-- Update Student Photo quick card -->
-    <div class="dc" style="margin-bottom:1rem">
-     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
-      <h3 style="margin-bottom:0">📷 Update Student Photo</h3>
-     </div>
-     <p style="color:#8b949e;font-size:.78rem;margin-bottom:.85rem;line-height:1.55">Search any student and update their profile photo instantly.</p>
-     <div class="pkr">
-      <input type="text" class="di" id="ph-pi" placeholder="🔍 Search student by name or ID..." oninput="searchPicker('ph',this.value)" onfocus="document.getElementById('ph-pr').classList.add('open')">
-      <div class="pkr-res" id="ph-pr"></div>
-     </div>
-     <div id="ph-ch" style="display:none"></div>
-     <div id="ph-preview" style="display:none;text-align:center;margin-bottom:.85rem">
-      <div class="pc dark" id="ph-circle" onclick="document.getElementById('ph-file').click()" style="margin:0 auto .4rem">📷</div>
-      <input type="file" id="ph-file" accept="image/*" style="display:none" onchange="onNoticePhoto(event)">
-      <div style="font-size:.7rem;color:#8b949e">Tap circle to choose photo</div>
-      <div id="ph-al" class="alert" style="margin-top:.5rem"></div>
-      <button class="b-acc" id="bt-ph-save" onclick="saveNoticePhoto()" style="width:100%;padding:.65rem;margin-top:.65rem">💾 Save Photo</button>
-     </div>
-    </div>
-
-    <!-- Post Announcement card -->
     <div class="dc">
      <h3>📢 Post Announcement</h3>
      <input type="text" class="di" id="no-ti" placeholder="Notice title...">
      <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
-     <button class="b-acc" onclick="postNotice()">Post Announcement</button>
+     <!-- Photo attachment -->
+     <div style="margin-bottom:.65rem">
+      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">📷 Attach Photo (optional)</div>
+      <div style="display:flex;align-items:center;gap:.6rem">
+       <div id="no-img-prev" onclick="document.getElementById('no-img-file').click()"
+        style="width:56px;height:56px;border-radius:8px;background:#0d1117;border:1.5px dashed #30363d;
+          display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.3rem;
+          overflow:hidden;flex-shrink:0;transition:border-color .2s">📷</div>
+       <input type="file" id="no-img-file" accept="image/*" style="display:none" onchange="onNoticeImg(event)">
+       <div>
+        <div style="color:#fff;font-size:.78rem" id="no-img-lbl">No photo selected</div>
+        <button onclick="clearNoticeImg()" id="bt-no-img-clear" style="display:none;background:none;border:none;color:#ef4444;font-size:.72rem;cursor:pointer;padding:0;margin-top:.2rem;font-family:'DM Sans',sans-serif">✕ Remove photo</button>
+       </div>
+      </div>
+     </div>
+     <button class="b-acc" onclick="postNotice()" style="width:100%;padding:.68rem">📢 Post Announcement</button>
     </div>
     <div id="no-list"><div class="empty" style="color:#8b949e">No notices yet</div></div>
    </div>
@@ -1503,7 +1546,10 @@ function loadStudentNotices(){
     snap.forEach(d => {
       const n = d.data();
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
-      el.innerHTML += `<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div></div>`;
+      const pHtml = n.photo
+        ? `<img src="${n.photo}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:.5rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
+        : '';
+      el.innerHTML += `<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`;
     });
   }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
@@ -1592,16 +1638,15 @@ let feePortalSelected = null;
 function loadStudentFees(){
   if(!CU) return;
   const q = query(collection(db,'fees'), where('studentUid','==', CU.uid));
-  // Real-time — updates instantly when admin adds/changes a fee
   onSnapshot(q, snap => {
     let total = 0, paid = 0;
     feePortalRecs = [];
     snap.forEach(d => {
       const r = {...d.data(), id: d.id};
       feePortalRecs.push(r);
-      total += Number(r.amount || 0);
-      if(r.status === 'Paid') paid += Number(r.amount || 0);
-      if(r.status === 'Partial') paid += Number(r.amount || 0)/2;
+      // New structure: courseFee + paidTotal
+      total += Number(r.courseFee || r.amount || 0);
+      paid  += Number(r.paidTotal || (r.status==='Paid'?Number(r.amount||0) : r.status==='Partial'?Number(r.amount||0)/2 : 0));
     });
     feePortalRecs.sort((a,b) => (b.month||'').localeCompare(a.month||''));
 
@@ -1634,17 +1679,31 @@ function loadStudentFees(){
       upcomingEl.style.display = 'none';
     }
 
-    // All fees list
+    // All fees list — new payment tracker structure
     el.innerHTML = feePortalRecs.map(r => {
-      const isOverdue = r.status !== 'Paid' && r.dueDate && r.dueDate < today;
-      return `<div class="fee-portal-item ${isOverdue ? 'overdue' : r.status === 'Paid' ? 'paid' : ''}">
-        <div class="fee-portal-badge ${isOverdue ? 'Overdue' : r.status}">${isOverdue ? 'Overdue' : r.status}</div>
+      const cf = Number(r.courseFee||r.amount||0);
+      const pt = Number(r.paidTotal||(r.status==='Paid'?cf:r.status==='Partial'?cf/2:0));
+      const rem = cf - pt;
+      const pct = cf > 0 ? Math.min(100,Math.round(pt/cf*100)) : 0;
+      const settled = rem <= 0 && cf > 0;
+      const today = new Date().toISOString().split('T')[0];
+      const isOverdue = !settled && r.dueDate && r.dueDate < today;
+      const badgeClass = settled ? 'Paid' : pt > 0 ? 'Partial' : 'Unpaid';
+      const badgeTxt   = settled ? '✅ Fully Settled' : pt > 0 ? '⚠️ Partial' : '🔴 Unpaid';
+      return `<div class="fee-portal-item ${settled?'paid':isOverdue?'overdue':''}">
+        <div class="fee-portal-badge ${badgeClass}">${badgeTxt}</div>
         <div class="fi-name">${esc(r.month||'—')}</div>
-        <div class="fi-amount ${isOverdue ? 'overdue' : r.status === 'Paid' ? 'paid' : ''}">Rs ${Number(r.amount||0).toLocaleString()}</div>
-        <div class="fi-due">📅 Due ${esc(r.dueDate||'N/A')}</div>
+        <div class="fi-amount ${settled?'paid':isOverdue?'overdue':''}">Rs ${cf.toLocaleString()}</div>
+        <div style="height:6px;background:#e8f4fb;border-radius:3px;overflow:hidden;margin:.3rem 0">
+          <div style="height:100%;width:${pct}%;background:${settled?'var(--success)':'var(--ocean)'};border-radius:3px;transition:width .4s ease"></div>
+        </div>
+        <div class="fi-due" style="display:flex;justify-content:space-between;margin-top:.25rem">
+          <span>💰 Paid: Rs ${pt.toLocaleString()} (${pct}%)</span>
+          <span style="color:${settled?'var(--success)':'var(--danger)'}">Rem: Rs ${rem>0?rem.toLocaleString():'0'}</span>
+        </div>
+        <div class="fi-due">📅 Due: ${esc(r.dueDate||'N/A')}${isOverdue?' ⚠️ Overdue':''}</div>
       </div>`;
     }).join('');
-
     $('d-select-btn').style.display = 'block';
     goFeeStep(1);
   }, e => console.error(e));
@@ -2060,120 +2119,177 @@ let currentFeeUid = null;
 let currentFeeSid = null;
 let currentFeeName = null;
 
-let studentFeeListener = null; // unsubscribe fn for current student fees
+let studentFeeListener = null;
 
 function loadStudentFeesAdmin(uid, name, sid){
-  currentFeeUid = uid;
-  currentFeeSid = sid;
-  currentFeeName = name;
-  const el = $('b-fee-list');
-  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
-  // Unsubscribe previous listener if switching students
+  currentFeeUid = uid; currentFeeSid = sid; currentFeeName = name;
+  const listEl = $('b-fee-list');
+  listEl.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
   if(studentFeeListener){ studentFeeListener(); studentFeeListener = null; }
-  // Real-time — fee status changes reflect instantly
+  // Listen to all fee records for this student in real-time
   studentFeeListener = onSnapshot(
     query(collection(db,'fees'), where('studentUid','==', uid)),
     snap => {
       const recs = [];
-      let total=0, paid=0;
-      snap.forEach(d => {
-        const r = {...d.data(), id:d.id};
-        recs.push(r);
-        total += Number(r.amount||0);
-        if(r.status==='Paid') paid += Number(r.amount||0);
-        else if(r.status==='Partial') paid += Number(r.amount||0)/2;
+      let grandTotal=0, grandPaid=0;
+      snap.forEach(d => { recs.push({...d.data(), id:d.id}); });
+      recs.sort((a,b)=>(b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
+      // Compute grand totals
+      recs.forEach(r => {
+        grandTotal += Number(r.courseFee||0);
+        grandPaid  += Number(r.paidTotal||0);
       });
-      recs.sort((a,b)=>(b.month||'').localeCompare(a.month||''));
-      $('b-fs-total').textContent = 'Rs ' + total.toLocaleString();
-      $('b-fs-paid').textContent  = 'Rs ' + paid.toLocaleString();
-      $('b-fs-due').textContent   = 'Rs ' + (total-paid).toLocaleString();
-      const cnt = $('b-fee-count');
-      if(cnt) cnt.textContent = recs.length ? recs.length + ' record' + (recs.length>1?'s':'') : '';
-      if(!recs.length){
-        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet. Add one above.</div>';
-        return;
-      }
-      const today = new Date().toISOString().split('T')[0];
-      el.innerHTML = recs.map(r => {
-        const isOverdue = r.status!=='Paid' && r.dueDate && r.dueDate < today;
-        const borderCol = r.status==='Paid'?'#16a34a': isOverdue?'#ef4444':'#d97706';
-        return `<div class="fee-card" style="border-left:3px solid ${borderCol}">
-          <div class="fc-top">
-            <div>
-              <div class="fc-month">${esc(r.month||'—')}</div>
-              <div class="fc-due">Rs ${Number(r.amount||0).toLocaleString()} · Due: ${esc(r.dueDate||'N/A')}${isOverdue?' ⚠️':''}</div>
-            </div>
-            <div class="fc-actions">
-              <!-- One-tap status buttons -->
-              <div class="status-toggle">
-                <button title="Mark Unpaid" class="${r.status==='Unpaid'?'on-unpaid':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Unpaid')">✕</button>
-                <button title="Mark Partial" class="${r.status==='Partial'?'on-partial':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Partial')">½</button>
-                <button title="Mark Paid" class="${r.status==='Paid'?'on-paid':''}" onclick="setFeeStatus('${r.id}',${r.amount},'${r.status}','Paid')">✓</button>
-              </div>
-              <button class="b-del" onclick="delFeeInline('${r.id}',${r.amount},'${r.status}')" title="Delete">🗑</button>
-            </div>
-          </div>
-        </div>`;
-      }).join('');
+      $('b-fs-total').textContent = 'Rs ' + grandTotal.toLocaleString();
+      $('b-fs-paid').textContent  = 'Rs ' + grandPaid.toLocaleString();
+      $('b-fs-due').textContent   = 'Rs ' + (grandTotal-grandPaid).toLocaleString();
+      // Show/hide the "Set Course Fee" form
+      const newForm = $('b-new-fee-form');
+      if(newForm) newForm.style.display = recs.length ? 'none' : 'block';
+      if(!recs.length){ listEl.innerHTML=''; return; }
+      // Render each fee tracker card
+      listEl.innerHTML = recs.map(r => renderFeeTracker(r)).join('');
     },
-    e => { el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`; }
+    e => { listEl.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`; }
   );
 }
 
-// toggleAddFeeForm removed — add fee form is always visible
+function renderFeeTracker(r){
+  const cf = Number(r.courseFee||0);
+  const pt = Number(r.paidTotal||0);
+  const rem = cf - pt;
+  const pct = cf > 0 ? Math.min(100, Math.round(pt/cf*100)) : 0;
+  const settled = rem <= 0 && cf > 0;
+  const payments = r.payments || [];
+  const badge = settled
+    ? '<span class="ft-settled">✅ FULLY SETTLED</span>'
+    : pt > 0
+      ? '<span class="ft-partial">⚠️ PARTIAL</span>'
+      : '<span class="ft-unsettled">🔴 UNPAID</span>';
+  const payRows = payments.map((p,i) => `
+    <div class="ft-pay-row">
+      <div class="ft-pay-dot"></div>
+      <div class="ft-pay-amount">Rs ${Number(p.amount||0).toLocaleString()}</div>
+      <div class="ft-pay-note">${esc(p.note||'')}</div>
+      <div class="ft-pay-date">${p.date||''}</div>
+      <button class="ft-pay-del" onclick="deletePayment('${r.id}',${i})" title="Remove this payment">✕</button>
+    </div>`).join('') || '<div style="color:#8b949e;font-size:.76rem;padding:.3rem 0">No payments recorded yet.</div>';
+  return `
+    <div class="fee-tracker ${settled?'settled':''}">
+      <div class="ft-header">
+        <div>
+          <div class="ft-title">${esc(r.month||'Course Fee')}</div>
+          <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Total: Rs ${cf.toLocaleString()} · Due: ${esc(r.dueDate||'N/A')}</div>
+        </div>
+        ${badge}
+      </div>
+      <div class="ft-progress">
+        <div class="ft-prog-bar"><div class="ft-prog-fill" style="width:${pct}%"></div></div>
+        <div class="ft-prog-nums">
+          <span class="ft-prog-paid">Paid: Rs ${pt.toLocaleString()} (${pct}%)</span>
+          <span class="ft-prog-rem">Remaining: Rs ${rem>0?rem.toLocaleString():'0'}</span>
+        </div>
+      </div>
+      <div class="ft-payments">
+        <div class="ft-pay-title">Payment History</div>
+        ${payRows}
+      </div>
+      ${settled?'':` 
+      <div class="ft-add">
+        <div style="color:#8b949e;font-size:.7rem;margin-bottom:.4rem">Add Payment</div>
+        <div class="ft-add-row">
+          <input type="number" class="di" id="fp-amt-${r.id}" placeholder="Amount (Rs)">
+          <input type="date" class="di" id="fp-dt-${r.id}">
+          <input type="text" class="di" id="fp-note-${r.id}" placeholder="Note (optional)">
+          <button class="ft-add-btn" onclick="addPayment('${r.id}',${cf},${pt})">＋ Pay</button>
+        </div>
+      </div>`}
+      <div style="padding:.4rem .8rem .6rem;display:flex;justify-content:flex-end">
+        <button class="ft-del-fee" onclick="delFeeRecord('${r.id}',${pt})">🗑 Delete Record</button>
+      </div>
+    </div>`;
+}
 
-
-window.addFeeInline = async () => {
+// Create a brand-new fee record (set course fee)
+window.createFeeRecord = async () => {
   if(!currentFeeUid){ alertMsg('b-fe-al','No student selected.'); return; }
-  const month = $('b-fe-mo').value.trim();
-  const amount = $('b-fe-am').value;
-  const due = $('b-fe-du').value;
-  const status = $('b-fe-st').value;
-  if(!month || !amount){ alertMsg('b-fe-al','Please fill Month and Amount.'); return; }
+  const month  = $('b-fe-mo').value.trim();
+  const total  = Number($('b-fe-total').value);
+  const due    = $('b-fe-du').value;
+  const first  = Number($('b-fe-first').value||0);
+  if(!month || !total){ alertMsg('b-fe-al','Please fill Description and Total Course Fee.'); return; }
+  const payments = first>0 ? [{ amount:first, date:new Date().toISOString().split('T')[0], note:'Initial payment' }] : [];
+  const paidTotal = payments.reduce((s,p)=>s+Number(p.amount),0);
   try {
     await addDoc(collection(db,'fees'), {
-      studentUid: currentFeeUid,
-      studentName: currentFeeName,
-      studentId: currentFeeSid,
-      month, amount: Number(amount), dueDate: due, status,
+      studentUid: currentFeeUid, studentName: currentFeeName, studentId: currentFeeSid,
+      month, courseFee: total, dueDate: due,
+      payments, paidTotal, remaining: total-paidTotal,
+      settled: paidTotal >= total,
       createdAt: serverTimestamp()
     });
-    // Clear form
-    $('b-fe-mo').value=''; $('b-fe-am').value=''; $('b-fe-du').value='';
-    $('b-fe-st').value='Unpaid';
-    // Real-time listener updates the list automatically
+    $('b-fe-mo').value=''; $('b-fe-total').value=''; $('b-fe-du').value=''; $('b-fe-first').value='';
+    $('b-fe-al').className='alert';
     loadBatchTotalPaid(currentBatch);
-    // Brief visual feedback
-    const btn = $('bt-fee-add');
-    if(btn){ btn.textContent='✅ Added!'; setTimeout(()=>{ btn.textContent='＋ Add Fee Entry'; },1500); }
   } catch(e){ alertMsg('b-fe-al','Failed: '+e.message); }
 };
 
-window.updateFeeStatusInline = async (id, ns, amount, os) => {
-  await setFeeStatus(id, amount, os, ns);
-};
-
-window.setFeeStatus = async (id, amount, os, ns) => {
-  if(os === ns) return; // no change
-  try {
-    await updateDoc(doc(db,'fees',id), {status:ns});
-    const d = feeContrib(ns,amount) - feeContrib(os,amount);
-    if(d!==0) try{ await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)}); }catch(_){}
-    // real-time listener will re-render automatically
-    loadBatchTotalPaid(currentBatch);
-  } catch(e){ alert('Failed to update: '+e.message); }
-};
-
-window.delFeeInline = async (id, amount, status) => {
-  if(!confirm('Delete this fee record?')) return;
-  await deleteDoc(doc(db,'fees',id));
-  try {
-    const d = -feeContrib(status,amount);
-    if(d!==0) await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(d)});
-  } catch(_){}
-  loadStudentFeesAdmin(currentFeeUid, currentFeeName, currentFeeSid);
+// Add a payment to an existing fee record
+window.addPayment = async (feeId, courseFee, currentPaid) => {
+  const amtEl = $('fp-amt-'+feeId), dtEl = $('fp-dt-'+feeId), noteEl = $('fp-note-'+feeId);
+  const amount = Number(amtEl?.value||0);
+  const date   = dtEl?.value || new Date().toISOString().split('T')[0];
+  const note   = noteEl?.value.trim()||'';
+  if(!amount || amount<=0){ alert('Please enter a valid payment amount.'); return; }
+  const feeRef = doc(db,'fees',feeId);
+  const snap = await getDoc(feeRef);
+  if(!snap.exists()) return;
+  const existing = snap.data().payments || [];
+  const newPayments = [...existing, { amount, date, note }];
+  const newPaid = newPayments.reduce((s,p)=>s+Number(p.amount),0);
+  const newRem = courseFee - newPaid;
+  await updateDoc(feeRef, {
+    payments: newPayments,
+    paidTotal: newPaid,
+    remaining: newRem,
+    settled: newRem <= 0
+  });
+  // Update counter
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(amount)}); } catch(_){}
+  if(amtEl) amtEl.value=''; if(noteEl) noteEl.value='';
   loadBatchTotalPaid(currentBatch);
 };
+
+// Delete a single payment from history
+window.deletePayment = async (feeId, payIndex) => {
+  if(!confirm('Remove this payment?')) return;
+  const feeRef = doc(db,'fees',feeId);
+  const snap = await getDoc(feeRef);
+  if(!snap.exists()) return;
+  const d = snap.data();
+  const payments = [...(d.payments||[])];
+  const removed = payments.splice(payIndex,1)[0];
+  const newPaid = payments.reduce((s,p)=>s+Number(p.amount),0);
+  const newRem = Number(d.courseFee||0) - newPaid;
+  await updateDoc(feeRef, {
+    payments, paidTotal:newPaid, remaining:newRem, settled:newRem<=0
+  });
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(-Number(removed?.amount||0))}); } catch(_){}
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Delete the whole fee record
+window.delFeeRecord = async (feeId, paidTotal) => {
+  if(!confirm('Delete this entire fee record and all payment history?')) return;
+  await deleteDoc(doc(db,'fees',feeId));
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(-Number(paidTotal||0))}); } catch(_){}
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Keep old compat functions
+window.addFeeInline = window.createFeeRecord;
+window.updateFeeStatusInline = async()=>{};
+window.setFeeStatus = async()=>{};
+window.delFeeInline = window.delFeeRecord;
 
 // Load total paid for current batch and show in stat box
 async function loadBatchTotalPaid(batch){
@@ -2457,22 +2573,7 @@ function selectPicker(kind, uid, sid, name){
   chip.style.display = 'block';
   chip.innerHTML = `<div class="chip"><span><strong>${esc(sid||'')}</strong>${esc(name||'')}</span><button onclick="clearPicker('${kind}')">✕</button></div>`;
   $(`${kind}-pr`).classList.remove('open');
-  // Show photo preview for the notices-tab photo picker
-  if(kind === 'ph'){
-    noticePhotoUid = uid;
-    noticePhotoData = null;
-    const prev = $('ph-preview');
-    if(prev){ prev.style.display='block'; }
-    const circle = $('ph-circle');
-    if(circle){ circle.innerHTML='📷'; circle.style.borderColor=''; circle.style.borderStyle=''; }
-    const al = $('ph-al'); if(al) al.className='alert';
-    // Try to show existing photo
-    getDoc(doc(db,'students',uid)).then(s=>{
-      if(s.exists() && s.data().photo && circle){
-        circle.innerHTML=`<img src="${s.data().photo}" alt="">`;
-      }
-    }).catch(_=>{});
-  }
+
 }
 window.selectPicker = selectPicker;
 
@@ -2484,12 +2585,7 @@ window.clearPicker = kind => {
   if(ch) ch.style.display = 'none';
   const pi = $(`${kind}-pi`);
   if(pi) pi.value = '';
-  // Hide photo preview when clearing photo picker
-  if(kind === 'ph'){
-    noticePhotoUid = null; noticePhotoData = null;
-    const prev = $('ph-preview');
-    if(prev) prev.style.display = 'none';
-  }
+
 };
 
 document.addEventListener('click', e => {
@@ -2666,51 +2762,48 @@ window.delFee = async (id, amount, status) => {
 };
 
 // ══ NOTICES ══
-// ── Notice tab photo update ──
-let noticePhotoData = null;
-let noticePhotoUid = null;
+// ── Notice / Announcement photo attachment ──
+let noticeImgData = null;
 
-window.onNoticePhoto = async (e) => {
+window.onNoticeImg = async (e) => {
   const f = e.target.files[0]; if(!f) return;
-  if(f.size > 5 * 1024 * 1024){ alertMsg('ph-al','Photo must be under 5MB.','err'); return; }
-  const c = $('ph-circle');
-  c.innerHTML = '⏳';
+  if(f.size > 5 * 1024 * 1024){ alert('Photo must be under 5MB.'); e.target.value=''; return; }
+  const prev = $('no-img-prev');
+  prev.innerHTML = '⏳';
   try {
-    noticePhotoData = await resizeImg(f);
-    c.innerHTML = `<img src="${noticePhotoData}" alt="">`;
-    c.style.borderColor='var(--accent)';c.style.borderStyle='solid';
-    alertMsg('ph-al','✅ Ready — tap Save Photo','ok');
-  } catch(err){ c.innerHTML='📷'; alertMsg('ph-al','Could not process image.','err'); }
+    noticeImgData = await resizeImg(f, 1000, 0.8);
+    prev.innerHTML = `<img src="${noticeImgData}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+    prev.style.borderColor = 'var(--accent)';
+    $('no-img-lbl').textContent = 'Photo attached ✅';
+    $('bt-no-img-clear').style.display = 'block';
+  } catch(err){
+    prev.innerHTML = '📷'; noticeImgData = null;
+    alert('Could not process image.');
+  }
 };
 
-window.saveNoticePhoto = async () => {
-  const btn = $('bt-ph-save');
-  if(!noticePhotoData){ alertMsg('ph-al','Please choose a photo first.'); return; }
-  if(!noticePhotoUid){ alertMsg('ph-al','No student selected.'); return; }
-  btn.innerHTML='<span class="spin"></span>Saving...'; btn.disabled=true;
-  try {
-    await updateDoc(doc(db,'students',noticePhotoUid),{photo:noticePhotoData});
-    alertMsg('ph-al','✅ Photo saved!','ok');
-    noticePhotoData=null;
-    // Reset circle to show the new photo
-    $('ph-circle').innerHTML=`<img src="${await (async()=>{const s=await getDoc(doc(db,'students',noticePhotoUid));return s.exists()?s.data().photo||'📷':'📷';})()}" alt="">`;
-  } catch(e){
-    let m='Save failed: '+e.message;
-    if(e.code==='permission-denied') m='Permission denied — check Firestore rules.';
-    alertMsg('ph-al',m,'err',true);
-  }
-  btn.innerHTML='💾 Save Photo'; btn.disabled=false;
+window.clearNoticeImg = () => {
+  noticeImgData = null;
+  $('no-img-prev').innerHTML = '📷';
+  $('no-img-prev').style.borderColor = '';
+  $('no-img-file').value = '';
+  $('no-img-lbl').textContent = 'No photo selected';
+  $('bt-no-img-clear').style.display = 'none';
 };
 
 window.postNotice = async () => {
   const title = $('no-ti').value.trim();
-  const body = $('no-bo').value.trim();
+  const body  = $('no-bo').value.trim();
   if(!title || !body){ alert('Please fill in title and message.'); return; }
   try {
-    await addDoc(collection(db,'notices'), { title, body, createdAt: serverTimestamp() });
+    await addDoc(collection(db,'notices'), {
+      title, body,
+      photo: noticeImgData || '',
+      createdAt: serverTimestamp()
+    });
     $('no-ti').value=''; $('no-bo').value='';
-    loadNotices();
-    alert('✅ Announcement posted!');
+    clearNoticeImg();
+    // real-time listener updates the list instantly — no manual reload needed
   } catch(e){
     alert('Failed: ' + e.message);
   }
@@ -2729,7 +2822,17 @@ function loadNotices(){
     el.innerHTML = '';
     snap.forEach(d => {
       const n = d.data();
-      el.innerHTML += `<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem"><div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div><button class="b-del" onclick="delNotice('${d.id}')">🗑</button></div><div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div></div>`;
+      const photoHtml = n.photo
+        ? `<img src="${n.photo}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:.55rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
+        : '';
+      el.innerHTML += `<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem">
+          <div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div>
+          <button class="b-del" onclick="delNotice('${d.id}')">🗑</button>
+        </div>
+        <div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div>
+        ${photoHtml}
+      </div>`;
     });
   }, e => console.error(e));
 }
