@@ -1378,12 +1378,25 @@ window.uploadGalleryPhoto = async () => {
   btn.innerHTML = '📤 Upload to Gallery'; btn.disabled = false;
 };
 
+let galleryListener = null;
+
 function loadGalleryList(){
   const el = $('gl-list');
   if(!el) return;
+
+  // Unsubscribe any previous listener to avoid duplicates
+  if(galleryListener){ try{ galleryListener(); }catch(_){} galleryListener = null; }
+
   el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading...</div>';
-  // Real-time — new photos appear/disappear instantly
-  onSnapshot(collection(db,'gallery'), snap => {
+
+  // Timeout fallback — if Firestore hasn't responded in 8s, show a retry option
+  const fallbackTimer = setTimeout(() => {
+    if(el.innerHTML.includes('Loading...'))
+      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Could not load gallery. Check your connection.</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>';
+  }, 8000);
+
+  galleryListener = onSnapshot(collection(db,'gallery'), snap => {
+    clearTimeout(fallbackTimer);
     if(snap.empty){
       el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
       return;
@@ -1409,9 +1422,11 @@ function loadGalleryList(){
     });
     el.innerHTML = html + '</div>';
   }, e => {
-    let msg = e.message||String(e);
-    if(e.code==='permission-denied') msg='Permission denied — check Firestore rules.';
-    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
+    clearTimeout(fallbackTimer);
+    let msg = e.message || String(e);
+    if(e.code === 'permission-denied') msg = 'Permission denied — check your Firestore security rules to allow admins to read the gallery collection.';
+    else if(e.code === 'unavailable') msg = 'Firestore is currently unavailable. Check your internet connection.';
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">⚠️ ${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
   });
 }
 
@@ -1435,6 +1450,7 @@ window.doLogout = async () => {
   // Stop all real-time listeners
   if(typeof batchStudentsListener === 'function'){ try{batchStudentsListener();}catch(_){} batchStudentsListener = null; }
   if(typeof studentFeeListener === 'function'){ try{studentFeeListener();}catch(_){} studentFeeListener = null; }
+  if(typeof galleryListener === 'function'){ try{galleryListener();}catch(_){} galleryListener = null; }
   await signOut(auth);
 };
 
