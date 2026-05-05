@@ -950,7 +950,6 @@ textarea.di{min-height:78px;resize:vertical}
       </button>
      </div>
      <input type="hidden" id="at-st" value="">
-     <button class="b-acc" style="width:100%;padding:.72rem;margin-top:.75rem" onclick="markAtt()">💾 Save Attendance</button>
     </div>
 
     <!-- View Records Card -->
@@ -2661,21 +2660,26 @@ document.addEventListener('click', e => {
 
 // ══ ATTENDANCE ══
 // ── Quick status selector ──
-window.selectAttStatus = function(status){
+window.selectAttStatus = async function(status){
   const el = $('at-st');
   el.value = status;
   ['present','absent','late'].forEach(s => {
     const btn = $('qm-'+s);
     if(btn) btn.classList.toggle('sel', s === status);
   });
+  // Auto-save immediately
+  await markAtt();
 };
 
 window.markAtt = async () => {
   const sel = pickers.at;
   const date = $('at-dt').value;
   const status = $('at-st').value;
-  if(!sel){ alertMsg('at-al', 'Please select a student.'); return; }
-  if(!date || !status){ alertMsg('at-al', 'Please fill all fields.'); return; }
+  if(!sel){ alertMsg('at-al', 'Please select a student first.'); return; }
+  if(!date){ alertMsg('at-al', 'Please pick a date first.'); return; }
+  if(!status){ return; } // called before status selected — do nothing
+  // Disable buttons during save
+  ['present','absent','late'].forEach(s => { const b=$('qm-'+s); if(b) b.disabled=true; });
   try {
     await addDoc(collection(db,'attendance'), {
       studentUid: sel.uid, studentName: sel.name, studentId: sel.sid,
@@ -2683,10 +2687,11 @@ window.markAtt = async () => {
     });
     alertMsg('at-al', '✅ Attendance saved!', 'ok');
     $('at-st').value = '';
-    ['present','absent','late'].forEach(s => { const b = $('qm-'+s); if(b) b.classList.remove('sel'); });
+    ['present','absent','late'].forEach(s => { const b = $('qm-'+s); if(b){ b.classList.remove('sel'); b.disabled=false; } });
     loadAttRecs(true);
   } catch(e){
     alertMsg('at-al', 'Save failed: ' + e.message);
+    ['present','absent','late'].forEach(s => { const b=$('qm-'+s); if(b) b.disabled=false; });
   }
 };
 
