@@ -547,7 +547,15 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+     <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+     <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+     </select>
+    </div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -570,16 +578,6 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
-     </select>
-    </div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-    <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-      <option value="Other">Other</option>
-      <option value="Prefer not to say">Prefer not to say</option>
      </select>
     </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
@@ -1162,6 +1160,7 @@ textarea.di{min-height:78px;resize:vertical}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getStorage, ref as sRef, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut, onAuthStateChanged, EmailAuthProvider,
@@ -1185,6 +1184,7 @@ const app = initializeApp({
 });
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 const SUPER_ADMIN = "zhakeel.mhd@gmail.com";
 const DEFAULT_BATCHES = ['Batch 20','Batch 21','Batch 22','Batch 23','Batch 24'];
@@ -1224,6 +1224,14 @@ function resizeImg(file, maxDim=400, q=0.75){
     };
     r.readAsDataURL(file);
   });
+}
+
+// Upload a base64 image to Firebase Storage and return the public download URL
+async function uploadPhotoToStorage(base64DataUrl, uid){
+  const path = `photos/${uid}_${Date.now()}.jpg`;
+  const r = sRef(storage, path);
+  await uploadString(r, base64DataUrl, 'data_url');
+  return await getDownloadURL(r);
 }
 
 async function nextStudentId(){
@@ -1569,6 +1577,12 @@ window.doRegister = async () => {
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const sid = await nextStudentId();
+    // Upload photo to Firebase Storage if provided
+    let photoUrl = '';
+    if(regPhoto){
+      try { photoUrl = await uploadPhotoToStorage(regPhoto, cred.user.uid); }
+      catch(_){ photoUrl = ''; }
+    }
     await setDoc(doc(db, 'students', cred.user.uid), {
       name: name,
       nameLower: name.toLowerCase(),
@@ -1578,7 +1592,7 @@ window.doRegister = async () => {
       studentId: sid,
       dob: dob || '',
       gender: gender || '',
-      photo: regPhoto || '',
+      photo: photoUrl,
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
@@ -2039,9 +2053,11 @@ window.savePhoto = async () => {
   if(!photoTarget){ alertMsg('mp-al', 'No target selected.'); return; }
   btn.innerHTML = '<span class="spin"></span>Saving...'; btn.disabled = true;
   try {
-    await updateDoc(doc(db,'students', photoTarget), { photo: pendingPhoto });
+    // Upload to Firebase Storage, get public URL
+    const url = await uploadPhotoToStorage(pendingPhoto, photoTarget);
+    await updateDoc(doc(db,'students', photoTarget), { photo: url });
     if(CU && photoTarget === CU.uid && CUD){
-      CUD.photo = pendingPhoto;
+      CUD.photo = url;
       renderStudent();
     }
     alertMsg('mp-al', '✅ Photo saved!', 'ok');
@@ -2053,7 +2069,7 @@ window.savePhoto = async () => {
     }, 700);
   } catch(e){
     let m = 'Save failed: ' + e.message;
-    if(e.code === 'permission-denied') m = 'Permission denied — check Firestore rules.';
+    if(e.code === 'permission-denied') m = 'Permission denied — check Firebase Storage rules (allow read, write: if request.auth != null).';
     alertMsg('mp-al', m, 'err', true);
   }
   btn.innerHTML = 'Save Photo'; btn.disabled = false;
@@ -3098,15 +3114,34 @@ window.adminAdd = async () => {
   }
   btn.innerHTML = '<span class="spin"></span>Creating...'; btn.disabled = true;
   try {
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    let uid;
+    // Try creating a new auth account
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      uid = cred.user.uid;
+    } catch(authErr){
+      if(authErr.code === 'auth/email-already-in-use'){
+        // Sign in with the existing account to get the UID
+        const cred2 = await signInWithEmailAndPassword(auth, email, pass);
+        uid = cred2.user.uid;
+      } else {
+        throw authErr;
+      }
+    }
+    // Upload photo to Firebase Storage if provided
+    let photoUrl = '';
+    if(addPhoto){
+      try { photoUrl = await uploadPhotoToStorage(addPhoto, uid); }
+      catch(_){ photoUrl = ''; }
+    }
     const sid = await nextStudentId();
-    await setDoc(doc(db,'students', cred.user.uid), {
+    await setDoc(doc(db,'students', uid), {
       name, nameLower: name.toLowerCase(),
       phone, email, course: batch,
       dob: dob || '',
       gender: gender || '',
       studentId: sid,
-      photo: addPhoto || '',
+      photo: photoUrl,
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
@@ -3121,7 +3156,8 @@ window.adminAdd = async () => {
     loadBatches();
   } catch(e){
     let m = 'Failed: ' + e.message;
-    if(e.code === 'auth/email-already-in-use') m = 'This email is already registered.';
+    if(e.code === 'auth/invalid-email') m = 'Invalid email address.';
+    if(e.code === 'auth/wrong-password') m = 'Email already exists but password is wrong — use the correct password for that account.';
     alertMsg('ad-al', m);
   }
   btn.innerHTML = 'Create Student Account'; btn.disabled = false;
