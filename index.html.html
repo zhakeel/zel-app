@@ -544,7 +544,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -1372,48 +1372,56 @@ window.uploadGalleryPhoto = async () => {
     $('gl-pc').innerHTML = '📷';
     $('gl-pc').style.borderColor = '';
     $('gl-pc').style.borderStyle = '';
-    loadGalleryList();
+    // onSnapshot listener auto-refreshes the gallery list
   } catch(e){
     alertMsg('gl-al', 'Failed: ' + e.message);
   }
   btn.innerHTML = '📤 Upload to Gallery'; btn.disabled = false;
 };
 
+let _galleryUnsub = null;
 function loadGalleryList(){
   const el = $('gl-list');
   if(!el) return;
+  // Unsubscribe any existing real-time listener before creating a new one
+  if(_galleryUnsub){ try{ _galleryUnsub(); }catch(_){} _galleryUnsub = null; }
   el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading...</div>';
-  // Real-time — new photos appear/disappear instantly
-  onSnapshot(collection(db,'gallery'), snap => {
-    if(snap.empty){
-      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
-      return;
-    }
-    const items = [];
-    snap.forEach(d => items.push({...d.data(), id:d.id}));
-    items.sort((a,b) => {
-      const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
-      const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
-      return tb - ta;
+  try {
+    _galleryUnsub = onSnapshot(collection(db,'gallery'), snap => {
+      if(snap.empty){
+        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
+        return;
+      }
+      const items = [];
+      snap.forEach(d => items.push({...d.data(), id:d.id}));
+      items.sort((a,b) => {
+        const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+        const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+        return tb - ta;
+      });
+      let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
+      items.forEach(g => {
+        const ps = g.photo || '';
+        const gid = g.id;
+        html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden">
+          <img src="${ps}" style="width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in" onclick="zoomPhotoSrc(this.src)" onerror="this.style.display='none'">
+          <div style="padding:.55rem .65rem">
+            <div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'Untitled')}</div>
+            <div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div>
+            <button class="b-del" style="width:100%;font-size:.68rem" onclick="deleteGalleryPhoto('${esc(gid)}')">&#128465; Remove</button>
+          </div>
+        </div>`;
+      });
+      el.innerHTML = html + '</div>';
+    }, e => {
+      let msg = e.message||String(e);
+      if(e.code==='permission-denied') msg='Permission denied — check Firestore rules.';
+      else if(e.code==='unavailable') msg='Network unavailable. Check your connection.';
+      el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">&#9888; ${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">&#128260; Retry</button>`;
     });
-    let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem">';
-    items.forEach(g => {
-      const ps = g.photo || '';
-      html += `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden">
-        <img src="${ps}" style="width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in" onclick="zoomPhotoSrc('${ps}')">
-        <div style="padding:.55rem .65rem">
-          <div style="color:#fff;font-size:.78rem;font-weight:600;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.title||'Untitled')}</div>
-          <div style="color:#8b949e;font-size:.68rem;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.caption||'')}</div>
-          <button class="b-del" style="width:100%;font-size:.68rem" onclick="deleteGalleryPhoto('${g.id}')">🗑 Remove</button>
-        </div>
-      </div>`;
-    });
-    el.innerHTML = html + '</div>';
-  }, e => {
-    let msg = e.message||String(e);
-    if(e.code==='permission-denied') msg='Permission denied — check Firestore rules.';
-    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
-  });
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">&#9888; Failed to load gallery: ${esc(e.message||String(e))}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">&#128260; Retry</button>`;
+  }
 }
 
 // Zoom from a direct image src (used in gallery thumbnails)
@@ -1427,7 +1435,7 @@ window.deleteGalleryPhoto = async (id) => {
   if(!confirm('Remove this photo from the gallery?')) return;
   try {
     await deleteDoc(doc(db,'gallery', id));
-    loadGalleryList();
+    // onSnapshot auto-refreshes the list — no manual reload needed
   } catch(e){ alert('Failed: ' + e.message); }
 };
 
@@ -2126,8 +2134,6 @@ window.openStudentDetail = async uid => {
         <div class="d-field"><label>Batch</label><span>${esc(s.course||'—')}</span></div>
         <div class="d-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
         <div class="d-field full"><label>Email</label><span>${esc(s.email||'—')}</span></div>
-        <div class="d-field"><label>Date of Birth</label><span>${esc(s.dob||'—')}</span></div>
-        <div class="d-field"><label>Gender</label><span>${esc(s.gender||'—')}</span></div>
         <div class="d-field"><label>Enrolled</label><span>${enr}</span></div>
         <div class="d-field"><label>Status</label><span style="color:#86efac;font-weight:600">✅ Active</span></div>
       </div>
