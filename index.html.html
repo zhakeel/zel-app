@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="theme-color" content="#064e73">
 <title>ZEL — Zone for English Learners</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap"></noscript>
 <style>
 :root{
   --ocean:#0a6e9f;--ocean-dark:#064e73;--ocean-deep:#03324a;
@@ -545,6 +548,14 @@ textarea.di{min-height:78px;resize:vertical}
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
     <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+     </select>
+    </div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -567,14 +578,6 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
-     </select>
-    </div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-    <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
      </select>
     </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
@@ -1305,15 +1308,15 @@ onAuthStateChanged(auth, async user => {
     $('b-grant').style.display = isSuperAdmin ? 'block' : 'none';
     $('t-admins').style.display = isSuperAdmin ? 'block' : 'none';
     await loadBatchOptions();
-    loadBatches();
+    await loadBatches();
     loadNotices();
-    loadFees(true);
     if(isSuperAdmin) loadAdminsList();
   } else {
     // Load student data with retry logic
     // (handles timing issue when student just registered and setDoc may not have completed)
     CUD = null;
-    for(let attempt = 0; attempt < 5; attempt++){
+    try { const cached = sessionStorage.getItem('zel_cud'); if(cached) CUD = JSON.parse(cached); } catch(_){}
+    for(let attempt = 0; attempt < 3; attempt++){
       try {
         const s = await getDoc(doc(db, 'students', user.uid));
         if(s.exists()){
@@ -1321,11 +1324,11 @@ onAuthStateChanged(auth, async user => {
           break;
         }
       } catch(e){ /* keep trying */ }
-      // Wait 600ms before retrying
-      await new Promise(r => setTimeout(r, 600));
+      if(attempt < 2) await new Promise(r => setTimeout(r, 300));
     }
     showScreen('scr-dash');
     if(CUD){
+      try { sessionStorage.setItem('zel_cud', JSON.stringify(CUD)); } catch(_){}
       renderStudent();
       loadStudentNotices();
       loadStudentAtt();
@@ -1486,6 +1489,7 @@ window.deleteGalleryPhoto = async (id) => {
 };
 
 window.doLogout = async () => {
+  try { sessionStorage.removeItem('zel_cud'); } catch(_){}
   stopDisabledWatcher();
   // Stop all real-time listeners
   if(typeof batchStudentsListener === 'function'){ try{batchStudentsListener();}catch(_){} batchStudentsListener = null; }
@@ -1624,15 +1628,16 @@ function loadStudentNotices(){
       el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
       return;
     }
-    el.innerHTML = '';
+    const parts = [];
     snap.forEach(d => {
       const n = d.data();
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
       const pHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:.5rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
-      el.innerHTML += `<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`;
+      parts.push(`<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`);
     });
+    el.innerHTML = parts.join('');
   }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   });
@@ -2041,7 +2046,6 @@ window.closeModal = id => $(id).classList.remove('open');
 
 // ══ ADMIN: BATCHES ══
 window.loadBatches = async () => {
-  await loadBatchOptions();
   const grid = $('b-grid');
   grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div>';
   try {
@@ -2133,16 +2137,18 @@ function renderStuRows(filter=''){
     el.innerHTML = '<div class="empty" style="color:#8b949e">No matches.</div>';
     return;
   }
-  el.innerHTML = '';
-  list.forEach(s => {
+  const rows = list.map(s => {
     const init = (s.name && s.name[0] || 'S').toUpperCase();
     const ph = s.photo ? `<img src="${s.photo}" alt="">` : init;
-    el.innerHTML += `<div class="s-row" onclick="openStudentDetail('${s.id}')"><div class="s-av">${ph}</div><div style="flex:1;min-width:0"><div class="s-id">${esc(s.studentId||'N/A')}</div><div class="s-name">${esc(s.name||'—')}</div><div class="s-meta">${esc(s.phone||'')}${s.email?' · '+esc(s.email):''}</div></div><div class="arr">›</div></div>`;
+    return `<div class="s-row" onclick="openStudentDetail('${s.id}')"><div class="s-av">${ph}</div><div style="flex:1;min-width:0"><div class="s-id">${esc(s.studentId||'N/A')}</div><div class="s-name">${esc(s.name||'—')}</div><div class="s-meta">${esc(s.phone||'')}${s.email?' · '+esc(s.email):''}</div></div><div class="arr">›</div></div>`;
   });
+  el.innerHTML = rows.join('');
 }
 
+let _filterTimer = null;
 window.filterStus = () => {
-  renderStuRows($('bs-search').value.toLowerCase().trim());
+  clearTimeout(_filterTimer);
+  _filterTimer = setTimeout(() => renderStuRows($('bs-search').value.toLowerCase().trim()), 120);
 };
 
 window.backToStus = () => {
@@ -2850,10 +2856,10 @@ window.loadAttRecs = async (reset=true) => {
     if(snap.docs.length) attCursor = snap.docs[snap.docs.length-1];
     $('at-more').style.display = snap.size === PAGE ? 'block' : 'none';
     const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
-    $('at-rec').innerHTML = '';
-    attRecs.forEach(r => {
-      $('at-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]||'#888'};color:#fff;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="b-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`;
-    });
+    const attParts = attRecs.map(r =>
+      `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]||'#888'};color:#fff;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="b-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`
+    );
+    $('at-rec').innerHTML = attParts.join('');
   } catch(e){
     $('at-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   }
@@ -2928,10 +2934,10 @@ window.loadFees = async (reset=true) => {
       const ms = await getDoc(doc(db,'meta','counters'));
       $('st-fe').textContent = 'Rs ' + (ms.exists() ? (ms.data().totalPaid||0) : 0);
     } catch(_){}
-    $('fe-rec').innerHTML = '';
-    feeRecs.forEach(r => {
-      $('fe-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${esc(r.dueDate||'—')}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.74rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="b-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`;
-    });
+    const feeParts = feeRecs.map(r =>
+      `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${esc(r.dueDate||'—')}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.74rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="b-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`
+    );
+    $('fe-rec').innerHTML = feeParts.join('');
   } catch(e){
     $('fe-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   }
@@ -3014,21 +3020,22 @@ function loadNotices(){
       el.innerHTML = '<div class="empty" style="color:#8b949e">No notices yet.</div>';
       return;
     }
-    el.innerHTML = '';
+    const nParts = [];
     snap.forEach(d => {
       const n = d.data();
       const photoHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:.55rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
-      el.innerHTML += `<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
+      nParts.push(`<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem">
           <div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div>
           <button class="b-del" onclick="delNotice('${d.id}')">🗑</button>
         </div>
         <div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div>
         ${photoHtml}
-      </div>`;
+      </div>`);
     });
+    el.innerHTML = nParts.join('');
   }, e => console.error(e));
 }
 
@@ -3261,6 +3268,10 @@ function admTab(sec, btn){
   }
   if(sec === 'gallery' && typeof loadGalleryList === 'function'){
     loadGalleryList();
+  }
+  if(sec === 'att') {
+    const mo = document.getElementById('at-mo');
+    if(mo && !mo.value) { const now = new Date(); mo.value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'); }
   }
 }
 window.admTab = admTab;
