@@ -547,15 +547,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-    <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-     </select>
-    </div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -578,6 +570,16 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
+     </select>
+    </div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to say">Prefer not to say</option>
      </select>
     </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
@@ -1029,6 +1031,21 @@ textarea.di{min-height:78px;resize:vertical}
       <div style="font-size:.7rem;color:#8b949e">Click to add photo</div>
      </div>
      <input type="text" class="di" id="ad-nm" placeholder="Full Name *">
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <div>
+       <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Date of Birth</div>
+       <input type="date" class="di" id="ad-dob" style="margin-bottom:0">
+      </div>
+      <div>
+       <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Gender</div>
+       <select class="ds" id="ad-gd" style="margin-bottom:0">
+        <option value="">Select...</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+       </select>
+      </div>
+     </div>
      <input type="tel" class="di" id="ad-ph" placeholder="Phone (e.g. +94761234567) *">
      <input type="email" class="di" id="ad-em" placeholder="Email *">
      <input type="password" class="di" id="ad-pw" placeholder="Password (min. 6) *">
@@ -3064,6 +3081,8 @@ window.onAddPhoto = async e => {
 
 window.adminAdd = async () => {
   const name = $('ad-nm').value.trim();
+  const dob  = $('ad-dob').value.trim();
+  const gender = $('ad-gd').value;
   const phone = $('ad-ph').value.trim();
   const email = $('ad-em').value.trim();
   const pass = $('ad-pw').value;
@@ -3084,13 +3103,16 @@ window.adminAdd = async () => {
     await setDoc(doc(db,'students', cred.user.uid), {
       name, nameLower: name.toLowerCase(),
       phone, email, course: batch,
+      dob: dob || '',
+      gender: gender || '',
       studentId: sid,
       photo: addPhoto || '',
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
     alertMsg('ad-al', `✅ Student created! ID: ${sid}`, 'ok');
-    $('ad-nm').value=''; $('ad-ph').value=''; $('ad-em').value='';
+    $('ad-nm').value=''; $('ad-dob').value=''; $('ad-gd').value='';
+    $('ad-ph').value=''; $('ad-em').value='';
     $('ad-pw').value=''; $('ad-ba').value='';
     addPhoto = null;
     $('ad-pc').innerHTML = '📷';
