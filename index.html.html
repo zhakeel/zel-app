@@ -545,15 +545,6 @@ textarea.di{min-height:78px;resize:vertical}
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
     <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-        </div>
-    <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-     </select>
-    </div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -577,6 +568,15 @@ textarea.di{min-height:78px;resize:vertical}
      <select id="rg-ba">
       <option value="">Loading batches...</option>
      </select>
+    </div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+     </select>
+    </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
     <button class="btn" id="bt-rg" onclick="doRegister()">Create Account</button>
     <p style="text-align:center;font-size:.74rem;color:var(--muted);margin-top:.85rem">After registering, sign in with your email and password.</p>
@@ -1481,7 +1481,7 @@ window.deleteGalleryPhoto = async (id) => {
   if(!confirm('Remove this photo from the gallery?')) return;
   try {
     await deleteDoc(doc(db,'gallery', id));
-    // real-time onSnapshot listener auto-removes it from the gallery
+    loadGalleryList();
   } catch(e){ alert('Failed: ' + e.message); }
 };
 
@@ -2022,10 +2022,6 @@ window.savePhoto = async () => {
       CUD.photo = pendingPhoto;
       renderStudent();
     }
-    // Update cache so re-opening student detail is instant
-    if(_stuCache[photoTarget]) _stuCache[photoTarget].photo = pendingPhoto;
-    const bIdx = batchLoaded.findIndex(x => x.id === photoTarget);
-    if(bIdx !== -1) batchLoaded[bIdx].photo = pendingPhoto;
     alertMsg('mp-al', '✅ Photo saved!', 'ok');
     setTimeout(() => {
       closeModal('m-photo');
@@ -2045,33 +2041,36 @@ window.closeModal = id => $(id).classList.remove('open');
 
 // ══ ADMIN: BATCHES ══
 window.loadBatches = async () => {
+  await loadBatchOptions();
   const grid = $('b-grid');
   grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">Loading...</div>';
   try {
-    // Fetch student count and batches in parallel
-    const [total] = await Promise.all([
-      getCountFromServer(collection(db,'students'))
-    ]);
+    // Recalculate ALL stats from real data (don't trust the counter)
+    const total = await getCountFromServer(collection(db,'students'));
     const realCount = total.data().count;
     $('st-stu').textContent = realCount;
     $('st-ba').textContent = allBatches.length;
+
+    // Total paid is now shown per-batch when a batch is opened
     $('st-fe').textContent = '—';
     $('st-fe-lbl') && ($('st-fe-lbl').textContent = 'Batch Paid');
+
 
     grid.innerHTML = '';
     if(allBatches.length === 0){
       grid.innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">No batches yet. Click "📚 Manage Batches" to add one.</div>';
     } else {
-      // Render cards immediately with placeholder count
-      grid.innerHTML = allBatches.map(b =>
-        `<div class="b-card" onclick='openBatch(${JSON.stringify(b)})' id="bcard-${b.replace(/\s/g,'_')}"><div class="ic">📚</div><div class="nm">${esc(b)}</div><div class="ct"><strong id="bct-${b.replace(/\s/g,'_')}">...</strong> students</div></div>`
-      ).join('');
-      // Fetch all batch counts in parallel — single Promise.all
+      // Show batch cards immediately with 0 count, then update counts in parallel
+      allBatches.forEach(b => {
+        grid.innerHTML += `<div class="b-card" onclick='openBatch(${JSON.stringify(b)})' id="bcard-${b.replace(/\s/g,'_')}"><div class="ic">📚</div><div class="nm">${esc(b)}</div><div class="ct"><strong id="bct-${b.replace(/\s/g,'_')}">...</strong> students</div></div>`;
+      });
+      // Fetch all counts in parallel
       await Promise.all(allBatches.map(async b => {
         try {
           const c = await getCountFromServer(query(collection(db,'students'), where('course','==', b)));
+          const n = c.data().count;
           const el = document.getElementById('bct-'+b.replace(/\s/g,'_'));
-          if(el) el.textContent = c.data().count;
+          if(el) el.textContent = n;
         } catch(e){}
       }));
     }
@@ -2134,15 +2133,12 @@ function renderStuRows(filter=''){
     el.innerHTML = '<div class="empty" style="color:#8b949e">No matches.</div>';
     return;
   }
-  // Build all HTML in one string — single DOM write, no reflows in loop
-  const rows = list.map(s => {
+  el.innerHTML = '';
+  list.forEach(s => {
     const init = (s.name && s.name[0] || 'S').toUpperCase();
     const ph = s.photo ? `<img src="${s.photo}" alt="">` : init;
-    // Keep cache warm
-    _stuCache[s.id] = s;
-    return `<div class="s-row" onclick="openStudentDetail('${s.id}')"><div class="s-av">${ph}</div><div style="flex:1;min-width:0"><div class="s-id">${esc(s.studentId||'N/A')}</div><div class="s-name">${esc(s.name||'—')}</div><div class="s-meta">${esc(s.phone||'')}${s.email?' · '+esc(s.email):''}</div></div><div class="arr">›</div></div>`;
+    el.innerHTML += `<div class="s-row" onclick="openStudentDetail('${s.id}')"><div class="s-av">${ph}</div><div style="flex:1;min-width:0"><div class="s-id">${esc(s.studentId||'N/A')}</div><div class="s-name">${esc(s.name||'—')}</div><div class="s-meta">${esc(s.phone||'')}${s.email?' · '+esc(s.email):''}</div></div><div class="arr">›</div></div>`;
   });
-  el.innerHTML = rows.join('');
 }
 
 window.filterStus = () => {
@@ -2156,43 +2152,18 @@ window.backToStus = () => {
   $('b-stus').style.display = 'block';
 };
 
-// In-memory student cache: keyed by uid
-const _stuCache = {};
-
 window.openStudentDetail = async uid => {
   $('b-stus').style.display = 'none';
   $('b-det').style.display = 'block';
   const el = $('b-det-c');
+  el.innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
   $('b-fee-section').style.display = 'none';
-
-  // Use cached data first for instant render, then silently refresh cache
-  let s = _stuCache[uid] || batchLoaded.find(x => x.id === uid);
-  if(s){
-    _renderStuDetail(uid, s, el);
-  } else {
-    el.innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
+  const snap = await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){
+    el.innerHTML = '<div class="empty" style="color:var(--danger)">Student not found.</div>';
+    return;
   }
-
-  // Always fetch fresh data from Firestore (to catch edits), but only re-render if changed
-  try {
-    const snap = await getDoc(doc(db,'students',uid));
-    if(!snap.exists()){
-      if(!s) el.innerHTML = '<div class="empty" style="color:var(--danger)">Student not found.</div>';
-      return;
-    }
-    const fresh = snap.data();
-    _stuCache[uid] = fresh;
-    // Re-render only if we didn't already show it, or data changed
-    if(!s || JSON.stringify(s) !== JSON.stringify(fresh)){
-      _renderStuDetail(uid, fresh, el);
-    }
-    s = fresh;
-  } catch(e) {
-    if(!s) el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
-  }
-};
-
-function _renderStuDetail(uid, s, el) {
+  const s = snap.data();
   const init = (s.name && s.name[0] || 'S').toUpperCase();
   const ph = s.photo ? `<img src="${s.photo}" alt="">` : init;
   const enr = s.enrolledAt && s.enrolledAt.toDate ? s.enrolledAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
@@ -2539,16 +2510,8 @@ window.deleteStudent = async uid => {
     }, 8000);
 
     showBatchList();
-    // Optimistic: update batch card count and global student count
-    if(currentBatch){
-      const bk = currentBatch.replace(/\s/g,'_');
-      const ctEl = document.getElementById('bct-'+bk);
-      if(ctEl){ const n = parseInt(ctEl.textContent)||0; if(n>0) ctEl.textContent = n-1; }
-    }
-    const stuEl = $('st-stu');
-    if(stuEl){ const n = parseInt(stuEl.textContent)||0; if(n>0) stuEl.textContent = n-1; }
-    // Remove from cache
-    delete _stuCache[uid];
+    loadBatches();
+    loadFees(true);
     alert('\u2705 Student permanently deleted.\nAll their records removed. They have been logged out.');
   } catch(e){
     alert('Failed to delete student: ' + e.message);
@@ -2557,29 +2520,24 @@ window.deleteStudent = async uid => {
 
 // ══ EDIT STUDENT ══
 window.openEditStudent = async uid => {
-  // Populate batch dropdown from in-memory allBatches — no network call
+  // Populate batch dropdown
   const baSel = $('es-ba');
-  let batches = allBatches.length ? allBatches : [];
-  // If allBatches empty try cache from Firestore (lazy, one-off)
-  if(!batches.length){
-    try {
-      const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
-      snap.forEach(d => batches.push(d.data().name));
-    } catch(_){}
-  }
-  baSel.innerHTML = batches.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+  baSel.innerHTML = allBatches.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
 
-  // Use in-memory cache — instant, zero network
-  let s = _stuCache[uid] || batchLoaded.find(x => x.id === uid);
-  if(!s){
-    // Fallback: fetch only if not in any cache
-    try {
-      const snap = await getDoc(doc(db,'students',uid));
-      if(!snap.exists()){ alert('Student not found.'); return; }
-      s = snap.data();
-      _stuCache[uid] = s;
-    } catch(e){ alert('Failed to load student.'); return; }
-  }
+  // Also load from Firestore batches
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    if(!snap.empty){
+      const names = [];
+      snap.forEach(d => names.push(d.data().name));
+      baSel.innerHTML = names.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+    }
+  } catch(_){}
+
+  // Load student data
+  const snap = await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){ alert('Student not found.'); return; }
+  const s = snap.data();
 
   $('es-uid').value = uid;
   $('es-nm').value = s.name || '';
@@ -2588,13 +2546,14 @@ window.openEditStudent = async uid => {
   $('es-dob').value = s.dob || '';
   $('es-gd').value = s.gender || '';
   $('es-st').value = s.status || 'active';
-  // Set batch — add as option if not in list
-  if(s.course && !batches.includes(s.course)){
+  // Set batch
+  baSel.value = s.course || '';
+  if(!baSel.value && s.course){
     const opt = document.createElement('option');
     opt.value = s.course; opt.textContent = s.course;
     baSel.prepend(opt);
+    baSel.value = s.course;
   }
-  baSel.value = s.course || '';
 
   $('es-al').className = 'alert';
   $('m-edit-stu').classList.add('open');
@@ -2616,30 +2575,15 @@ window.saveStudentEdit = async () => {
 
   btn.textContent = 'Saving...'; btn.disabled = true;
 
-  const updates = { name, phone, email, course: batch, dob, gender: gnd, status: stat };
-
-  // ── Optimistic update: patch cache and re-render immediately ──
-  const prev = _stuCache[uid] || {};
-  const optimistic = {...prev, ...updates};
-  _stuCache[uid] = optimistic;
-  // Also patch batchLoaded so the list reflects changes instantly
-  const idx = batchLoaded.findIndex(x => x.id === uid);
-  if(idx !== -1) batchLoaded[idx] = {...batchLoaded[idx], ...updates};
-
-  // Re-render card instantly (user sees change before Firestore confirms)
-  const el = $('b-det-c');
-  if(el) _renderStuDetail(uid, optimistic, el);
-  closeModal('m-edit-stu');
-
-  // Write to Firestore in background
   try {
+    const updates = { name, phone, email, course: batch, dob, gender: gnd, status: stat };
     await updateDoc(doc(db,'students', uid), updates);
+    alertMsg('es-al','✅ Student details updated!','ok');
+    // Refresh the detail card
+    await openStudentDetail(uid);
+    setTimeout(() => closeModal('m-edit-stu'), 900);
   } catch(e){
-    // Rollback cache on failure
-    _stuCache[uid] = prev;
-    if(idx !== -1) batchLoaded[idx] = {...batchLoaded[idx], ...prev};
-    if(el) _renderStuDetail(uid, prev, el);
-    alert('Save failed: ' + e.message);
+    alertMsg('es-al','Failed: ' + e.message);
   }
   btn.textContent = '💾 Save Changes'; btn.disabled = false;
 };
@@ -2679,41 +2623,22 @@ window.addBatch = async () => {
   const name = inp ? inp.value.trim() : '';
   if(!name){ alertMsg('bm-al', 'Please enter a batch name.'); return; }
   try {
-    if(allBatches.includes(name)){
+    // Check duplicate
+    const existing = await getDocs(query(collection(db,'batches'), where('name','==', name)));
+    if(!existing.empty){
       alertMsg('bm-al', 'This batch already exists.', 'err');
       return;
     }
-    // Check duplicate in Firestore only if not in local list
-    const existing = await getDocs(query(collection(db,'batches'), where('name','==', name)));
-    if(!existing.empty){
+    if(allBatches.includes(name)){
       alertMsg('bm-al', 'This batch already exists.', 'err');
       return;
     }
     await addDoc(collection(db,'batches'), { name, createdAt: serverTimestamp() });
     alertMsg('bm-al', `✅ Batch "${name}" added!`, 'ok');
     inp.value = '';
-
-    // Optimistic: add to local state immediately
-    allBatches.push(name);
-    allBatches.sort();
-    $('st-ba').textContent = allBatches.length;
-    // Add to dropdowns immediately
-    ['rg-ba','ad-ba','es-ba'].forEach(id => {
-      const sel = $(id);
-      if(sel){ const opt = document.createElement('option'); opt.value=name; opt.textContent=name; sel.appendChild(opt); }
-    });
-    // Add card to batch grid
-    const grid = $('b-grid');
-    if(grid && grid.querySelector('.empty')) grid.innerHTML = '';
-    if(grid){
-      const card = document.createElement('div');
-      card.className = 'b-card';
-      card.id = 'bcard-'+name.replace(/\s/g,'_');
-      card.onclick = () => openBatch(name);
-      card.innerHTML = `<div class="ic">📚</div><div class="nm">${esc(name)}</div><div class="ct"><strong id="bct-${name.replace(/\s/g,'_')}">0</strong> students</div>`;
-      grid.appendChild(card);
-    }
     await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
   } catch(e){
     alertMsg('bm-al', 'Failed: ' + e.message);
   }
@@ -2780,20 +2705,9 @@ window.deleteBatch = async (id, name) => {
     await deleteDoc(doc(db,'batches', id));
 
     alertMsg('bm-al', `✅ Batch "${name}" deleted with ${stuIds.length} student${stuIds.length!==1?'s':''}.`, 'ok');
-    // Optimistic UI update — remove from allBatches and dropdowns
-    const idx = allBatches.indexOf(name);
-    if(idx !== -1) allBatches.splice(idx, 1);
-    $('st-ba').textContent = allBatches.length;
-    const cardEl = document.getElementById('bcard-'+name.replace(/\s/g,'_'));
-    if(cardEl) cardEl.remove();
-    if($('b-grid') && !$('b-grid').children.length){
-      $('b-grid').innerHTML = '<div class="empty" style="color:#8b949e;grid-column:1/-1">No batches yet.</div>';
-    }
-    ['rg-ba','ad-ba','es-ba'].forEach(id => {
-      const sel = $(id);
-      if(sel){ for(const opt of sel.options){ if(opt.value===name){ sel.removeChild(opt); break; } } }
-    });
     await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
   } catch(e){
     alertMsg('bm-al', 'Failed: ' + e.message);
   }
@@ -2900,57 +2814,55 @@ window.markAtt = async () => {
     alertMsg('at-al', '✅ Attendance saved!', 'ok');
     $('at-st').value = '';
     ['present','absent','late'].forEach(s => { const b = $('qm-'+s); if(b){ b.classList.remove('sel'); b.disabled=false; } });
-    // real-time listener auto-refreshes the list
+    loadAttRecs(true);
   } catch(e){
     alertMsg('at-al', 'Save failed: ' + e.message);
     ['present','absent','late'].forEach(s => { const b=$('qm-'+s); if(b) b.disabled=false; });
   }
 };
 
-let _attListener = null;
-
-window.loadAttRecs = (reset=true) => {
+window.loadAttRecs = async (reset=true) => {
   const month = $('at-mo').value;
   if(!month){
     $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">Pick a month to view records</div>';
     $('at-more').style.display = 'none';
     return;
   }
-  // Unsubscribe previous listener
-  if(_attListener){ _attListener(); _attListener = null; }
   if(reset){
+    attCursor = null;
     attRecs = [];
     $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
   }
-  const q = query(
-    collection(db,'attendance'),
-    where('date','>=', month+'-01'),
-    where('date','<=', month+'-31'),
-    orderBy('date','desc'),
-    limit(PAGE)
-  );
-  _attListener = onSnapshot(q, snap => {
-    if(snap.empty){
+  try {
+    let q;
+    if(attCursor){
+      q = query(collection(db,'attendance'), where('date','>=', month+'-01'), where('date','<=', month+'-31'), orderBy('date','desc'), startAfter(attCursor), limit(PAGE));
+    } else {
+      q = query(collection(db,'attendance'), where('date','>=', month+'-01'), where('date','<=', month+'-31'), orderBy('date','desc'), limit(PAGE));
+    }
+    const snap = await getDocs(q);
+    if(snap.empty && !attRecs.length){
       $('at-rec').innerHTML = '<div class="empty" style="color:#8b949e">No records found.</div>';
       $('at-more').style.display = 'none';
       return;
     }
-    attRecs = [];
     snap.forEach(d => attRecs.push({...d.data(), id:d.id}));
-    $('at-more').style.display = 'none';
+    if(snap.docs.length) attCursor = snap.docs[snap.docs.length-1];
+    $('at-more').style.display = snap.size === PAGE ? 'block' : 'none';
     const colors = { present:'#16a34a', absent:'#dc2626', late:'#d97706' };
-    $('at-rec').innerHTML = attRecs.map(r =>
-      `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]||'#888'};color:#fff;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="b-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`
-    ).join('');
-  }, e => {
+    $('at-rec').innerHTML = '';
+    attRecs.forEach(r => {
+      $('at-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.date)}</div></div><div style="display:flex;align-items:center;gap:.5rem"><span style="background:${colors[r.status]||'#888'};color:#fff;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:capitalize">${r.status}</span><button class="b-del" onclick="delAtt('${r.id}')">🗑</button></div></div>`;
+    });
+  } catch(e){
     $('at-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
-  });
+  }
 };
 
 window.delAtt = async id => {
   if(!confirm('Delete this attendance record?')) return;
   await deleteDoc(doc(db,'attendance', id));
-  // Real-time listener auto-updates the list — no manual reload needed
+  loadAttRecs(true);
 };
 
 // ══ FEES ══
@@ -2991,30 +2903,38 @@ window.addFee = async () => {
   }
 };
 
-let _feesListener = null;
-
-window.loadFees = (reset=true) => {
-  if(_feesListener){ _feesListener(); _feesListener = null; }
+window.loadFees = async (reset=true) => {
   if(reset){
+    feeCursor = null;
     feeRecs = [];
     $('fe-rec').innerHTML = '<div class="empty" style="color:#8b949e">Loading...</div>';
   }
-  const q = query(collection(db,'fees'), orderBy('createdAt','desc'), limit(PAGE));
-  _feesListener = onSnapshot(q, snap => {
-    feeRecs = [];
+  try {
+    let q;
+    if(feeCursor){
+      q = query(collection(db,'fees'), orderBy('createdAt','desc'), startAfter(feeCursor), limit(PAGE));
+    } else {
+      q = query(collection(db,'fees'), orderBy('createdAt','desc'), limit(PAGE));
+    }
+    const snap = await getDocs(q);
     if(snap.empty && !feeRecs.length){
       $('fe-rec').innerHTML = '<div class="empty" style="color:#8b949e">No fee records yet.</div>';
       $('fe-more').style.display = 'none';
-      return;
     }
     snap.forEach(d => feeRecs.push({...d.data(), id:d.id}));
-    $('fe-more').style.display = 'none';
-    $('fe-rec').innerHTML = feeRecs.map(r =>
-      `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${esc(r.dueDate||'—')}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.74rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="b-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`
-    ).join('');
-  }, e => {
+    if(snap.docs.length) feeCursor = snap.docs[snap.docs.length-1];
+    $('fe-more').style.display = snap.size === PAGE ? 'block' : 'none';
+    try {
+      const ms = await getDoc(doc(db,'meta','counters'));
+      $('st-fe').textContent = 'Rs ' + (ms.exists() ? (ms.data().totalPaid||0) : 0);
+    } catch(_){}
+    $('fe-rec').innerHTML = '';
+    feeRecs.forEach(r => {
+      $('fe-rec').innerHTML += `<div class="fee-row" style="background:#0d1117;border-color:#30363d"><div><div class="mon" style="color:#fff">${esc(r.studentId||'')} — ${esc(r.studentName||'')}</div><div class="sub">${esc(r.month)} · Rs ${r.amount} · Due ${esc(r.dueDate||'—')}</div></div><div style="display:flex;align-items:center;gap:.5rem"><select class="ds" style="width:auto;margin-bottom:0;padding:.32rem .58rem;font-size:.74rem" onchange="updateFeeStatus('${r.id}',this.value,${r.amount},'${r.status}')"><option ${r.status==='Unpaid'?'selected':''}>Unpaid</option><option ${r.status==='Partial'?'selected':''}>Partial</option><option ${r.status==='Paid'?'selected':''}>Paid</option></select><button class="b-del" onclick="delFee('${r.id}',${r.amount},'${r.status}')">🗑</button></div></div>`;
+    });
+  } catch(e){
     $('fe-rec').innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
-  });
+  }
 };
 
 window.updateFeeStatus = async (id, ns, amount, os) => {
@@ -3023,7 +2943,7 @@ window.updateFeeStatus = async (id, ns, amount, os) => {
     const d = feeContrib(ns, amount) - feeContrib(os, amount);
     if(d !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(d) });
   } catch(_){}
-  // real-time listener auto-updates the list
+  loadFees(true);
 };
 
 window.delFee = async (id, amount, status) => {
@@ -3033,7 +2953,7 @@ window.delFee = async (id, amount, status) => {
     const d = -feeContrib(status, amount);
     if(d !== 0) await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(d) });
   } catch(_){}
-  // real-time listener auto-updates the list
+  loadFees(true);
 };
 
 // ══ NOTICES ══
@@ -3115,7 +3035,7 @@ function loadNotices(){
 window.delNotice = async id => {
   if(!confirm('Delete this notice?')) return;
   await deleteDoc(doc(db,'notices', id));
-  // real-time onSnapshot listener auto-removes it from the list
+  loadNotices();
 };
 
 // ══ ADD STUDENT (admin) ══
@@ -3169,12 +3089,7 @@ window.adminAdd = async () => {
     $('ad-pc').innerHTML = '📷';
     $('ad-pc').style.borderColor = '';
     $('ad-pc').style.borderStyle = '';
-    // Optimistically bump the batch card count and global student stat
-    const bk = batch.replace(/\s/g,'_');
-    const ctEl = document.getElementById('bct-'+bk);
-    if(ctEl){ const n = parseInt(ctEl.textContent)||0; ctEl.textContent = n+1; }
-    const stuEl = $('st-stu');
-    if(stuEl){ const n = parseInt(stuEl.textContent)||0; stuEl.textContent = n+1; }
+    loadBatches();
   } catch(e){
     let m = 'Failed: ' + e.message;
     if(e.code === 'auth/email-already-in-use') m = 'This email is already registered.';
