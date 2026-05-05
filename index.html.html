@@ -551,6 +551,8 @@ textarea.di{min-height:78px;resize:vertical}
       <option value="">Select gender...</option>
       <option value="Male">Male</option>
       <option value="Female">Female</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to say">Prefer not to say</option>
      </select>
     </div>
     <div class="fg">
@@ -1057,6 +1059,63 @@ textarea.di{min-height:78px;resize:vertical}
  </div>
 </div>
 
+<!-- EDIT STUDENT MODAL -->
+<div class="ovl" id="m-edit-stu">
+ <div class="modal dark" style="max-width:420px">
+  <button class="x" onclick="closeModal('m-edit-stu')">✕</button>
+  <h3>✏️ Edit Student Details</h3>
+  <div id="es-al" class="alert"></div>
+  <input type="hidden" id="es-uid">
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Full Name *</div>
+   <input type="text" class="di" id="es-nm" placeholder="Full Name" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Phone</div>
+   <input type="tel" class="di" id="es-ph" placeholder="+94761234567" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Email</div>
+   <input type="email" class="di" id="es-em" placeholder="student@email.com" style="margin-bottom:0">
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.55rem">
+   <div>
+    <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Batch</div>
+    <select class="ds" id="es-ba" style="margin-bottom:0"></select>
+   </div>
+   <div>
+    <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Gender</div>
+    <select class="ds" id="es-gd" style="margin-bottom:0">
+     <option value="">Select...</option>
+     <option value="Male">Male</option>
+     <option value="Female">Female</option>
+     <option value="Other">Other</option>
+     <option value="Prefer not to say">Prefer not to say</option>
+    </select>
+   </div>
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Date of Birth</div>
+   <input type="date" class="di" id="es-dob" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:1rem">
+   <div style="color:#8b949e;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Status</div>
+   <select class="ds" id="es-st" style="margin-bottom:0">
+    <option value="active">✅ Active</option>
+    <option value="inactive">⛔ Inactive</option>
+   </select>
+  </div>
+
+  <button class="b-acc" id="bt-es" onclick="saveStudentEdit()" style="width:100%;padding:.7rem;font-size:.86rem">💾 Save Changes</button>
+ </div>
+</div>
+
 <!-- PHOTO MODAL -->
 <div class="ovl" id="m-photo">
  <div class="modal">
@@ -1376,25 +1435,12 @@ window.uploadGalleryPhoto = async () => {
   btn.innerHTML = '📤 Upload to Gallery'; btn.disabled = false;
 };
 
-let galleryListener = null;
-
 function loadGalleryList(){
   const el = $('gl-list');
   if(!el) return;
-
-  // Unsubscribe any previous listener to avoid duplicates
-  if(galleryListener){ try{ galleryListener(); }catch(_){} galleryListener = null; }
-
   el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Loading...</div>';
-
-  // Timeout fallback — if Firestore hasn't responded in 8s, show a retry option
-  const fallbackTimer = setTimeout(() => {
-    if(el.innerHTML.includes('Loading...'))
-      el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">Could not load gallery. Check your connection.</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>';
-  }, 8000);
-
-  galleryListener = onSnapshot(collection(db,'gallery'), snap => {
-    clearTimeout(fallbackTimer);
+  // Real-time — new photos appear/disappear instantly
+  onSnapshot(collection(db,'gallery'), snap => {
     if(snap.empty){
       el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No photos yet. Upload one above!</div>';
       return;
@@ -1420,11 +1466,9 @@ function loadGalleryList(){
     });
     el.innerHTML = html + '</div>';
   }, e => {
-    clearTimeout(fallbackTimer);
-    let msg = e.message || String(e);
-    if(e.code === 'permission-denied') msg = 'Permission denied — check your Firestore security rules to allow admins to read the gallery collection.';
-    else if(e.code === 'unavailable') msg = 'Firestore is currently unavailable. Check your internet connection.';
-    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">⚠️ ${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
+    let msg = e.message||String(e);
+    if(e.code==='permission-denied') msg='Permission denied — check Firestore rules.';
+    el.innerHTML = `<div style="color:var(--danger);font-size:.8rem;padding:.5rem 0">${esc(msg)}</div><button class="b-sec" style="margin-top:.5rem" onclick="loadGalleryList()">🔄 Retry</button>`;
   });
 }
 
@@ -1448,7 +1492,6 @@ window.doLogout = async () => {
   // Stop all real-time listeners
   if(typeof batchStudentsListener === 'function'){ try{batchStudentsListener();}catch(_){} batchStudentsListener = null; }
   if(typeof studentFeeListener === 'function'){ try{studentFeeListener();}catch(_){} studentFeeListener = null; }
-  if(typeof galleryListener === 'function'){ try{galleryListener();}catch(_){} galleryListener = null; }
   await signOut(auth);
 };
 
@@ -2148,6 +2191,7 @@ window.openStudentDetail = async uid => {
     <div class="acts">
       <button class="act" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
       <button class="act" onclick="quickJumpAtt('${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
+      <button class="act" style="border-color:var(--accent);color:var(--accent)" onclick="openEditStudent('${uid}')">✏️ Edit Info</button>
     </div>
     <button class="b-del" style="width:100%;padding:.7rem;margin-top:.4rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
 
@@ -2474,6 +2518,76 @@ window.deleteStudent = async uid => {
   } catch(e){
     alert('Failed to delete student: ' + e.message);
   }
+};
+
+// ══ EDIT STUDENT ══
+window.openEditStudent = async uid => {
+  // Populate batch dropdown
+  const baSel = $('es-ba');
+  baSel.innerHTML = allBatches.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+
+  // Also load from Firestore batches
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    if(!snap.empty){
+      const names = [];
+      snap.forEach(d => names.push(d.data().name));
+      baSel.innerHTML = names.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+    }
+  } catch(_){}
+
+  // Load student data
+  const snap = await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){ alert('Student not found.'); return; }
+  const s = snap.data();
+
+  $('es-uid').value = uid;
+  $('es-nm').value = s.name || '';
+  $('es-ph').value = s.phone || '';
+  $('es-em').value = s.email || '';
+  $('es-dob').value = s.dob || '';
+  $('es-gd').value = s.gender || '';
+  $('es-st').value = s.status || 'active';
+  // Set batch
+  baSel.value = s.course || '';
+  if(!baSel.value && s.course){
+    const opt = document.createElement('option');
+    opt.value = s.course; opt.textContent = s.course;
+    baSel.prepend(opt);
+    baSel.value = s.course;
+  }
+
+  $('es-al').className = 'alert';
+  $('m-edit-stu').classList.add('open');
+};
+
+window.saveStudentEdit = async () => {
+  const uid  = $('es-uid').value;
+  const name = $('es-nm').value.trim();
+  const phone= $('es-ph').value.trim();
+  const email= $('es-em').value.trim().toLowerCase();
+  const batch= $('es-ba').value;
+  const dob  = $('es-dob').value;
+  const gnd  = $('es-gd').value;
+  const stat = $('es-st').value;
+  const btn  = $('bt-es');
+
+  if(!name){ alertMsg('es-al','Name is required.'); return; }
+  if(!batch){ alertMsg('es-al','Please select a batch.'); return; }
+
+  btn.textContent = 'Saving...'; btn.disabled = true;
+
+  try {
+    const updates = { name, phone, email, course: batch, dob, gender: gnd, status: stat };
+    await updateDoc(doc(db,'students', uid), updates);
+    alertMsg('es-al','✅ Student details updated!','ok');
+    // Refresh the detail card
+    await openStudentDetail(uid);
+    setTimeout(() => closeModal('m-edit-stu'), 900);
+  } catch(e){
+    alertMsg('es-al','Failed: ' + e.message);
+  }
+  btn.textContent = '💾 Save Changes'; btn.disabled = false;
 };
 
 // ══ MANAGE BATCHES ══
