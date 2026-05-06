@@ -548,7 +548,7 @@ textarea.di{min-height:78px;resize:vertical}
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
     <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
-     <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
      <div class="fg"><label>Gender</label>
      <select id="rg-gd">
       <option value="">Select gender...</option>
@@ -973,8 +973,16 @@ textarea.di{min-height:78px;resize:vertical}
    <div class="sec" id="as-notices">
     <div class="dc">
      <h3>📢 Post Announcement</h3>
+     <div id="no-al" class="alert"></div>
      <input type="text" class="di" id="no-ti" placeholder="Notice title...">
      <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
+     <!-- Batch Target -->
+     <div style="margin-bottom:.65rem">
+      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">🎯 Target Audience</div>
+      <select class="ds" id="no-batch">
+       <option value="all">📢 All Students (Everyone)</option>
+      </select>
+     </div>
      <!-- Photo attachment -->
      <div style="margin-bottom:.65rem">
       <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">📷 Attach Photo (optional)</div>
@@ -1302,6 +1310,11 @@ async function loadBatchOptions(){
       } else {
         a.innerHTML = '<option value="">Select Batch *</option>' + list.map(b=>`<option>${esc(b)}</option>`).join('');
       }
+    }
+    // populate notice batch target dropdown
+    const nb = $('no-batch');
+    if(nb){
+      nb.innerHTML = '<option value="all">📢 All Students (Everyone)</option>' + list.map(b=>`<option value="${esc(b)}">${esc(b)} Only</option>`).join('');
     }
   } catch(e){
     allBatches = [];
@@ -1652,7 +1665,8 @@ function renderStudent(){
 function loadStudentNotices(){
   const el = $('d-not');
   el.innerHTML = '<div class="empty">📭 Loading...</div>';
-  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
+  const studentBatch = (CUD && CUD.course) ? CUD.course : '';
+  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
   // Real-time listener — updates instantly when admin posts a notice
   onSnapshot(q, snap => {
     if(snap.empty){
@@ -1662,13 +1676,20 @@ function loadStudentNotices(){
     const parts = [];
     snap.forEach(d => {
       const n = d.data();
+      // Show notice only if it targets all or the student's own batch
+      const tb = n.targetBatch || 'all';
+      if(tb !== 'all' && studentBatch && tb !== studentBatch) return;
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
       const pHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:.5rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
       parts.push(`<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`);
     });
-    el.innerHTML = parts.join('');
+    if(!parts.length){
+      el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
+    } else {
+      el.innerHTML = parts.join('');
+    }
   }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   });
@@ -3028,18 +3049,22 @@ window.clearNoticeImg = () => {
 window.postNotice = async () => {
   const title = $('no-ti').value.trim();
   const body  = $('no-bo').value.trim();
-  if(!title || !body){ alert('Please fill in title and message.'); return; }
+  const targetBatch = $('no-batch') ? $('no-batch').value : 'all';
+  if(!title || !body){ alertMsg('no-al','Please fill in title and message.'); return; }
   try {
     await addDoc(collection(db,'notices'), {
       title, body,
       photo: noticeImgData || '',
+      targetBatch: targetBatch || 'all',
       createdAt: serverTimestamp()
     });
     $('no-ti').value=''; $('no-bo').value='';
+    if($('no-batch')) $('no-batch').value = 'all';
     clearNoticeImg();
-    // real-time listener updates the list instantly — no manual reload needed
+    alertMsg('no-al', '\u2705 Announcement posted!', 'ok');
+    // real-time listener updates the list instantly
   } catch(e){
-    alert('Failed: ' + e.message);
+    alertMsg('no-al', 'Failed: ' + e.message);
   }
 };
 
@@ -3059,12 +3084,18 @@ function loadNotices(){
       const photoHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:.55rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
+      const batchLabel = (!n.targetBatch || n.targetBatch === 'all')
+        ? '<span style="background:rgba(0,180,216,.18);color:var(--accent);font-size:.66rem;font-weight:700;padding:.15rem .55rem;border-radius:50px;letter-spacing:.04em">📢 All Students</span>'
+        : `<span style="background:rgba(22,163,74,.18);color:#4ade80;font-size:.66rem;font-weight:700;padding:.15rem .55rem;border-radius:50px;letter-spacing:.04em">🎯 ${esc(n.targetBatch)}</span>`;
       nParts.push(`<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem">
-          <div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.38rem;gap:.5rem;flex-wrap:wrap">
+          <div>
+            <div style="color:#fff;font-weight:600;font-size:.86rem;margin-bottom:.25rem">${esc(n.title)}</div>
+            ${batchLabel}
+          </div>
           <button class="b-del" onclick="delNotice('${d.id}')">🗑</button>
         </div>
-        <div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div>
+        <div style="color:#8b949e;font-size:.8rem;line-height:1.55;margin-top:.45rem">${esc(n.body)}</div>
         ${photoHtml}
       </div>`);
     });
