@@ -975,6 +975,14 @@ textarea.di{min-height:78px;resize:vertical}
      <h3>📢 Post Announcement</h3>
      <input type="text" class="di" id="no-ti" placeholder="Notice title...">
      <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
+     <!-- Batch target selector -->
+     <div style="margin-bottom:.65rem">
+      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">🎯 Target Batch</div>
+      <select class="ds" id="no-batch">
+       <option value="all">📢 All Batches</option>
+      </select>
+      <div style="color:#8b949e;font-size:.68rem;margin-top:.28rem;line-height:1.45">Only students in the selected batch will see this notice.</div>
+     </div>
      <!-- Photo attachment -->
      <div style="margin-bottom:.65rem">
       <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">📷 Attach Photo (optional)</div>
@@ -1652,23 +1660,31 @@ function renderStudent(){
 function loadStudentNotices(){
   const el = $('d-not');
   el.innerHTML = '<div class="empty">📭 Loading...</div>';
-  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
+  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
   // Real-time listener — updates instantly when admin posts a notice
   onSnapshot(q, snap => {
     if(snap.empty){
       el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
       return;
     }
+    const studentBatch = (CUD && CUD.course) ? CUD.course : '';
     const parts = [];
     snap.forEach(d => {
       const n = d.data();
+      // Only show if notice targets 'all' OR matches the student's batch
+      const target = n.targetBatch || 'all';
+      if(target !== 'all' && target !== studentBatch) return;
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
       const pHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:.5rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
       parts.push(`<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`);
     });
-    el.innerHTML = parts.join('');
+    if(parts.length === 0){
+      el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
+    } else {
+      el.innerHTML = parts.join('');
+    }
   }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   });
@@ -3040,17 +3056,38 @@ window.clearNoticeImg = () => {
   $('bt-no-img-clear').style.display = 'none';
 };
 
+// ── Populate batch dropdown for notices ──
+window.loadNoticeBatchOptions = async function(){
+  const sel = $('no-batch');
+  if(!sel) return;
+  try {
+    const snap = await getDocs(collection(db,'batches'));
+    // Keep the first "All Batches" option, then repopulate batch options
+    sel.innerHTML = '<option value="all">📢 All Batches</option>';
+    snap.forEach(d => {
+      const name = d.data().name || d.id;
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = '📚 ' + name;
+      sel.appendChild(opt);
+    });
+  } catch(_){}
+};
+
 window.postNotice = async () => {
   const title = $('no-ti').value.trim();
   const body  = $('no-bo').value.trim();
+  const targetBatch = $('no-batch') ? $('no-batch').value : 'all';
   if(!title || !body){ alert('Please fill in title and message.'); return; }
   try {
     await addDoc(collection(db,'notices'), {
       title, body,
       photo: noticeImgData || '',
+      targetBatch: targetBatch || 'all',
       createdAt: serverTimestamp()
     });
     $('no-ti').value=''; $('no-bo').value='';
+    if($('no-batch')) $('no-batch').value = 'all';
     clearNoticeImg();
     // real-time listener updates the list instantly — no manual reload needed
   } catch(e){
@@ -3074,10 +3111,13 @@ function loadNotices(){
       const photoHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:.55rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
+      const batchTag = (n.targetBatch && n.targetBatch !== 'all')
+        ? `<span style="background:rgba(0,180,216,.18);color:var(--accent);border:1px solid var(--accent);font-size:.6rem;font-weight:700;letter-spacing:.08em;padding:.12rem .42rem;border-radius:4px;text-transform:uppercase;white-space:nowrap">📚 ${esc(n.targetBatch)}</span>`
+        : `<span style="background:rgba(255,255,255,.07);color:#8b949e;border:1px solid #30363d;font-size:.6rem;font-weight:700;letter-spacing:.08em;padding:.12rem .42rem;border-radius:4px;text-transform:uppercase;white-space:nowrap">📢 All</span>`;
       nParts.push(`<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem">
           <div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div>
-          <button class="b-del" onclick="delNotice('${d.id}')">🗑</button>
+          <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">${batchTag}<button class="b-del" onclick="delNotice('${d.id}')">🗑</button></div>
         </div>
         <div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div>
         ${photoHtml}
@@ -3338,6 +3378,9 @@ function admTab(sec, btn){
   $$('as-' + sec).classList.add('active');
   if(sec === 'batches' && typeof showBatchList === 'function'){
     showBatchList();
+  }
+  if(sec === 'notices' && typeof loadNoticeBatchOptions === 'function'){
+    loadNoticeBatchOptions();
   }
   if(sec === 'gallery' && typeof loadGalleryList === 'function'){
     loadGalleryList();
