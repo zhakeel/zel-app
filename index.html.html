@@ -547,15 +547,7 @@ textarea.di{min-height:78px;resize:vertical}
      <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
      <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
     </div>
-    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
-    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
-     <div class="fg"><label>Gender</label>
-     <select id="rg-gd">
-      <option value="">Select gender...</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-     </select>
-    </div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Sara Ahmed" autocomplete="name"></div>
     <div class="fg">
      <label>Phone / WhatsApp</label>
      <div class="ph-row">
@@ -578,6 +570,16 @@ textarea.di{min-height:78px;resize:vertical}
     <div class="fg"><label>Batch *</label>
      <select id="rg-ba">
       <option value="">Loading batches...</option>
+     </select>
+    </div>
+    <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+    <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to say">Prefer not to say</option>
      </select>
     </div>
     <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
@@ -883,28 +885,10 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="back" onclick="backToStus()">← Back to Students</button>
      <div id="b-det-c"></div>
 
-     <!-- Fee Panel (shown below student card) — Portal Style -->
+     <!-- Fee Panel (shown below student card) -->
      <div id="b-fee-section" style="display:none;margin-top:.85rem">
 
-      <!-- Step indicator (admin) -->
-      <div style="display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;gap:0">
-       <div style="display:flex;flex-direction:column;align-items:center">
-        <div id="afs1" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;background:var(--accent);color:#0d1117;z-index:1">1</div>
-        <div style="font-size:.58rem;color:var(--accent);text-align:center;margin-top:.25rem;width:58px;font-weight:600">View<br>Fees</div>
-       </div>
-       <div id="afl1" style="width:44px;height:2px;background:#30363d;margin-bottom:18px"></div>
-       <div style="display:flex;flex-direction:column;align-items:center">
-        <div id="afs2" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;background:#30363d;color:#8b949e;z-index:1">2</div>
-        <div id="afs2l" style="font-size:.58rem;color:#8b949e;text-align:center;margin-top:.25rem;width:58px">Add<br>Payment</div>
-       </div>
-       <div id="afl2" style="width:44px;height:2px;background:#30363d;margin-bottom:18px"></div>
-       <div style="display:flex;flex-direction:column;align-items:center">
-        <div id="afs3" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;background:#30363d;color:#8b949e;z-index:1">3</div>
-        <div id="afs3l" style="font-size:.58rem;color:#8b949e;text-align:center;margin-top:.25rem;width:58px">Payment<br>History</div>
-       </div>
-      </div>
-
-      <!-- Summary strip -->
+      <!-- Overall summary strip -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:.6rem;text-align:center">
         <div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Course Fee</div>
@@ -920,61 +904,22 @@ textarea.di{min-height:78px;resize:vertical}
        </div>
       </div>
 
-      <!-- STEP 1: View Fees / Set Course Fee -->
-      <div id="af-step1" style="display:block">
-
-       <!-- Set Course Fee form (shown when no fee exists) -->
-       <div class="dc" id="b-new-fee-form" style="display:none">
-        <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">💳 Step 1 — Set Course Fee</div>
-        <div id="b-fe-al" class="alert"></div>
-        <input type="text" class="di" id="b-fe-mo" placeholder="Course Name (e.g. English Course 2026) *">
-        <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *" min="1">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.5rem">
-         <input type="date" class="di" id="b-fe-du" title="Due date" style="margin-bottom:0">
-         <input type="number" class="di" id="b-fe-first" placeholder="Initial payment (Rs)" min="0" style="margin-bottom:0">
-        </div>
-        <button class="b-acc" onclick="createFeeRecord()" style="width:100%;padding:.65rem">✅ Create Fee Record</button>
+      <!-- Set Course Fee form (shown when no fee record exists) -->
+      <div class="new-fee-form" id="b-new-fee-form" style="display:none">
+       <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">💳 Set Course Fee</div>
+       <div id="b-fe-al" class="alert"></div>
+       <input type="text" class="di" id="b-fe-mo" placeholder="Course Name / Description (e.g. English Course 2026) *">
+       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *" min="1">
+       <div class="nf-row">
+        <input type="date" class="di" id="b-fe-du" title="Due date (optional)">
+        <input type="number" class="di" id="b-fe-first" placeholder="Initial payment (Rs, optional)" min="0">
        </div>
-
-       <!-- Fee tracker cards -->
-       <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
-
-       <!-- Action buttons row -->
-       <div id="af-action-row" style="display:none;margin-top:.65rem;display:flex;gap:.4rem">
-        <button class="b-acc" onclick="goAdminFeeStep(2)" style="flex:1;padding:.6rem">＋ Add Payment →</button>
-        <button class="b-sec" onclick="goAdminFeeStep(3)" style="flex:1;padding:.6rem">📋 Payment History</button>
-       </div>
+       <p style="color:#8b949e;font-size:.72rem;margin-bottom:.5rem;line-height:1.55">Set the total course fee first. You can record an initial payment now, or add payments later after saving.</p>
+       <button class="b-acc" onclick="createFeeRecord()" style="width:100%;padding:.65rem">✅ Create Fee Record</button>
       </div>
 
-      <!-- STEP 2: Add Payment -->
-      <div id="af-step2" style="display:none">
-       <div class="dc">
-        <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">💰 Step 2 — Record Payment</div>
-        <div id="af-pay-al" class="alert"></div>
-        <div id="af-pay-target" style="color:#fff;font-size:.88rem;font-weight:600;margin-bottom:.6rem"></div>
-        <input type="number" class="di" id="af-pay-amt" placeholder="Payment Amount (Rs) *" min="1">
-        <input type="date" class="di" id="af-pay-dt">
-        <input type="text" class="di" id="af-pay-note" placeholder="Note (e.g. 2nd instalment)">
-        <button class="b-acc" onclick="addPaymentAdmin()" style="width:100%;padding:.65rem">💰 Record Payment</button>
-       </div>
-       <div style="display:flex;gap:.4rem;margin-top:.65rem">
-        <button class="b-sec" onclick="goAdminFeeStep(1)" style="flex:1;padding:.55rem">← Back to Fees</button>
-        <button class="b-sec" onclick="goAdminFeeStep(3)" style="flex:1;padding:.55rem">📋 History →</button>
-       </div>
-      </div>
-
-      <!-- STEP 3: Payment History -->
-      <div id="af-step3" style="display:none">
-       <div class="dc">
-        <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">📋 Step 3 — Payment History</div>
-        <div id="af-history-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No payments yet.</div></div>
-       </div>
-       <div style="display:flex;gap:.4rem;margin-top:.65rem">
-        <button class="b-sec" onclick="goAdminFeeStep(1)" style="flex:1;padding:.55rem">← Back to Fees</button>
-        <button class="b-acc" onclick="goAdminFeeStep(2)" style="flex:1;padding:.55rem">＋ Add Payment</button>
-       </div>
-      </div>
-
+      <!-- Fee tracker list (shown when fee records exist) -->
+      <div id="b-fee-list"><div style="color:#8b949e;font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
      </div>
     </div>
 
@@ -1030,16 +975,8 @@ textarea.di{min-height:78px;resize:vertical}
    <div class="sec" id="as-notices">
     <div class="dc">
      <h3>📢 Post Announcement</h3>
-     <div id="no-al" class="alert"></div>
      <input type="text" class="di" id="no-ti" placeholder="Notice title...">
      <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
-     <!-- Batch Target -->
-     <div style="margin-bottom:.65rem">
-      <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">🎯 Target Audience</div>
-      <select class="ds" id="no-batch">
-       <option value="all">📢 All Students (Everyone)</option>
-      </select>
-     </div>
      <!-- Photo attachment -->
      <div style="margin-bottom:.65rem">
       <div style="color:#8b949e;font-size:.72rem;margin-bottom:.38rem">📷 Attach Photo (optional)</div>
@@ -1367,11 +1304,6 @@ async function loadBatchOptions(){
       } else {
         a.innerHTML = '<option value="">Select Batch *</option>' + list.map(b=>`<option>${esc(b)}</option>`).join('');
       }
-    }
-    // populate notice batch target dropdown
-    const nb = $('no-batch');
-    if(nb){
-      nb.innerHTML = '<option value="all">📢 All Students (Everyone)</option>' + list.map(b=>`<option value="${esc(b)}">${esc(b)} Only</option>`).join('');
     }
   } catch(e){
     allBatches = [];
@@ -1722,8 +1654,7 @@ function renderStudent(){
 function loadStudentNotices(){
   const el = $('d-not');
   el.innerHTML = '<div class="empty">📭 Loading...</div>';
-  const studentBatch = (CUD && CUD.course) ? CUD.course : '';
-  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(50));
+  const q = query(collection(db,'notices'), orderBy('createdAt','desc'), limit(20));
   // Real-time listener — updates instantly when admin posts a notice
   onSnapshot(q, snap => {
     if(snap.empty){
@@ -1733,20 +1664,13 @@ function loadStudentNotices(){
     const parts = [];
     snap.forEach(d => {
       const n = d.data();
-      // Show notice only if it targets all or the student's own batch
-      const tb = n.targetBatch || 'all';
-      if(tb !== 'all' && studentBatch && tb !== studentBatch) return;
       const dt = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
       const pHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:.5rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
       parts.push(`<div class="notice"><div class="dt">${dt}</div><div class="ti">${esc(n.title)}</div><div class="bd">${esc(n.body)}</div>${pHtml}</div>`);
     });
-    if(!parts.length){
-      el.innerHTML = '<div class="empty">📭 No announcements yet</div>';
-    } else {
-      el.innerHTML = parts.join('');
-    }
+    el.innerHTML = parts.join('');
   }, e => {
     el.innerHTML = `<div class="empty" style="color:var(--danger)">Error: ${esc(e.message)}</div>`;
   });
@@ -2042,8 +1966,7 @@ window.deleteMyAccount = async () => {
       const dels = [];
       feeSnap.forEach(d => {
         const f = d.data();
-        if(f.status === 'Paid') paidLost += Number(f.amount||0);
-        else if(f.status === 'Partial') paidLost += Number(f.amount||0)/2;
+        paidLost += Number(f.paidTotal||0);
         dels.push(deleteDoc(doc(db,'fees', d.id)));
       });
       await Promise.all(dels);
@@ -2211,8 +2134,8 @@ window.openBatch = async b => {
 
 window.showBatchList = () => {
   // Stop real-time listeners when leaving batch view
-  if(typeof batchStudentsListener === 'function'){ batchStudentsListener(); batchStudentsListener = null; }
-  if(typeof studentFeeListener === 'function'){ studentFeeListener(); studentFeeListener = null; }
+  if(batchStudentsListener){ batchStudentsListener(); batchStudentsListener = null; }
+  if(studentFeeListener){ studentFeeListener(); studentFeeListener = null; }
   $('b-list').style.display = 'block';
   $('b-stus').style.display = 'none';
   $('b-det').style.display = 'none';
@@ -2264,7 +2187,7 @@ window.filterStus = () => {
 
 window.backToStus = () => {
   // Stop real-time fee listener when leaving student detail
-  if(typeof studentFeeListener === 'function'){ studentFeeListener(); studentFeeListener = null; }
+  if(studentFeeListener){ studentFeeListener(); studentFeeListener = null; }
   $('b-det').style.display = 'none';
   $('b-stus').style.display = 'block';
 };
@@ -2325,9 +2248,10 @@ let studentFeeListener = null;
 
 function loadStudentFeesAdmin(uid, name, sid){
   currentFeeUid = uid; currentFeeSid = sid; currentFeeName = name;
-  const el = $('b-fee-list');
-  el.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
+  const listEl = $('b-fee-list');
+  listEl.innerHTML = '<div style="color:#8b949e;font-size:.8rem">Loading...</div>';
   if(studentFeeListener){ studentFeeListener(); studentFeeListener = null; }
+  // Listen to all fee records for this student in real-time
   studentFeeListener = onSnapshot(
     query(collection(db,'fees'), where('studentUid','==', uid)),
     snap => {
@@ -2335,6 +2259,7 @@ function loadStudentFeesAdmin(uid, name, sid){
       let grandTotal=0, grandPaid=0;
       snap.forEach(d => { recs.push({...d.data(), id:d.id}); });
       recs.sort((a,b)=>(b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
+      // Compute grand totals
       recs.forEach(r => {
         grandTotal += Number(r.courseFee||0);
         grandPaid  += Number(r.paidTotal||0);
@@ -2342,28 +2267,32 @@ function loadStudentFeesAdmin(uid, name, sid){
       $('b-fs-total').textContent = 'Rs ' + grandTotal.toLocaleString();
       $('b-fs-paid').textContent  = 'Rs ' + grandPaid.toLocaleString();
       $('b-fs-due').textContent   = 'Rs ' + (grandTotal-grandPaid).toLocaleString();
+      // Show/hide the "Set Course Fee" form
       const newForm = $('b-new-fee-form');
-      const actRow = $('af-action-row');
-      if(!recs.length){
-        el.innerHTML = '<div style="color:#8b949e;font-size:.8rem;padding:.4rem 0">No fee records yet.</div>';
-        if(newForm) newForm.style.display = 'block';
-        if(actRow) actRow.style.display = 'none';
-        adminFeeCurrentRecord = null;
-        goAdminFeeStep(1);
-        return;
+      if(newForm){
+        newForm.style.display = recs.length ? 'none' : 'block';
+        // Add "Add another fee record" button after the fee list if there are existing records
+        let addBtn = $('b-fee-add-btn');
+        if(!addBtn){
+          addBtn = document.createElement('div');
+          addBtn.id = 'b-fee-add-btn';
+          listEl.parentNode.insertBefore(addBtn, listEl.nextSibling);
+        }
+        if(recs.length){
+          addBtn.innerHTML = `<button class="b-sec" style="width:100%;margin-top:.4rem;padding:.6rem;font-size:.78rem" onclick="toggleNewFeeForm()">➕ Add Another Fee Record</button>`;
+        } else {
+          addBtn.innerHTML = '';
+        }
       }
-      // Render fee tracker cards
-      if(newForm) newForm.style.display = 'none';
-      if(actRow) actRow.style.display = 'flex';
-      adminFeeCurrentRecord = recs[0];
-      el.innerHTML = recs.map(r => renderFeeCard(r)).join('');
-      goAdminFeeStep(1);
+      if(!recs.length){ listEl.innerHTML=''; return; }
+      // Render each fee tracker card
+      listEl.innerHTML = recs.map(r => renderFeeTracker(r)).join('');
     },
-    e => { el.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`; }
+    e => { listEl.innerHTML = `<div style="color:var(--danger);font-size:.8rem">${esc(e.message)}</div>`; }
   );
 }
 
-function renderFeeCard(r){
+function renderFeeTracker(r){
   const cf = Number(r.courseFee||0);
   const pt = Number(r.paidTotal||0);
   const rem = cf - pt;
@@ -2371,151 +2300,516 @@ function renderFeeCard(r){
   const settled = rem <= 0 && cf > 0;
   const payments = r.payments || [];
   const badge = settled
-    ? '<span style="background:#d1fae5;color:#065f46;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:50px">✅ FULLY SETTLED</span>'
+    ? '<span class="ft-settled">✅ FULLY SETTLED</span>'
     : pt > 0
-      ? '<span style="background:#fef3c7;color:#92400e;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:50px">⚠️ PARTIAL</span>'
-      : '<span style="background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:50px">🔴 UNPAID</span>';
-  const payRows = payments.map((p,i) =>
-    `<div style="display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid #1c2128">
-      <div style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0"></div>
-      <div style="color:#fff;font-size:.82rem;font-weight:600">Rs ${Number(p.amount||0).toLocaleString()}</div>
-      <div style="color:#8b949e;font-size:.7rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.note||'')}</div>
-      <div style="color:#8b949e;font-size:.7rem;flex-shrink:0">${p.date||''}</div>
-      <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:.75rem" onclick="deletePayment('${r.id}',${i})">✕</button>
-    </div>`).join('') || '<div style="color:#8b949e;font-size:.76rem;padding:.25rem 0">No payments yet</div>';
+      ? '<span class="ft-partial">⚠️ PARTIAL</span>'
+      : '<span class="ft-unsettled">🔴 UNPAID</span>';
+  const payRows = payments.map((p,i) => `
+    <div class="ft-pay-row">
+      <div class="ft-pay-dot"></div>
+      <div class="ft-pay-amount">Rs ${Number(p.amount||0).toLocaleString()}</div>
+      <div class="ft-pay-note">${esc(p.note||'')}</div>
+      <div class="ft-pay-date">${p.date||''}</div>
+      <button class="ft-pay-del" onclick="deletePayment('${r.id}',${i})" title="Remove this payment">✕</button>
+    </div>`).join('') || '<div style="color:#8b949e;font-size:.76rem;padding:.3rem 0">No payments recorded yet.</div>';
   const todayStr = new Date().toISOString().split('T')[0];
   return `
-    <div style="background:#0d1117;border:1px solid ${settled?'#16a34a':'#30363d'};border-radius:14px;overflow:hidden;margin-bottom:.65rem">
-      <div style="padding:.8rem 1rem;background:#161b22;display:flex;align-items:center;justify-content:space-between;gap:.4rem;flex-wrap:wrap">
+    <div class="fee-tracker ${settled?'settled':''}">
+      <div class="ft-header">
         <div>
-          <div style="color:#fff;font-size:.88rem;font-weight:600">${esc(r.month||'Course Fee')}</div>
-          <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Fee: Rs ${cf.toLocaleString()}${r.dueDate?' · Due: '+esc(r.dueDate):''}</div>
+          <div class="ft-title">${esc(r.month||'Course Fee')}</div>
+          <div style="color:#8b949e;font-size:.72rem;margin-top:.1rem">Course Fee: Rs ${cf.toLocaleString()}${r.dueDate ? ' · Due: '+esc(r.dueDate) : ''}</div>
         </div>
         ${badge}
       </div>
-      <div style="padding:.65rem 1rem">
-        <div style="height:8px;background:#30363d;border-radius:4px;overflow:hidden;margin-bottom:.4rem">
-          <div style="height:100%;width:${pct}%;background:${settled?'#16a34a':'linear-gradient(90deg,#00b4d8,#16a34a)'};border-radius:4px;transition:width .5s"></div>
+      <div class="ft-progress">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.5rem;text-align:center">
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Course Fee</div><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${cf.toLocaleString()}</div></div>
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Paid</div><div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${pt.toLocaleString()}</div></div>
+          <div><div style="font-size:.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Remaining</div><div style="color:${settled?'#16a34a':'#dc2626'};font-family:'Cormorant Garamond',serif;font-size:1.1rem">Rs ${rem>0?rem.toLocaleString():'0'}</div></div>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:.7rem">
-          <span style="color:#16a34a;font-weight:600">Paid: Rs ${pt.toLocaleString()} (${pct}%)</span>
-          <span style="color:${settled?'#16a34a':'#dc2626'};font-weight:600">${settled?'✅ Settled':'Rem: Rs '+rem.toLocaleString()}</span>
+        <div class="ft-prog-bar"><div class="ft-prog-fill" style="width:${pct}%${settled?';background:linear-gradient(90deg,#16a34a,#16a34a)':''}"></div></div>
+        <div class="ft-prog-nums">
+          <span class="ft-prog-paid">Paid: ${pct}%</span>
+          <span class="ft-prog-rem">${settled ? '✅ Settled' : 'Remaining: Rs '+rem.toLocaleString()}</span>
         </div>
       </div>
-      <div style="padding:.5rem 1rem;border-top:1px solid #30363d">
-        <div style="font-size:.68rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem">Payment History (${payments.length})</div>
+      <div class="ft-payments">
+        <div class="ft-pay-title">Payment History (${payments.length} payment${payments.length!==1?'s':''})</div>
         ${payRows}
       </div>
-      ${settled?'':
-      `<div style="padding:.55rem 1rem;border-top:1px solid #30363d">
-        <div style="font-size:.68rem;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem">➕ Add Payment</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.35rem;align-items:center">
-          <input type="number" class="di" id="fp-amt-${r.id}" placeholder="Amount *" min="1" style="margin-bottom:0;padding:.48rem .6rem;font-size:.78rem">
-          <input type="date" class="di" id="fp-dt-${r.id}" value="${todayStr}" style="margin-bottom:0;padding:.48rem .6rem;font-size:.78rem">
-          <input type="text" class="di" id="fp-note-${r.id}" placeholder="Note" style="margin-bottom:0;padding:.48rem .6rem;font-size:.78rem">
-          <button style="background:var(--accent);color:#0d1117;border:none;border-radius:8px;padding:.48rem .7rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap" onclick="addPayment('${r.id}',${cf},${pt})">＋ Pay</button>
+      ${settled?`
+      <div style="padding:.65rem 1rem;background:#0a1f0a;border-top:1px solid #166534;text-align:center">
+        <span style="color:#86efac;font-size:.82rem;font-weight:600">🎉 Course fee fully settled — no balance remaining!</span>
+      </div>`:` 
+      <div class="ft-add">
+        <div style="color:#8b949e;font-size:.7rem;margin-bottom:.5rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em">➕ Add Payment</div>
+        <div class="ft-add-row">
+          <input type="number" class="di" id="fp-amt-${r.id}" placeholder="Amount (Rs) *" min="1" max="${rem}">
+          <input type="date" class="di" id="fp-dt-${r.id}" value="${todayStr}">
+          <input type="text" class="di" id="fp-note-${r.id}" placeholder="Note (optional, e.g. Cash)">
+          <button class="ft-add-btn" onclick="addPayment('${r.id}',${cf},${pt})">＋ Pay</button>
         </div>
+        <div style="font-size:.68rem;color:#8b949e;margin-top:.3rem">Remaining balance: Rs ${rem.toLocaleString()}</div>
       </div>`}
-      <div style="padding:.35rem .8rem .5rem;display:flex;justify-content:flex-end">
-        <button style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:.25rem .5rem;font-size:.68rem;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="delFeeRecord('${r.id}',${pt})">🗑 Delete Record</button>
+      <div style="padding:.4rem .8rem .6rem;display:flex;justify-content:flex-end">
+        <button class="ft-del-fee" onclick="delFeeRecord('${r.id}',${pt})">🗑 Delete Record</button>
       </div>
     </div>`;
 }
 
-
-// ══ ADMIN FEE PORTAL ══
-let adminFeeCurrentRecord = null;
-
-window.goAdminFeeStep = function(step){
-  ['af-step1','af-step2','af-step3'].forEach((id,i) => {
-    const el = $(id); if(el) el.style.display = (i+1===step)?'block':'none';
-  });
-  [1,2,3].forEach(n => {
-    const c=$('afs'+n); if(!c) return;
-    const l=n>1?$('afs'+n+'l'):null;
-    const line=n<3?$('afl'+n):null;
-    if(n<step){ c.style.background='#16a34a';c.style.color='#fff'; if(l){l.style.color='#16a34a';l.style.fontWeight='600';} if(line)line.style.background='#16a34a'; }
-    else if(n===step){ c.style.background='var(--accent)';c.style.color='#0d1117'; if(l){l.style.color='var(--accent)';l.style.fontWeight='600';} if(line)line.style.background='#30363d'; }
-    else{ c.style.background='#30363d';c.style.color='#8b949e'; if(l){l.style.color='#8b949e';l.style.fontWeight='400';} if(line)line.style.background='#30363d'; }
-  });
-  if(step===2 && adminFeeCurrentRecord){
-    const r=adminFeeCurrentRecord;
-    const rem=Number(r.courseFee||0)-Number(r.paidTotal||0);
-    $('af-pay-target').innerHTML=`<span style="color:var(--accent)">${esc(r.month||'Course Fee')}</span> — Remaining: <span style="color:#dc2626">Rs ${rem.toLocaleString()}</span>`;
-    if(!$('af-pay-dt').value) $('af-pay-dt').value=new Date().toISOString().split('T')[0];
-  }
-  if(step===3 && adminFeeCurrentRecord) renderAdminPaymentHistory();
-};
-
-function renderAdminPaymentHistory(){
-  const r=adminFeeCurrentRecord; if(!r) return;
-  const el=$('af-history-list'); if(!el) return;
-  const payments=r.payments||[];
-  if(!payments.length){ el.innerHTML='<div style="color:#8b949e;font-size:.8rem">No payments yet. Go to Step 2 to add one.</div>'; return; }
-  el.innerHTML=payments.map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid #30363d">
-    <div style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0"></div>
-    <div style="flex:1;min-width:0">
-      <div style="color:#fff;font-size:.84rem;font-weight:600">Rs ${Number(p.amount||0).toLocaleString()}</div>
-      <div style="color:#8b949e;font-size:.7rem;margin-top:.05rem">${esc(p.note||'Payment')} · ${p.date||'—'}</div>
-    </div>
-    <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:.75rem" onclick="deletePayment('${r.id}',${i})">✕</button>
-  </div>`).join('');
-}
-
-window.addPaymentAdmin = async () => {
-  if(!adminFeeCurrentRecord){ alertMsg('af-pay-al','No fee record selected.'); return; }
-  const amount=Number($('af-pay-amt').value||0);
-  const date=$('af-pay-dt').value||new Date().toISOString().split('T')[0];
-  const note=$('af-pay-note').value.trim()||'';
-  if(!amount||amount<=0){ alertMsg('af-pay-al','Please enter a valid amount.'); return; }
-  const feeRef=doc(db,'fees',adminFeeCurrentRecord.id);
-  try{
-    const snap=await getDoc(feeRef); if(!snap.exists()) return;
-    const d=snap.data();
-    const newPayments=[...(d.payments||[]),{amount,date,note}];
-    const newPaid=newPayments.reduce((s,p)=>s+Number(p.amount||0),0);
-    const courseFee=Number(d.courseFee||0);
-    const newRem=courseFee-newPaid;
-    await updateDoc(feeRef,{payments:newPayments,paidTotal:newPaid,remaining:newRem,settled:newRem<=0});
-    try{await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(amount)});}catch(_){}
-    $('af-pay-amt').value=''; $('af-pay-note').value='';
-    alertMsg('af-pay-al','✅ Payment of Rs '+amount.toLocaleString()+' recorded!','ok');
-    loadBatchTotalPaid(currentBatch);
-    adminFeeCurrentRecord.payments=newPayments;
-    adminFeeCurrentRecord.paidTotal=newPaid;
-    adminFeeCurrentRecord.remaining=newRem;
-    adminFeeCurrentRecord.settled=newRem<=0;
-  }catch(e){ alertMsg('af-pay-al','Failed: '+e.message); }
-};
-
+// Create a brand-new fee record (set course fee)
 window.createFeeRecord = async () => {
   if(!currentFeeUid){ alertMsg('b-fe-al','No student selected.'); return; }
-  const month=$('b-fe-mo').value.trim();
-  const total=Number($('b-fe-total').value);
-  const due=$('b-fe-du').value;
-  const first=Number($('b-fe-first').value||0);
-  if(!month||!total){ alertMsg('b-fe-al','Please fill Course Name and Total Fee.'); return; }
-  const payments=first>0?[{amount:first,date:new Date().toISOString().split('T')[0],note:'Initial payment'}]:[];
-  const paidTotal=payments.reduce((s,p)=>s+Number(p.amount),0);
-  try{
-    await addDoc(collection(db,'fees'),{
-      studentUid:currentFeeUid,studentName:currentFeeName,studentId:currentFeeSid,
-      month,courseFee:total,dueDate:due,
-      payments,paidTotal,remaining:total-paidTotal,settled:paidTotal>=total,
-      createdAt:serverTimestamp()
+  const month  = $('b-fe-mo').value.trim();
+  const total  = Number($('b-fe-total').value);
+  const due    = $('b-fe-du').value;
+  const first  = Number($('b-fe-first').value||0);
+  if(!month || !total){ alertMsg('b-fe-al','Please fill Description and Total Course Fee.'); return; }
+  const payments = first>0 ? [{ amount:first, date:new Date().toISOString().split('T')[0], note:'Initial payment' }] : [];
+  const paidTotal = payments.reduce((s,p)=>s+Number(p.amount),0);
+  try {
+    await addDoc(collection(db,'fees'), {
+      studentUid: currentFeeUid, studentName: currentFeeName, studentId: currentFeeSid,
+      month, courseFee: total, dueDate: due,
+      payments, paidTotal, remaining: total-paidTotal,
+      settled: paidTotal >= total,
+      createdAt: serverTimestamp()
     });
-    $('b-fe-mo').value='';$('b-fe-total').value='';$('b-fe-du').value='';$('b-fe-first').value='';
+    $('b-fe-mo').value=''; $('b-fe-total').value=''; $('b-fe-du').value=''; $('b-fe-first').value='';
     $('b-fe-al').className='alert';
     loadBatchTotalPaid(currentBatch);
-  }catch(e){ alertMsg('b-fe-al','Failed: '+e.message); }
+  } catch(e){ alertMsg('b-fe-al','Failed: '+e.message); }
 };
+
+// Add a payment to an existing fee record
+window.addPayment = async (feeId, courseFee, currentPaid) => {
+  const amtEl = $('fp-amt-'+feeId), dtEl = $('fp-dt-'+feeId), noteEl = $('fp-note-'+feeId);
+  const amount = Number(amtEl?.value||0);
+  const date   = dtEl?.value || new Date().toISOString().split('T')[0];
+  const note   = noteEl?.value.trim()||'';
+  if(!amount || amount<=0){ alert('Please enter a valid payment amount.'); return; }
+  const feeRef = doc(db,'fees',feeId);
+  const snap = await getDoc(feeRef);
+  if(!snap.exists()) return;
+  const existing = snap.data().payments || [];
+  const newPayments = [...existing, { amount, date, note }];
+  const newPaid = newPayments.reduce((s,p)=>s+Number(p.amount),0);
+  const newRem = courseFee - newPaid;
+  await updateDoc(feeRef, {
+    payments: newPayments,
+    paidTotal: newPaid,
+    remaining: newRem,
+    settled: newRem <= 0
+  });
+  // Update counter
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(amount)}); } catch(_){}
+  if(amtEl) amtEl.value=''; if(noteEl) noteEl.value='';
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Delete a single payment from history
+window.deletePayment = async (feeId, payIndex) => {
+  if(!confirm('Remove this payment?')) return;
+  const feeRef = doc(db,'fees',feeId);
+  const snap = await getDoc(feeRef);
+  if(!snap.exists()) return;
+  const d = snap.data();
+  const payments = [...(d.payments||[])];
+  const removed = payments.splice(payIndex,1)[0];
+  const newPaid = payments.reduce((s,p)=>s+Number(p.amount),0);
+  const newRem = Number(d.courseFee||0) - newPaid;
+  await updateDoc(feeRef, {
+    payments, paidTotal:newPaid, remaining:newRem, settled:newRem<=0
+  });
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(-Number(removed?.amount||0))}); } catch(_){}
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Delete the whole fee record
+window.delFeeRecord = async (feeId, paidTotal) => {
+  if(!confirm('Delete this entire fee record and all payment history?')) return;
+  await deleteDoc(doc(db,'fees',feeId));
+  try { await updateDoc(doc(db,'meta','counters'),{totalPaid:increment(-Number(paidTotal||0))}); } catch(_){}
+  loadBatchTotalPaid(currentBatch);
+};
+
+// Keep old compat functions
+window.addFeeInline = window.createFeeRecord;
+window.updateFeeStatusInline = async()=>{};
+window.setFeeStatus = async()=>{};
+window.delFeeInline = window.delFeeRecord;
 
 window.toggleNewFeeForm = () => {
-  const f=$('b-new-fee-form'); if(!f) return;
-  f.style.display=f.style.display==='block'?'none':'block';
+  const f = $('b-new-fee-form');
+  if(!f) return;
+  const shown = f.style.display === 'block';
+  f.style.display = shown ? 'none' : 'block';
+  if(!shown){ f.scrollIntoView({behavior:'smooth',block:'nearest'}); }
 };
 
+// Load total paid for current batch and show in stat box
+async function loadBatchTotalPaid(batch){
+  if(!batch) return;
+  try {
+    // Get all students in batch
+    const stuSnap = await getDocs(query(collection(db,'students'), where('course','==',batch)));
+    const uids = [];
+    stuSnap.forEach(d => uids.push(d.id));
+    if(!uids.length){ updateBatchPaidStat(batch, 0); return; }
+    // Get all fees for those students
+    let total = 0;
+    // Firestore 'in' query supports up to 30 items
+    const chunks = [];
+    for(let i=0;i<uids.length;i+=10) chunks.push(uids.slice(i,i+10));
+    for(const chunk of chunks){
+      const fsnap = await getDocs(query(collection(db,'fees'), where('studentUid','in',chunk)));
+      fsnap.forEach(d => {
+        const f = d.data();
+        // Use paidTotal (new structure) or fall back to old status-based estimate
+        if(typeof f.paidTotal === 'number') total += f.paidTotal;
+        else if(f.status==='Paid') total += Number(f.amount||0);
+        else if(f.status==='Partial') total += Number(f.amount||0)/2;
+      });
+    }
+    updateBatchPaidStat(batch, total);
+  } catch(_){}
+}
 
+function updateBatchPaidStat(batch, total){
+  const el = $('st-fe');
+  const lbl = $('st-fe-lbl');
+  if(el) el.textContent = 'Rs ' + total.toLocaleString();
+  if(lbl) lbl.textContent = batch ? batch.replace('Batch','B.') + ' Paid' : 'Batch Paid';
+  // Also update the bs-total-paid in student list view
+  const bs = $('bs-total-paid');
+  if(bs) bs.textContent = 'Rs ' + total.toLocaleString();
+}
+
+// jump to attendance tab for a specific student
+window.quickJumpAtt = (uid, sid, name) => {
+  document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.adm-tabs button')[1].classList.add('active');
+  $('as-att').classList.add('active');
+  selectPicker('at', uid, sid, name);
+};
+
+// quickJump kept for compatibility but fees now inline
+window.quickJump = (kind, uid, sid, name) => {
+  if(kind === 'at'){
+    document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.adm-tabs button')[1].classList.add('active');
+    $('as-att').classList.add('active');
+    selectPicker('at', uid, sid, name);
+  }
+  // fees are now inline in student detail — no redirect needed
+};
+
+window.deleteStudent = async uid => {
+  if(!confirm('Permanently delete this student?\n\n• Profile and photo deleted\n• All attendance records deleted\n• All fee records deleted\n• Cannot log in again\n\nThis cannot be undone.')) return;
+
+  // Stop real-time listeners FIRST before any async work to prevent listener errors
+  if(typeof studentFeeListener === 'function'){ studentFeeListener(); studentFeeListener = null; }
+  if(typeof batchStudentsListener === 'function'){ batchStudentsListener(); batchStudentsListener = null; }
+
+  // Navigate away immediately so UI doesn't flicker or show stale data
+  showBatchList();
+
+  try {
+    // Step 1: Mark as disabled so any logged-in student session gets blocked
+    try {
+      await setDoc(doc(db,'disabled', uid), {
+        disabledAt: serverTimestamp(),
+        disabledBy: CU.email
+      });
+    } catch(_){}
+
+    // Step 2: Short delay so any active student session sees the disabled flag
+    await new Promise(r => setTimeout(r, 500));
+
+    // Step 3: Delete all attendance records for this student
+    try {
+      const attSnap = await getDocs(query(collection(db,'attendance'), where('studentUid','==', uid)));
+      if(!attSnap.empty){
+        await Promise.all(attSnap.docs.map(d => deleteDoc(doc(db,'attendance', d.id))));
+      }
+    } catch(_){}
+
+    // Step 4: Delete all fee records and update counters
+    try {
+      const feeSnap = await getDocs(query(collection(db,'fees'), where('studentUid','==', uid)));
+      if(!feeSnap.empty){
+        let paidLost = 0;
+        feeSnap.forEach(d => {
+          const f = d.data();
+          paidLost += Number(f.paidTotal||0);
+        });
+        await Promise.all(feeSnap.docs.map(d => deleteDoc(doc(db,'fees', d.id))));
+        if(paidLost > 0){
+          try { await updateDoc(doc(db,'meta','counters'), { totalPaid: increment(-paidLost) }); } catch(_){}
+        }
+      }
+    } catch(_){}
+
+    // Step 5: Delete the student profile document
+    await deleteDoc(doc(db,'students', uid));
+
+    // Step 6: Decrement student counter
+    try { await updateDoc(doc(db,'meta','counters'), { studentCount: increment(-1) }); } catch(_){}
+
+    // Step 7: Clean up the disabled flag after a delay
+    setTimeout(async () => {
+      try { await deleteDoc(doc(db,'disabled', uid)); } catch(_){}
+    }, 10000);
+
+    // Step 8: Refresh the batch and fees lists
+    try { await loadBatches(); } catch(_){}
+    try { loadFees(true); } catch(_){}
+
+    alert('✅ Student permanently deleted.\nAll records removed successfully.');
+  } catch(e){
+    alert('Failed to delete student: ' + e.message + '\n\nThe student may have been partially removed. Please refresh and check.');
+  }
+};
+
+// ══ EDIT STUDENT ══
+window.openEditStudent = async uid => {
+  // Populate batch dropdown
+  const baSel = $('es-ba');
+  baSel.innerHTML = allBatches.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+
+  // Also load from Firestore batches
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    if(!snap.empty){
+      const names = [];
+      snap.forEach(d => names.push(d.data().name));
+      baSel.innerHTML = names.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+    }
+  } catch(_){}
+
+  // Load student data
+  const snap = await getDoc(doc(db,'students',uid));
+  if(!snap.exists()){ alert('Student not found.'); return; }
+  const s = snap.data();
+
+  $('es-uid').value = uid;
+  $('es-nm').value = s.name || '';
+  $('es-ph').value = s.phone || '';
+  $('es-em').value = s.email || '';
+  $('es-dob').value = s.dob || '';
+  $('es-gd').value = s.gender || '';
+  $('es-st').value = s.status || 'active';
+  // Set batch
+  baSel.value = s.course || '';
+  if(!baSel.value && s.course){
+    const opt = document.createElement('option');
+    opt.value = s.course; opt.textContent = s.course;
+    baSel.prepend(opt);
+    baSel.value = s.course;
+  }
+
+  $('es-al').className = 'alert';
+  $('m-edit-stu').classList.add('open');
+};
+
+window.saveStudentEdit = async () => {
+  const uid  = $('es-uid').value;
+  const name = $('es-nm').value.trim();
+  const phone= $('es-ph').value.trim();
+  const email= $('es-em').value.trim().toLowerCase();
+  const batch= $('es-ba').value;
+  const dob  = $('es-dob').value;
+  const gnd  = $('es-gd').value;
+  const stat = $('es-st').value;
+  const btn  = $('bt-es');
+
+  if(!name){ alertMsg('es-al','Name is required.'); return; }
+  if(!batch){ alertMsg('es-al','Please select a batch.'); return; }
+
+  btn.textContent = 'Saving...'; btn.disabled = true;
+
+  try {
+    const updates = { name, phone, email, course: batch, dob, gender: gnd, status: stat };
+    await updateDoc(doc(db,'students', uid), updates);
+    alertMsg('es-al','✅ Student details updated!','ok');
+    // Refresh the detail card
+    await openStudentDetail(uid);
+    setTimeout(() => closeModal('m-edit-stu'), 900);
+  } catch(e){
+    alertMsg('es-al','Failed: ' + e.message);
+  }
+  btn.textContent = '💾 Save Changes'; btn.disabled = false;
+};
+
+// ══ MANAGE BATCHES ══
+window.toggleBatchMgr = () => {
+  const el = $('b-mgr');
+  if(el.style.display === 'none'){
+    el.style.display = 'block';
+    loadBatchesMgr();
+  } else {
+    el.style.display = 'none';
+  }
+};
+
+async function loadBatchesMgr(){
+  const el = $('bm-list');
+  if(!el) return;
+  try {
+    const snap = await getDocs(query(collection(db,'batches'), orderBy('name','asc')));
+    if(snap.empty){
+      el.innerHTML = `<div style="color:#8b949e;font-size:.78rem;padding:.4rem 0">No batches yet. Add one above to get started.</div>`;
+      return;
+    }
+    el.innerHTML = '';
+    snap.forEach(d => {
+      const b = d.data().name;
+      el.innerHTML += `<div class="bm-row"><span>${esc(b)}</span><button class="b-del" onclick="deleteBatch('${d.id}','${esc(b).replace(/'/g,"\\\\'")}')">🗑 Remove</button></div>`;
+    });
+  } catch(e){
+    el.innerHTML = `<div style="color:var(--danger);font-size:.78rem">${esc(e.message)}</div>`;
+  }
+}
+
+window.addBatch = async () => {
+  const inp = $('bm-name');
+  const name = inp ? inp.value.trim() : '';
+  if(!name){ alertMsg('bm-al', 'Please enter a batch name.'); return; }
+  try {
+    // Check duplicate
+    const existing = await getDocs(query(collection(db,'batches'), where('name','==', name)));
+    if(!existing.empty){
+      alertMsg('bm-al', 'This batch already exists.', 'err');
+      return;
+    }
+    if(allBatches.includes(name)){
+      alertMsg('bm-al', 'This batch already exists.', 'err');
+      return;
+    }
+    await addDoc(collection(db,'batches'), { name, createdAt: serverTimestamp() });
+    alertMsg('bm-al', `✅ Batch "${name}" added!`, 'ok');
+    inp.value = '';
+    await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
+  } catch(e){
+    alertMsg('bm-al', 'Failed: ' + e.message);
+  }
+};
+
+window.deleteBatch = async (id, name) => {
+  // Check how many students are in this batch first
+  let stuCount = 0;
+  try {
+    const cnt = await getCountFromServer(query(collection(db,'students'), where('course','==', name)));
+    stuCount = cnt.data().count;
+  } catch(_){}
+
+  const msg = stuCount > 0
+    ? `Delete batch "${name}"?\n\n⚠️ This will PERMANENTLY DELETE:\n• ${stuCount} student account${stuCount>1?'s':''} in this batch\n• All their attendance records\n• All their fee records\n• Their login access\n\nThis CANNOT be undone. Type DELETE to confirm:`
+    : `Delete batch "${name}"?\n\nNo students in this batch.\n\nType DELETE to confirm:`;
+
+  const confirm1 = prompt(msg);
+  if(confirm1 !== 'DELETE'){
+    if(confirm1 !== null) alert('Cancelled. You did not type DELETE correctly.');
+    return;
+  }
+
+  alertMsg('bm-al', '⏳ Deleting batch and all students...', 'info', true);
+
+  try {
+    // Get all students in this batch
+    const stuSnap = await getDocs(query(collection(db,'students'), where('course','==', name)));
+    const stuIds = [];
+    stuSnap.forEach(d => stuIds.push(d.id));
+
+    // For each student: mark disabled + delete attendance + fees + profile
+    for(const uid of stuIds){
+      // Mark disabled so they get logged out
+      try { await setDoc(doc(db,'disabled',uid),{disabledAt:serverTimestamp(),disabledBy:CU.email}); } catch(_){}
+      // Delete attendance
+      try {
+        const aSnap = await getDocs(query(collection(db,'attendance'), where('studentUid','==',uid)));
+        await Promise.all(aSnap.docs.map(d=>deleteDoc(doc(db,'attendance',d.id))));
+      } catch(_){}
+      // Delete fees
+      try {
+        const fSnap = await getDocs(query(collection(db,'fees'), where('studentUid','==',uid)));
+        await Promise.all(fSnap.docs.map(d=>deleteDoc(doc(db,'fees',d.id))));
+      } catch(_){}
+      // Delete student profile
+      try { await deleteDoc(doc(db,'students',uid)); } catch(_){}
+    }
+
+    // Update student counter
+    if(stuIds.length > 0){
+      try { await updateDoc(doc(db,'meta','counters'),{studentCount:increment(-stuIds.length)}); } catch(_){}
+    }
+
+    // Wait a moment so disabled flags reach logged-in students
+    if(stuIds.length > 0) await new Promise(r=>setTimeout(r,600));
+
+    // Clean up disabled flags
+    for(const uid of stuIds){
+      setTimeout(async()=>{ try{ await deleteDoc(doc(db,'disabled',uid)); }catch(_){} }, 8000);
+    }
+
+    // Delete the batch document
+    await deleteDoc(doc(db,'batches', id));
+
+    alertMsg('bm-al', `✅ Batch "${name}" deleted with ${stuIds.length} student${stuIds.length!==1?'s':''}.`, 'ok');
+    await loadBatchesMgr();
+    await loadBatchOptions();
+    await loadBatches();
+  } catch(e){
+    alertMsg('bm-al', 'Failed: ' + e.message);
+  }
+};
+
+// ══ PICKER (att/fee student picker) ══
+window.searchPicker = async (kind, term) => {
+  const res = $(`${kind}-pr`);
+  res.classList.add('open');
+  term = term.trim();
+  if(!term){
+    res.innerHTML = '<div class="pkr-em">Type to search by name or ID...</div>';
+    return;
+  }
+  clearTimeout(pickerTimers[kind]);
+  pickerTimers[kind] = setTimeout(async () => {
+    res.innerHTML = '<div class="pkr-em">Searching...</div>';
+    try {
+      const up = term.toUpperCase(), lo = term.toLowerCase();
+      const map = new Map();
+      try {
+        const q1 = query(collection(db,'students'), where('studentId','>=', up), where('studentId','<=', up+'\uf8ff'), limit(8));
+        (await getDocs(q1)).forEach(d => map.set(d.id, {...d.data(), id:d.id}));
+      } catch(_){}
+      try {
+        const q2 = query(collection(db,'students'), where('nameLower','>=', lo), where('nameLower','<=', lo+'\uf8ff'), limit(8));
+        (await getDocs(q2)).forEach(d => map.set(d.id, {...d.data(), id:d.id}));
+      } catch(_){}
+      const arr = [...map.values()].slice(0,12);
+      if(!arr.length){
+        res.innerHTML = '<div class="pkr-em">No students found.</div>';
+        return;
+      }
+      res.innerHTML = '';
+      arr.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'pkr-it';
+        div.innerHTML = `<div class="pid">${esc(s.studentId||'')}</div><div class="pnm">${esc(s.name||'')}</div><div class="pba">${esc(s.course||'')}</div>`;
+        div.onclick = () => selectPicker(kind, s.id, s.studentId, s.name);
+        res.appendChild(div);
+      });
+    } catch(e){
+      res.innerHTML = `<div class="pkr-em">Error: ${esc(e.message)}</div>`;
+    }
+  }, 250);
+};
 
 function selectPicker(kind, uid, sid, name){
   pickers[kind] = { uid, sid, name };
@@ -2751,22 +3045,18 @@ window.clearNoticeImg = () => {
 window.postNotice = async () => {
   const title = $('no-ti').value.trim();
   const body  = $('no-bo').value.trim();
-  const targetBatch = $('no-batch') ? $('no-batch').value : 'all';
-  if(!title || !body){ alertMsg('no-al','Please fill in title and message.'); return; }
+  if(!title || !body){ alert('Please fill in title and message.'); return; }
   try {
     await addDoc(collection(db,'notices'), {
       title, body,
       photo: noticeImgData || '',
-      targetBatch: targetBatch || 'all',
       createdAt: serverTimestamp()
     });
     $('no-ti').value=''; $('no-bo').value='';
-    if($('no-batch')) $('no-batch').value = 'all';
     clearNoticeImg();
-    alertMsg('no-al', '\u2705 Announcement posted!', 'ok');
-    // real-time listener updates the list instantly
+    // real-time listener updates the list instantly — no manual reload needed
   } catch(e){
-    alertMsg('no-al', 'Failed: ' + e.message);
+    alert('Failed: ' + e.message);
   }
 };
 
@@ -2786,18 +3076,12 @@ function loadNotices(){
       const photoHtml = n.photo
         ? `<img src="${n.photo}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:.55rem;cursor:zoom-in" onclick="zoomPhotoSrc('${n.photo}')">`
         : '';
-      const batchLabel = (!n.targetBatch || n.targetBatch === 'all')
-        ? '<span style="background:rgba(0,180,216,.18);color:var(--accent);font-size:.66rem;font-weight:700;padding:.15rem .55rem;border-radius:50px;letter-spacing:.04em">📢 All Students</span>'
-        : `<span style="background:rgba(22,163,74,.18);color:#4ade80;font-size:.66rem;font-weight:700;padding:.15rem .55rem;border-radius:50px;letter-spacing:.04em">🎯 ${esc(n.targetBatch)}</span>`;
       nParts.push(`<div class="dc" style="margin-bottom:.55rem;padding:.95rem 1.1rem">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.38rem;gap:.5rem;flex-wrap:wrap">
-          <div>
-            <div style="color:#fff;font-weight:600;font-size:.86rem;margin-bottom:.25rem">${esc(n.title)}</div>
-            ${batchLabel}
-          </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.28rem;gap:.5rem">
+          <div style="color:#fff;font-weight:600;font-size:.86rem">${esc(n.title)}</div>
           <button class="b-del" onclick="delNotice('${d.id}')">🗑</button>
         </div>
-        <div style="color:#8b949e;font-size:.8rem;line-height:1.55;margin-top:.45rem">${esc(n.body)}</div>
+        <div style="color:#8b949e;font-size:.8rem;line-height:1.55">${esc(n.body)}</div>
         ${photoHtml}
       </div>`);
     });
@@ -3069,12 +3353,13 @@ window.admTab = admTab;
 </script>
 
 <!-- PHOTO ZOOM OVERLAY -->
-<div id="zoom-ovl" onclick="closeZoom()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out;backdrop-filter:blur(8px)">
+<div id="zoom-ovl" onclick="closeZoom()" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out;backdrop-filter:blur(8px)">
   <span style="position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2.2rem;cursor:pointer;background:rgba(255,255,255,.1);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1" onclick="event.stopPropagation();closeZoom()">&times;</span>
   <img id="zoom-img" src="" style="max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:zoomIn .3s ease both">
 </div>
 <style>
 @keyframes zoomIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+#zoom-ovl{display:none}
 #zoom-ovl.show{display:flex!important}
 </style>
 
