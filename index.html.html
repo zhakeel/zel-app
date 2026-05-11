@@ -3457,53 +3457,6 @@ window.doGrant = async () => {
   btn.textContent = '✅ Grant Access'; btn.disabled = false;
 };
 
-</script>
-
-<script>
-// ── Navigation (non-module, plain script) ──
-function $$(id){ return document.getElementById(id); }
-
-// ══ PHOTO ZOOM ══
-window.zoomPhoto = function(el){
-  if(!el) return;
-  const img = el.querySelector('img');
-  if(!img || !img.src){
-    // No photo to zoom (just initial letter) - do nothing
-    return;
-  }
-  document.getElementById('zoom-img').src = img.src;
-  document.getElementById('zoom-ovl').classList.add('show');
-};
-
-window.closeZoom = function(){
-  document.getElementById('zoom-ovl').classList.remove('show');
-};
-
-// Close zoom on Escape
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){
-    var ovl = document.getElementById('zoom-ovl');
-    if(ovl && ovl.classList.contains('show')) ovl.classList.remove('show');
-  }
-});
-
-function loginTab(tab){
-  $$('pg-in').style.display = tab === 'in' ? 'block' : 'none';
-  $$('pg-rg').style.display = tab === 'rg' ? 'block' : 'none';
-  $$('t-in').classList.toggle('active', tab === 'in');
-  $$('t-rg').classList.toggle('active', tab === 'rg');
-  $$('la').className = 'alert';
-}
-window.loginTab = loginTab;
-
-function stuTab(sec, btn){
-  document.querySelectorAll('.bnav button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.sub').forEach(s => s.classList.remove('active'));
-  $$('ss-' + sec).classList.add('active');
-}
-window.stuTab = stuTab;
-
 
 // ══════════════════════════════════════════════
 //   NFC ATTENDANCE ENGINE
@@ -3788,6 +3741,54 @@ async function linkNfcCardToStudent(uid){
     setNfcScreen('error', '❌ Link failed', e.message);
   }
 }
+
+</script>
+
+<script>
+// ── Navigation (non-module, plain script) ──
+function $$(id){ return document.getElementById(id); }
+
+// ══ PHOTO ZOOM ══
+window.zoomPhoto = function(el){
+  if(!el) return;
+  const img = el.querySelector('img');
+  if(!img || !img.src){
+    // No photo to zoom (just initial letter) - do nothing
+    return;
+  }
+  document.getElementById('zoom-img').src = img.src;
+  document.getElementById('zoom-ovl').classList.add('show');
+};
+
+window.closeZoom = function(){
+  document.getElementById('zoom-ovl').classList.remove('show');
+};
+
+// Close zoom on Escape
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    var ovl = document.getElementById('zoom-ovl');
+    if(ovl && ovl.classList.contains('show')) ovl.classList.remove('show');
+  }
+});
+
+function loginTab(tab){
+  $$('pg-in').style.display = tab === 'in' ? 'block' : 'none';
+  $$('pg-rg').style.display = tab === 'rg' ? 'block' : 'none';
+  $$('t-in').classList.toggle('active', tab === 'in');
+  $$('t-rg').classList.toggle('active', tab === 'rg');
+  $$('la').className = 'alert';
+}
+window.loginTab = loginTab;
+
+function stuTab(sec, btn){
+  document.querySelectorAll('.bnav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sub').forEach(s => s.classList.remove('active'));
+  $$('ss-' + sec).classList.add('active');
+}
+window.stuTab = stuTab;
+
 
 function admTab(sec, btn){
   document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
