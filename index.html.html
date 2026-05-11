@@ -515,6 +515,68 @@ textarea.di{min-height:78px;resize:vertical}
 .new-fee-form .nf-row .di{margin-bottom:0}
 .new-fee-form .b-acc{width:100%;padding:.6rem;margin-top:.45rem}
 
+
+/* ── NFC ATTENDANCE ── */
+.nfc-screen{background:linear-gradient(135deg,#0d1117,#161b22);border:2px solid #30363d;border-radius:18px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .3s}
+.nfc-screen.scanning{border-color:var(--accent);box-shadow:0 0 30px rgba(0,180,216,.3)}
+.nfc-screen.success{border-color:#16a34a;box-shadow:0 0 40px rgba(22,163,74,.4)}
+.nfc-screen.error{border-color:#dc2626;box-shadow:0 0 30px rgba(220,38,38,.3)}
+.nfc-icon{font-size:4rem;margin-bottom:.7rem;animation:nfcPulse 1.6s ease-in-out infinite}
+@keyframes nfcPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+.nfc-status{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;margin-bottom:.4rem}
+.nfc-hint{color:#8b949e;font-size:.82rem;line-height:1.5}
+
+.nfc-controls{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.nfc-mode-btn{background:#161b22;border:2px solid #30363d;border-radius:12px;padding:.85rem .7rem;color:#fff;cursor:pointer;text-align:left;transition:all .2s;font-family:'DM Sans',sans-serif}
+.nfc-mode-btn:hover{border-color:var(--accent)}
+.nfc-mode-btn.active{border-color:var(--accent);background:#0c2933}
+.nfc-mode-btn .nm-title{font-size:.85rem;font-weight:600;margin-bottom:.18rem}
+.nfc-mode-btn .nm-sub{font-size:.7rem;color:#8b949e}
+
+.nfc-uid-input{background:#0d1117;border:2px solid #30363d;border-radius:10px;padding:.7rem 1rem;color:#fff;width:100%;font-family:'JetBrains Mono',monospace;font-size:.95rem;outline:none;letter-spacing:.05em;text-align:center}
+.nfc-uid-input:focus{border-color:var(--accent)}
+
+.nfc-card-result{background:#0c2933;border:2px solid var(--accent);border-radius:14px;padding:1rem;margin-bottom:1rem}
+.ncr-row{display:flex;align-items:center;gap:.85rem;margin-bottom:.85rem}
+.ncr-photo{width:64px;height:64px;border-radius:14px;background:#161b22;border:2px solid var(--accent);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--accent);font-weight:600}
+.ncr-photo img{width:100%;height:100%;object-fit:cover}
+.ncr-info{flex:1;min-width:0}
+.ncr-name{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;line-height:1.2}
+.ncr-id{color:var(--accent);font-size:.78rem;font-weight:600;margin-top:.18rem}
+.ncr-batch{color:#8b949e;font-size:.74rem;margin-top:.1rem}
+
+.nfc-att-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.nfc-att-btn{border:none;border-radius:12px;padding:.8rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.2rem;transition:all .2s}
+.nfc-att-btn .ic{font-size:1.4rem}
+.nfc-att-btn.present{background:#d1fae5;color:#065f46}
+.nfc-att-btn.present:hover{background:#16a34a;color:#fff}
+.nfc-att-btn.late{background:#fef3c7;color:#92400e}
+.nfc-att-btn.late:hover{background:#d97706;color:#fff}
+.nfc-att-btn.absent{background:#fee2e2;color:#991b1b}
+.nfc-att-btn.absent:hover{background:#dc2626;color:#fff}
+
+.nfc-already{background:#451a03;border:1px solid #d97706;border-radius:12px;padding:.85rem 1rem;margin-bottom:1rem}
+.nfc-already-txt{color:#fcd34d;font-size:.85rem;font-weight:600;margin-bottom:.3rem}
+.nfc-already-sub{color:#8b949e;font-size:.74rem}
+
+.nfc-recent{background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:.85rem;margin-top:1rem}
+.nfc-recent-h{color:#8b949e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+.nfc-tap-row{display:flex;align-items:center;gap:.55rem;padding:.5rem 0;border-bottom:1px solid #1c2128;font-size:.8rem}
+.nfc-tap-row:last-child{border-bottom:none}
+.nfc-tap-row .tm{color:#8b949e;font-size:.72rem;font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:46px}
+.nfc-tap-row .nm{color:#fff;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nfc-tap-row .st{font-size:.7rem;font-weight:700;padding:.18rem .5rem;border-radius:50px;flex-shrink:0}
+.nfc-tap-row .st.present{background:#16a34a;color:#fff}
+.nfc-tap-row .st.late{background:#d97706;color:#fff}
+.nfc-tap-row .st.absent{background:#dc2626;color:#fff}
+
+/* NFC Link card UI in student profile */
+.nfc-link-status{background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:.65rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.nfc-link-status .ls-info{flex:1;min-width:0}
+.nfc-link-status .ls-label{color:#8b949e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+.nfc-link-status .ls-value{color:#fff;font-family:'JetBrains Mono',monospace;font-size:.85rem;margin-top:.15rem;word-break:break-all}
+.nfc-link-status .ls-empty{color:#8b949e;font-style:italic;font-size:.78rem}
+
 </style>
 </head>
 <body>
@@ -832,6 +894,7 @@ textarea.di{min-height:78px;resize:vertical}
     <button onclick="admTab('notices',this)">📢 Notices</button>
     <button onclick="admTab('gallery',this)">📸 Gallery</button>
     <button onclick="admTab('add',this)">➕ Add Student</button>
+    <button onclick="admTab('nfc',this)">📡 NFC</button>
     <button id="t-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
    </div>
 
@@ -1001,6 +1064,69 @@ textarea.di{min-height:78px;resize:vertical}
      <button class="b-acc" onclick="postNotice()" style="width:100%;padding:.68rem">📢 Post Announcement</button>
     </div>
     <div id="no-list"><div class="empty" style="color:#8b949e">No notices yet</div></div>
+   </div>
+
+   <!-- NFC ATTENDANCE -->
+   <div class="sec" id="as-nfc">
+    <h3 style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.85rem">📡 NFC Attendance</h3>
+
+    <!-- Reader mode selector -->
+    <div class="nfc-controls">
+     <div class="nfc-mode-btn active" id="nfc-mode-keyboard" onclick="setNfcMode('keyboard')">
+      <div class="nm-title">⌨️ Keyboard Reader</div>
+      <div class="nm-sub">Plug-and-play USB reader</div>
+     </div>
+     <div class="nfc-mode-btn" id="nfc-mode-manual" onclick="setNfcMode('manual')">
+      <div class="nm-title">✏️ Manual Entry</div>
+      <div class="nm-sub">Type the card UID</div>
+     </div>
+    </div>
+
+    <!-- Hidden input for keyboard mode (auto-receives card UID) -->
+    <input type="text" id="nfc-input" class="nfc-uid-input" placeholder="Tap card on the reader..." autocomplete="off" style="margin-bottom:1rem">
+
+    <!-- Visual scanner screen -->
+    <div class="nfc-screen scanning" id="nfc-screen">
+     <div class="nfc-icon">📡</div>
+     <div class="nfc-status" id="nfc-status">Ready to Scan</div>
+     <div class="nfc-hint" id="nfc-hint">Tap a student's NFC card on the reader to mark attendance</div>
+    </div>
+
+    <!-- Card result + attendance buttons (shown after scan) -->
+    <div id="nfc-result" style="display:none">
+     <div class="nfc-card-result">
+      <div class="ncr-row">
+       <div class="ncr-photo" id="ncr-photo">?</div>
+       <div class="ncr-info">
+        <div class="ncr-name" id="ncr-name">—</div>
+        <div class="ncr-id" id="ncr-id">—</div>
+        <div class="ncr-batch" id="ncr-batch">—</div>
+       </div>
+      </div>
+      <!-- Already marked notice -->
+      <div class="nfc-already" id="nfc-already" style="display:none">
+       <div class="nfc-already-txt" id="nfc-already-txt">⚠️ Already marked today</div>
+       <div class="nfc-already-sub">You can update the status by tapping a button below.</div>
+      </div>
+      <!-- Attendance buttons -->
+      <div class="nfc-att-buttons">
+       <button class="nfc-att-btn present" onclick="markNfcAtt('present')"><span class="ic">✅</span>Present</button>
+       <button class="nfc-att-btn late" onclick="markNfcAtt('late')"><span class="ic">⏰</span>Late</button>
+       <button class="nfc-att-btn absent" onclick="markNfcAtt('absent')"><span class="ic">❌</span>Absent</button>
+      </div>
+     </div>
+     <button class="b-sec" style="width:100%;padding:.6rem" onclick="nfcReset()">↻ Cancel / Tap Next Card</button>
+    </div>
+
+    <!-- Recent taps -->
+    <div class="nfc-recent">
+     <div class="nfc-recent-h">
+      <span>📋 Recent Taps Today</span>
+      <span id="nfc-recent-count" style="color:var(--accent);font-weight:700">0</span>
+     </div>
+     <div id="nfc-recent-list"><div style="color:#8b949e;font-size:.78rem;padding:.4rem 0;text-align:center">No taps yet today.</div></div>
+    </div>
+
    </div>
 
    <!-- GALLERY -->
@@ -2245,6 +2371,13 @@ window.openStudentDetail = async uid => {
       <button class="act" onclick="quickJumpAtt('${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
       <button class="act" style="border-color:var(--accent);color:var(--accent)" onclick="openEditStudent('${uid}')">✏️ Edit Info</button>
     </div>
+    <div class="nfc-link-status">
+      <div class="ls-info">
+       <div class="ls-label">📡 NFC Card</div>
+       <div class="ls-value" id="nfc-cur-${uid}">${s.nfcId ? esc(s.nfcId) : '<span class="ls-empty">No card linked</span>'}</div>
+      </div>
+      <button class="b-acc" style="font-size:.74rem;padding:.5rem .8rem" onclick="linkNfcCard('${uid}','${esc(s.name||'')}','${esc(s.studentId||'')}')">${s.nfcId ? '🔄 Re-link Card' : '🔗 Link NFC Card'}</button>
+    </div>
     <button class="b-del" style="width:100%;padding:.7rem;margin-top:.4rem" onclick="deleteStudent('${uid}')">🗑 Remove Student</button>`;
 
   // Show fee section and load this student's fees
@@ -3371,6 +3504,291 @@ function stuTab(sec, btn){
 }
 window.stuTab = stuTab;
 
+
+// ══════════════════════════════════════════════
+//   NFC ATTENDANCE ENGINE
+// ══════════════════════════════════════════════
+
+let nfcMode = 'keyboard'; // 'keyboard' | 'manual'
+let nfcCurrentStudent = null; // {uid, name, sid, photo, batch, nfcId}
+let nfcLinkMode = null; // when set, next tap links card to this {uid, name, sid}
+let nfcRecentTaps = []; // [{time, name, sid, status}]
+let nfcInputBuffer = '';
+let nfcInputTimer = null;
+
+window.setNfcMode = function(mode){
+  nfcMode = mode;
+  document.getElementById('nfc-mode-keyboard').classList.toggle('active', mode === 'keyboard');
+  document.getElementById('nfc-mode-manual').classList.toggle('active', mode === 'manual');
+  const inp = document.getElementById('nfc-input');
+  if(mode === 'manual'){
+    inp.placeholder = 'Type the card UID and press Enter';
+    inp.readOnly = false;
+  } else {
+    inp.placeholder = 'Tap card on the reader (auto-receive)';
+    inp.readOnly = false; // keep editable for keyboard wedge
+    inp.focus();
+  }
+};
+
+// Listen for Enter key in the NFC input — most keyboard NFC readers send the UID
+// followed by Enter. Manual mode also uses Enter to submit.
+function setupNfcInput(){
+  const inp = document.getElementById('nfc-input');
+  if(!inp) return;
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      const uid = inp.value.trim();
+      if(uid) handleNfcTap(uid);
+      inp.value = '';
+    }
+  });
+  // Auto-focus the input when the NFC tab is active
+  document.addEventListener('click', () => {
+    const sec = document.getElementById('as-nfc');
+    if(sec && sec.classList.contains('active')){
+      setTimeout(() => inp.focus(), 50);
+    }
+  });
+}
+// Init when page loads
+if(document.readyState !== 'loading') setupNfcInput();
+else document.addEventListener('DOMContentLoaded', setupNfcInput);
+
+// ── Main tap handler ──
+async function handleNfcTap(uid){
+  // Normalise UID — strip whitespace, uppercase hex
+  uid = uid.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+  if(!uid) return;
+
+  // If we're in link mode, link this card to the pending student
+  if(nfcLinkMode){
+    await linkNfcCardToStudent(uid);
+    return;
+  }
+
+  // Look up student by nfcId
+  setNfcScreen('scanning', '🔍 Looking up card...', `Card UID: ${uid}`);
+  try {
+    const snap = await getDocs(query(collection(db,'students'), where('nfcId','==', uid), limit(1)));
+    if(snap.empty){
+      setNfcScreen('error', '❌ Card not recognised', `UID: ${uid} is not linked to any student. Open a student profile and click "Link NFC Card".`);
+      playNfcBeep('error');
+      setTimeout(() => nfcReset(), 4000);
+      return;
+    }
+    const doc0 = snap.docs[0];
+    const s = doc0.data();
+    nfcCurrentStudent = {
+      uid: doc0.id,
+      name: s.name || '',
+      sid: s.studentId || '',
+      photo: s.photo || '',
+      batch: s.course || '',
+      nfcId: uid
+    };
+    showNfcStudentCard();
+    playNfcBeep('success');
+  } catch(e){
+    setNfcScreen('error', '❌ Lookup failed', e.message);
+    setTimeout(() => nfcReset(), 3500);
+  }
+}
+
+function setNfcScreen(state, status, hint){
+  const scr = document.getElementById('nfc-screen');
+  if(!scr) return;
+  scr.classList.remove('scanning','success','error');
+  scr.classList.add(state);
+  document.getElementById('nfc-status').textContent = status;
+  document.getElementById('nfc-hint').innerHTML = hint;
+  document.getElementById('nfc-result').style.display = 'none';
+  scr.style.display = 'flex';
+  // Update icon based on state
+  const ic = scr.querySelector('.nfc-icon');
+  if(ic){
+    ic.textContent = state === 'success' ? '✅' : state === 'error' ? '⚠️' : '📡';
+  }
+}
+
+async function showNfcStudentCard(){
+  const s = nfcCurrentStudent;
+  document.getElementById('nfc-screen').style.display = 'none';
+  const result = document.getElementById('nfc-result');
+  result.style.display = 'block';
+  // Photo
+  const ph = document.getElementById('ncr-photo');
+  if(s.photo) ph.innerHTML = `<img src="${s.photo}" alt="">`;
+  else ph.textContent = (s.name && s.name[0] || '?').toUpperCase();
+  document.getElementById('ncr-name').textContent = s.name || '—';
+  document.getElementById('ncr-id').textContent = s.sid || '—';
+  document.getElementById('ncr-batch').textContent = s.batch || '—';
+
+  // Check if already marked today
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    const q = query(
+      collection(db,'attendance'),
+      where('studentUid','==', s.uid),
+      where('date','==', today)
+    );
+    const snap = await getDocs(q);
+    const already = document.getElementById('nfc-already');
+    if(!snap.empty){
+      const existing = snap.docs[0].data();
+      const stTxt = (existing.status || '').toUpperCase();
+      already.style.display = 'block';
+      document.getElementById('nfc-already-txt').textContent = `⚠️ Already marked today as ${stTxt}`;
+    } else {
+      already.style.display = 'none';
+    }
+  } catch(_){}
+}
+
+window.markNfcAtt = async function(status){
+  if(!nfcCurrentStudent) return;
+  const s = nfcCurrentStudent;
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    // Find existing record or create new
+    const q = query(
+      collection(db,'attendance'),
+      where('studentUid','==', s.uid),
+      where('date','==', today)
+    );
+    const snap = await getDocs(q);
+    if(!snap.empty){
+      // Update existing
+      await updateDoc(doc(db,'attendance', snap.docs[0].id), {
+        status,
+        updatedAt: serverTimestamp()
+      });
+    } else {
+      // Create new
+      await addDoc(collection(db,'attendance'), {
+        studentUid: s.uid,
+        studentName: s.name,
+        studentId: s.sid,
+        date: today,
+        status,
+        createdAt: serverTimestamp()
+      });
+    }
+    // Add to recent taps
+    const tm = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+    nfcRecentTaps.unshift({ time: tm, name: s.name, sid: s.sid, status });
+    if(nfcRecentTaps.length > 30) nfcRecentTaps.pop();
+    renderNfcRecent();
+    // Visual confirmation
+    setNfcScreen('success', `✅ ${status.toUpperCase()} for ${s.name}`, `Marked ${s.sid} as ${status} on ${today}. Tap next card.`);
+    playNfcBeep('confirm');
+    nfcCurrentStudent = null;
+    setTimeout(() => {
+      nfcReset();
+      const inp = document.getElementById('nfc-input');
+      if(inp) inp.focus();
+    }, 2000);
+  } catch(e){
+    alert('Failed to save attendance: ' + e.message);
+  }
+};
+
+window.nfcReset = function(){
+  nfcCurrentStudent = null;
+  document.getElementById('nfc-result').style.display = 'none';
+  setNfcScreen('scanning', 'Ready to Scan', 'Tap a student\'s NFC card on the reader to mark attendance');
+  const inp = document.getElementById('nfc-input');
+  if(inp){ inp.value = ''; inp.focus(); }
+};
+
+function renderNfcRecent(){
+  const el = document.getElementById('nfc-recent-list');
+  const cnt = document.getElementById('nfc-recent-count');
+  if(!el) return;
+  cnt.textContent = nfcRecentTaps.length;
+  if(!nfcRecentTaps.length){
+    el.innerHTML = '<div style="color:#8b949e;font-size:.78rem;padding:.4rem 0;text-align:center">No taps yet today.</div>';
+    return;
+  }
+  el.innerHTML = nfcRecentTaps.map(t => `
+    <div class="nfc-tap-row">
+      <span class="tm">${t.time}</span>
+      <span class="nm"><strong style="color:var(--accent)">${esc(t.sid||'—')}</strong> ${esc(t.name||'')}</span>
+      <span class="st ${t.status}">${t.status}</span>
+    </div>`).join('');
+}
+
+// ── Beep sound (audio feedback) ──
+let nfcAudioCtx = null;
+function playNfcBeep(kind){
+  try {
+    if(!nfcAudioCtx) nfcAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = nfcAudioCtx.createOscillator();
+    const g = nfcAudioCtx.createGain();
+    o.connect(g); g.connect(nfcAudioCtx.destination);
+    if(kind === 'success'){
+      o.frequency.value = 880; g.gain.value = .15;
+      o.start(); setTimeout(() => { o.stop(); }, 100);
+    } else if(kind === 'confirm'){
+      o.frequency.value = 1320; g.gain.value = .15;
+      o.start(); setTimeout(() => { o.stop(); }, 150);
+    } else if(kind === 'error'){
+      o.frequency.value = 200; g.gain.value = .12;
+      o.start(); setTimeout(() => { o.stop(); }, 300);
+    }
+  } catch(_){}
+}
+
+// ══════════════════════════════════════════════
+//   NFC CARD LINKING (in student profile)
+// ══════════════════════════════════════════════
+
+window.linkNfcCard = function(uid, name, sid){
+  // Open a tiny prompt-style modal to capture the card
+  if(!confirm(`Link an NFC card to ${name} (${sid})?\n\n1. After clicking OK, you'll see a tap screen.\n2. Tap a blank or new card on the reader.\n3. The card UID will be saved and linked to this student.`)) return;
+  nfcLinkMode = { uid, name, sid };
+  // Switch to NFC tab
+  document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
+  const nfcBtn = [...document.querySelectorAll('.adm-tabs button')].find(b => b.textContent.includes('NFC'));
+  if(nfcBtn) nfcBtn.classList.add('active');
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.getElementById('as-nfc').classList.add('active');
+  // Update screen
+  setNfcScreen('scanning', `📱 Linking card for ${name}`, `Tap a card on the reader to link it to <strong>${esc(sid)}</strong>. Click "Cancel" below to abort.`);
+  document.getElementById('nfc-result').style.display = 'none';
+  // Show cancel button via reset
+  setTimeout(() => { const inp = document.getElementById('nfc-input'); if(inp) inp.focus(); }, 100);
+};
+
+async function linkNfcCardToStudent(uid){
+  if(!nfcLinkMode) return;
+  const target = nfcLinkMode;
+  try {
+    // Check if this UID is already linked to someone else
+    const existing = await getDocs(query(collection(db,'students'), where('nfcId','==', uid), limit(1)));
+    if(!existing.empty && existing.docs[0].id !== target.uid){
+      const other = existing.docs[0].data();
+      if(!confirm(`⚠️ This card is already linked to ${other.name || 'another student'} (${other.studentId || ''}).\n\nDo you want to MOVE it to ${target.name} (${target.sid})?\n\nThe other student will lose this card.`)){
+        nfcLinkMode = null;
+        nfcReset();
+        return;
+      }
+      // Unlink from other student
+      await updateDoc(doc(db,'students', existing.docs[0].id), { nfcId: '' });
+    }
+    // Link to target student
+    await updateDoc(doc(db,'students', target.uid), { nfcId: uid });
+    nfcLinkMode = null;
+    setNfcScreen('success', `✅ Card linked to ${target.name}!`, `UID <strong>${uid}</strong> is now linked to <strong>${esc(target.sid)}</strong>. Use this card to mark attendance.`);
+    playNfcBeep('confirm');
+    setTimeout(() => nfcReset(), 3500);
+  } catch(e){
+    nfcLinkMode = null;
+    setNfcScreen('error', '❌ Link failed', e.message);
+  }
+}
+
 function admTab(sec, btn){
   document.querySelectorAll('.adm-tabs button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -3388,6 +3806,12 @@ function admTab(sec, btn){
   if(sec === 'att') {
     const mo = document.getElementById('at-mo');
     if(mo && !mo.value) { const now = new Date(); mo.value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'); }
+  }
+  if(sec === 'nfc'){
+    setTimeout(() => {
+      const inp = document.getElementById('nfc-input');
+      if(inp) inp.focus();
+    }, 100);
   }
 }
 window.admTab = admTab;
