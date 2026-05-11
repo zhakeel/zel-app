@@ -577,6 +577,26 @@ textarea.di{min-height:78px;resize:vertical}
 .nfc-link-status .ls-value{color:#fff;font-family:'JetBrains Mono',monospace;font-size:.85rem;margin-top:.15rem;word-break:break-all}
 .nfc-link-status .ls-empty{color:#8b949e;font-style:italic;font-size:.78rem}
 
+
+/* ── NFC FULL STUDENT ID CARD ── */
+.nfc-id-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);border:2px solid var(--accent);position:relative}
+.nfc-id-bar{height:4px;background:linear-gradient(90deg,var(--ocean-dark),var(--accent),var(--ocean))}
+.nfc-id-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem .5rem;background:#fff}
+.nfc-id-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ocean-dark);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.nfc-id-badge{background:var(--sky);color:var(--ocean-dark);padding:.25rem .75rem;border-radius:50px;font-size:.74rem;font-weight:700;border:1px solid var(--ocean);letter-spacing:.05em;font-family:'JetBrains Mono',monospace}
+.nfc-id-top{display:flex;align-items:center;gap:1rem;padding:.4rem 1.2rem 1rem}
+.nfc-id-photo{width:100px;height:100px;border-radius:14px;background:var(--sky);border:3px solid var(--accent);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--ocean-dark);font-weight:600}
+.nfc-id-photo img{width:100%;height:100%;object-fit:cover}
+.nfc-id-namebox{flex:1;min-width:0}
+.nfc-id-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--ocean-dark);font-weight:500;line-height:1.15;text-transform:uppercase;letter-spacing:.02em}
+.nfc-id-batch{color:var(--muted);font-size:.92rem;margin-top:.3rem}
+.nfc-id-divider{height:1px;background:linear-gradient(90deg,transparent,#dbeafe,transparent);margin:0 1.2rem}
+.nfc-id-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem .9rem;padding:1rem 1.2rem 1.2rem}
+.nfc-id-field{min-width:0}
+.nfc-id-field.full{grid-column:1/-1}
+.nfc-id-field label{display:block;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem;font-weight:500}
+.nfc-id-field span{display:block;color:var(--ink);font-size:.92rem;font-weight:500;line-height:1.3;word-break:break-word}
+
 </style>
 </head>
 <body>
@@ -1094,28 +1114,52 @@ textarea.di{min-height:78px;resize:vertical}
 
     <!-- Card result + attendance buttons (shown after scan) -->
     <div id="nfc-result" style="display:none">
-     <div class="nfc-card-result">
-      <div class="ncr-row">
-       <div class="ncr-photo" id="ncr-photo">?</div>
-       <div class="ncr-info">
-        <div class="ncr-name" id="ncr-name">—</div>
-        <div class="ncr-id" id="ncr-id">—</div>
-        <div class="ncr-batch" id="ncr-batch">—</div>
+
+     <!-- FULL STUDENT ID CARD -->
+     <div class="nfc-id-card">
+      <!-- Top accent bar -->
+      <div class="nfc-id-bar"></div>
+      <!-- Header -->
+      <div class="nfc-id-head">
+       <div class="nfc-id-title">📇 Student ID</div>
+       <div class="nfc-id-badge" id="ncr-id">—</div>
+      </div>
+      <!-- Photo + name row -->
+      <div class="nfc-id-top">
+       <div class="nfc-id-photo" id="ncr-photo">?</div>
+       <div class="nfc-id-namebox">
+        <div class="nfc-id-name" id="ncr-name">—</div>
+        <div class="nfc-id-batch" id="ncr-batch">—</div>
        </div>
       </div>
-      <!-- Already marked notice -->
-      <div class="nfc-already" id="nfc-already" style="display:none">
-       <div class="nfc-already-txt" id="nfc-already-txt">⚠️ Already marked today</div>
-       <div class="nfc-already-sub">You can update the status by tapping a button below.</div>
-      </div>
-      <!-- Attendance buttons -->
-      <div class="nfc-att-buttons">
-       <button class="nfc-att-btn present" onclick="markNfcAtt('present')"><span class="ic">✅</span>Present</button>
-       <button class="nfc-att-btn late" onclick="markNfcAtt('late')"><span class="ic">⏰</span>Late</button>
-       <button class="nfc-att-btn absent" onclick="markNfcAtt('absent')"><span class="ic">❌</span>Absent</button>
+      <!-- Divider -->
+      <div class="nfc-id-divider"></div>
+      <!-- Detail grid -->
+      <div class="nfc-id-grid">
+       <div class="nfc-id-field"><label>Full Name</label><span id="ncr-fullname">—</span></div>
+       <div class="nfc-id-field"><label>Phone</label><span id="ncr-phone">—</span></div>
+       <div class="nfc-id-field"><label>Date of Birth</label><span id="ncr-dob">—</span></div>
+       <div class="nfc-id-field"><label>Gender</label><span id="ncr-gender">—</span></div>
+       <div class="nfc-id-field full"><label>Email</label><span id="ncr-email">—</span></div>
+       <div class="nfc-id-field"><label>Status</label><span id="ncr-status">✅ Active</span></div>
+       <div class="nfc-id-field"><label>Enrolled</label><span id="ncr-enrolled">—</span></div>
       </div>
      </div>
-     <button class="b-sec" style="width:100%;padding:.6rem" onclick="nfcReset()">↻ Cancel / Tap Next Card</button>
+
+     <!-- Already marked notice -->
+     <div class="nfc-already" id="nfc-already" style="display:none;margin-top:.75rem">
+      <div class="nfc-already-txt" id="nfc-already-txt">⚠️ Already marked today</div>
+      <div class="nfc-already-sub">You can update the status by tapping a button below.</div>
+     </div>
+
+     <!-- Attendance buttons -->
+     <div class="nfc-att-buttons" style="margin-top:.85rem">
+      <button class="nfc-att-btn present" onclick="markNfcAtt('present')"><span class="ic">✅</span>Present</button>
+      <button class="nfc-att-btn late" onclick="markNfcAtt('late')"><span class="ic">⏰</span>Late</button>
+      <button class="nfc-att-btn absent" onclick="markNfcAtt('absent')"><span class="ic">❌</span>Absent</button>
+     </div>
+
+     <button class="b-sec" style="width:100%;padding:.6rem;margin-top:.6rem" onclick="nfcReset()">↻ Cancel / Tap Next Card</button>
     </div>
 
     <!-- Recent taps -->
@@ -3539,6 +3583,12 @@ async function handleNfcTap(uid){
       sid: s.studentId || '',
       photo: s.photo || '',
       batch: s.course || '',
+      phone: s.phone || '',
+      email: s.email || '',
+      dob: s.dob || '',
+      gender: s.gender || '',
+      status: s.status || 'active',
+      enrolledAt: s.enrolledAt || null,
       nfcId: uid
     };
     showNfcStudentCard();
@@ -3574,9 +3624,45 @@ async function showNfcStudentCard(){
   const ph = document.getElementById('ncr-photo');
   if(s.photo) ph.innerHTML = `<img src="${s.photo}" alt="">`;
   else ph.textContent = (s.name && s.name[0] || '?').toUpperCase();
+  // Name & header
   document.getElementById('ncr-name').textContent = s.name || '—';
   document.getElementById('ncr-id').textContent = s.sid || '—';
   document.getElementById('ncr-batch').textContent = s.batch || '—';
+  // Detail grid
+  document.getElementById('ncr-fullname').textContent = s.name || '—';
+  document.getElementById('ncr-phone').textContent = s.phone || '—';
+  document.getElementById('ncr-email').textContent = s.email || '—';
+  // Format DOB
+  let dobTxt = '—';
+  if(s.dob){
+    try {
+      const d = new Date(s.dob);
+      if(!isNaN(d)) dobTxt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      else dobTxt = s.dob;
+    } catch(_){ dobTxt = s.dob; }
+  }
+  document.getElementById('ncr-dob').textContent = dobTxt;
+  // Gender — capitalise
+  document.getElementById('ncr-gender').textContent = s.gender ? s.gender.charAt(0).toUpperCase()+s.gender.slice(1) : '—';
+  // Status
+  const statusEl = document.getElementById('ncr-status');
+  const st = (s.status || 'active').toLowerCase();
+  if(st === 'active'){
+    statusEl.innerHTML = '<span style="color:#16a34a;font-weight:600">✅ Active</span>';
+  } else if(st === 'inactive'){
+    statusEl.innerHTML = '<span style="color:#dc2626;font-weight:600">⛔ Inactive</span>';
+  } else {
+    statusEl.textContent = s.status;
+  }
+  // Enrolled date
+  let enrTxt = '—';
+  if(s.enrolledAt){
+    try {
+      const d = s.enrolledAt.toDate ? s.enrolledAt.toDate() : new Date(s.enrolledAt);
+      if(!isNaN(d)) enrTxt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    } catch(_){}
+  }
+  document.getElementById('ncr-enrolled').textContent = enrTxt;
 
   // Check if already marked today
   const today = new Date().toISOString().split('T')[0];
