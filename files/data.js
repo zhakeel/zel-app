@@ -1,18 +1,70 @@
-// data.js — all Firestore reads + rendering into the DOM
+// data.js — Firebase Auth + all Firestore reads + rendering into the DOM
 // Depends on: firebase-config.js (firebaseConfig), ui.js (goTab), and the Firebase
-// compat SDK scripts being loaded before this file.
+// compat SDK scripts (app, firestore, auth) being loaded before this file.
 
-// ⚠️ Hardcoded to one student (by nfcId) since there's no login flow yet.
-// Swap this for the logged-in student's doc id once auth exists.
-const CURRENT_STUDENT_NFC_ID = "ZEL0001";
-
-let app, db;
+let app, db, auth;
 try{
   app = firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
+  auth = firebase.auth();
 }catch(e){ console.error("Firebase init failed:", e); }
 
 let currentStudent = null;
+
+function showLoginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function handleLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  document.getElementById('loginError').style.display = 'none';
+  if(!email || !password){ showLoginError('Enter your email and password.'); return; }
+  try{
+    await auth.signInWithEmailAndPassword(email, password);
+    // onAuthStateChanged below handles showing the app
+  }catch(e){
+    console.error(e);
+    const friendly = {
+      'auth/invalid-email': 'That email address looks invalid.',
+      'auth/user-not-found': 'No account found for that email.',
+      'auth/wrong-password': 'Incorrect password.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+      'auth/too-many-requests': 'Too many attempts — try again shortly.'
+    };
+    showLoginError(friendly[e.code] || 'Could not sign in. Please try again.');
+  }
+}
+
+function handleLogout(){
+  auth.signOut();
+}
+
+function showLoggedOutUI(){
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appMain').style.display = 'none';
+  document.getElementById('appNav').style.display = 'none';
+}
+
+function showLoggedInUI(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appMain').style.display = 'block';
+  document.getElementById('appNav').style.display = 'flex';
+}
+
+if(auth){
+  auth.onAuthStateChanged(async (user) => {
+    if(user){
+      showLoggedInUI();
+      await loadStudentByUid(user.uid);
+      loadNotices();
+    }else{
+      showLoggedOutUI();
+    }
+  });
+}
 
 function timeAgo(date){
   const s = Math.floor((Date.now() - date.getTime()) / 1000);
@@ -48,11 +100,11 @@ async function loadNotices(){
   }
 }
 
-async function loadStudent(){
+async function loadStudentByUid(uid){
   try{
-    const snap = await db.collection('students').where('nfcId', '==', CURRENT_STUDENT_NFC_ID).limit(1).get();
-    if(snap.empty) throw new Error('Student not found');
-    currentStudent = { id: snap.docs[0].id, ...snap.docs[0].data() };
+    const doc = await db.collection('students').doc(uid).get();
+    if(!doc.exists) throw new Error('Student profile not found for this account');
+    currentStudent = { id: doc.id, ...doc.data() };
     renderProfile();
     renderBatch();
     loadFees();
@@ -154,9 +206,4 @@ async function loadAttendance(){
     console.error(e);
     listEl.innerHTML = '<p class="sub">Could not load attendance.</p>';
   }
-}
-
-if(db){
-  loadNotices();
-  loadStudent();
 }
