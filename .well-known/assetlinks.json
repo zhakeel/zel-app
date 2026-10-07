@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.web.zel_app_cfb38.twa",
+        "sha256_cert_fingerprints": ["A2:BE:1D:17:81:D4:27:E4:68:DB:60:7D:B4:44:3B:44:10:3C:40:06:22:66:34:49:18:8D:EA:8B:DB:86:2D:55"]
+      }
+    }]

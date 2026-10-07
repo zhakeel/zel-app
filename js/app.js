@@ -1,10 +1,11 @@
 /* ZEL — main app: Firebase (Auth, Firestore, Storage) + all screens. Loaded as an ES module. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getStorage, ref as sRef, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut, onAuthStateChanged, EmailAuthProvider,
-  reauthenticateWithCredential, updatePassword, deleteUser
+  reauthenticateWithCredential, updatePassword, deleteUser, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, updateDoc,
@@ -24,6 +25,9 @@ const app = initializeApp({
 });
 const auth = getAuth(app);
 const db = getFirestore(app);
+const functions = getFunctions(app);
+const adminResetPasswordFn = httpsCallable(functions, 'adminResetPassword');
+const adminRecreateAuthFn = httpsCallable(functions, 'adminRecreateStudentAuth');
 const storage = getStorage(app);
 
 const SUPER_ADMIN = "zhakeel.mhd@gmail.com";
@@ -340,6 +344,80 @@ window.migrateStudentIds = async () => {
     alertMsg('sy-al', 'Conversion failed: ' + e.message);
   }
   btn.disabled = false; btn.innerHTML = '🔁 Convert Old IDs to ZEL0001';
+};
+
+// ══ FORGOT PASSWORD (Student ID or email) ══
+window.doForgotPassword = async () => {
+  const input = $('fp-em').value.trim();
+  const btn = $('bt-fp');
+  const reset = () => { btn.innerHTML = 'Send Reset Link'; btn.disabled = false; };
+  if(!input){ alertMsg('la', 'Please enter your Student ID or email.'); return; }
+  btn.innerHTML = '<span class="spin"></span>Sending...'; btn.disabled = true;
+  const finish = () => {
+    alertMsg('la', "✅ If an account exists, a password reset link has been sent to its email. Check the inbox (and spam folder).", 'ok', true);
+    $('fp-em').value = ''; reset();
+  };
+  try {
+    let email = input;
+    if(!input.includes('@')){
+      const sid = normSid(input);
+      if(!sid){ alertMsg('la', 'Please enter a valid email or Student ID (e.g. ZEL0001).'); reset(); return; }
+      email = await emailFromStudentId(sid);
+      if(!email){ finish(); return; }
+    }
+    await sendPasswordResetEmail(auth, email);
+  } catch(e){
+    if(e.code === 'auth/invalid-email'){ alertMsg('la', 'Please enter a valid email address or Student ID.'); reset(); return; }
+  }
+  finish();
+};
+
+// ══ ADMIN: RESET STUDENT PASSWORD (no email) ══
+// Uses a Cloud Function running with Admin privileges — the only way to
+// directly set another account's password. The client itself never has
+// this power, by design.
+function genRandomPassword(len=10){
+  // Avoids visually ambiguous characters (0/O, 1/l/I) since an admin will
+  // read this password aloud or type it into a message by hand.
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  const arr = new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  let out = '';
+  for(let i=0;i<len;i++) out += chars[arr[i] % chars.length];
+  return out;
+}
+window.resetStudentPassword = async (uid, name) => {
+  const newPass = genRandomPassword(10);
+  const ok = confirm(
+    `Reset password for ${name}?\n\n` +
+    `New password:\n${newPass}\n\n` +
+    `No email will be sent — you'll need to share this with the student yourself ` +
+    `(WhatsApp, SMS, in person, etc).\n\nContinue?`
+  );
+  if(!ok) return;
+  try {
+    await adminResetPasswordFn({ uid, newPassword: newPass });
+    alert(`✅ Password reset for ${name}.\n\nNew password:\n${newPass}\n\nShare it with the student securely — this won't be shown again.`);
+  } catch(e){
+    if(/no longer exists in Firebase Authentication/.test(e.message||'')){
+      const repair = confirm(
+        `This student's login account was deleted separately from their profile ` +
+        `(this can happen if it was removed directly in Firebase, outside the app).\n\n` +
+        `Recreate their login now? This restores access while keeping all existing ` +
+        `attendance and fee history correctly linked.\n\nContinue?`
+      );
+      if(repair){
+        try {
+          const res = await adminRecreateAuthFn({ uid, newPassword: newPass });
+          alert(`✅ Login recreated for ${name} (${res.data.email}).\n\nNew password:\n${newPass}\n\nShare it with the student securely — this won't be shown again.`);
+        } catch(e2){
+          alert('❌ Could not recreate login: ' + (e2.message || 'Unknown error'));
+        }
+      }
+      return;
+    }
+    alert('❌ Could not reset password: ' + (e.message || 'Unknown error'));
+  }
 };
 
 let galleryPhoto = null;
@@ -1163,6 +1241,7 @@ window.openStudentDetail = async uid => {
       <button class="act" onclick="openPhotoModal('${uid}')">📷 Edit Photo</button>
       <button class="act" onclick="quickJumpAtt('${uid}','${esc(s.studentId||'')}','${esc(s.name||'')}')">📋 Attendance</button>
       <button class="act" style="border-color:var(--accent);color:var(--accent)" onclick="openEditStudent('${uid}')">✏️ Edit Info</button>
+      <button class="act" style="border-color:var(--warn);color:var(--warn)" onclick="resetStudentPassword('${uid}','${esc(s.name||'')}')">🔑 Reset Password</button>
     </div>
     <div class="nfc-link-status">
       <div class="ls-info">

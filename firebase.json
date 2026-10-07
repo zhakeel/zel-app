@@ -1,8 +1,12 @@
 {
+  "functions": [{ "source": "functions", "codebase": "default" }],
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "README.md"],
+    "ignore": ["firebase.json", ".firebaserc", ".firebase/**", ".git/**", "**/node_modules/**", "functions/**", "*.md", "**/*.keystore", "**/*.apk", "**/*.aab", "signing-key-info.txt"],
+    "rewrites": [{ "source": "/zel-app.html", "destination": "/index.html" }],
     "headers": [
+      { "source": "/.well-known/assetlinks.json", "headers": [{ "key": "Content-Type", "value": "application/json" }] },
+      { "source": "/service-worker.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
       { "source": "**/*.@(css|js)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
     ]
   }
