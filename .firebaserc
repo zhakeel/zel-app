@@ -1,5 +1,19 @@
 {
   "projects": {
     "default": "zel-app-cfb38"
-  }
+  },
+  "targets": {
+    "zel-app-cfb38": {
+      "hosting": {
+        "zel": [
+          "zel-connect",
+          "zel-learners"
+        ],
+        "app": [
+          "zel-app-cfb38"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
