@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#090c12">
+<script src="js/theme-init.js"></script>
+<title>ZEL — Zone for English Learners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="screen active" id="scr-login">
+ <button type="button" class="theme-toggle float" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
+ <div class="login-card">
+  <div class="brand">
+   <span class="dot"></span><h1>ZEL</h1>
+   <p>Zone for English Learners</p>
+  </div>
+  <div id="la" class="alert"></div>
+  <div class="tabs">
+   <button class="active" id="t-in" onclick="loginTab('in')">Sign In</button>
+   <button id="t-rg" onclick="loginTab('rg')">Register</button>
+  </div>
+
+  <!-- SIGN IN -->
+  <div id="pg-in">
+   <div class="fg"><label>Email or Student ID</label><input type="text" id="li-em" placeholder="your@email.com or ZEL-0001" autocomplete="username"></div>
+   <div class="fg"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" autocomplete="current-password"></div>
+   <button class="btn" id="bt-li" onclick="doLogin()">Sign In</button>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="pg-rg" style="display:none">
+    <!-- Photo -->
+    <div style="text-align:center;margin-bottom:.85rem">
+     <div class="pc" id="rg-pc" onclick="document.getElementById('rg-pf').click()">📷</div>
+     <input type="file" id="rg-pf" accept="image/*" style="display:none" onchange="onRegPhoto(event)">
+     <div style="font-size:.7rem;color:var(--muted)">Tap to add photo (optional)</div>
+    </div>
+    <div class="fg"><label>Full Name</label><input type="text" id="rg-nm" placeholder="e.g. Mohamed Shakeel" autocomplete="name"></div>
+     <div class="fg"><label>Date of Birth</label><input type="date" id="rg-dob"></div>
+        <div class="fg"><label>Gender</label>
+     <select id="rg-gd">
+      <option value="">Select gender...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+     </select>
+    </div>
+    <div class="fg">
+     <label>Phone / WhatsApp</label>
+     <div class="ph-row">
+      <select class="ph-cc" id="rg-cc">
+       <option value="+94">🇱🇰 +94</option>
+       <option value="+91">🇮🇳 +91</option>
+       <option value="+92">🇵🇰 +92</option>
+       <option value="+880">🇧🇩 +880</option>
+       <option value="+971">🇦🇪 +971</option>
+       <option value="+966">🇸🇦 +966</option>
+       <option value="+60">🇲🇾 +60</option>
+       <option value="+65">🇸🇬 +65</option>
+       <option value="+1">🇺🇸 +1</option>
+       <option value="+44">🇬🇧 +44</option>
+      </select>
+      <input class="ph-num" type="tel" id="rg-ph" placeholder="761234567" autocomplete="tel">
+     </div>
+    </div>
+    <div class="fg"><label>Email Address *</label><input type="email" id="rg-em" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="fg"><label>Batch *</label>
+     <select id="rg-ba">
+      <option value="">Loading batches...</option>
+     </select>
+    </div>
+    <div class="fg"><label>Password (min. 6 chars) *</label><input type="password" id="rg-pw" placeholder="Create a password" autocomplete="new-password"></div>
+    <button class="btn" id="bt-rg" onclick="doRegister()">Create Account</button>
+    <p style="text-align:center;font-size:.74rem;color:var(--muted);margin-top:.85rem">After registering, sign in with your email and password.</p>
+  </div>
+ </div>
+</div>
+
+<!-- ══ STUDENT DASHBOARD ══ -->
+<div class="screen" id="scr-dash">
+ <div style="width:100%">
+  <div class="topbar">
+   <div class="tb-brand"><span class="dot"></span> ZEL</div>
+   <div class="tb-right">
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
+    <div class="av" id="d-av" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
+    <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
+   </div>
+  </div>
+  <div class="dash">
+
+   <!-- HOME -->
+   <div class="sub active" id="ss-home">
+    <div class="welcome">
+     <h2 id="d-welcome">Welcome back! 👋</h2>
+     <p>Keep up the great work — your English journey is progressing well!</p>
+    </div>
+    <div class="title">📊 Quick Info</div>
+    <div class="card" style="margin-bottom:1rem">
+     <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:110px">
+       <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">My Batch</div>
+       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-ba">—</div>
+      </div>
+      <div style="flex:1;min-width:110px">
+       <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.25rem">Student ID</div>
+       <div style="font-size:.92rem;color:var(--ocean-dark);font-weight:600" id="d-sid">—</div>
+      </div>
+     </div>
+    </div>
+    <div class="title">📢 Announcements</div>
+    <div id="d-not"><div class="empty">📭 No announcements yet</div></div>
+   </div>
+
+   <!-- ID -->
+   <div class="sub" id="ss-id">
+    <div class="card acc-top" style="margin-top:.25rem">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark)">🪪 Student ID</span>
+      <span class="id-badge" id="d-sid2">ZEL-0000</span>
+     </div>
+     <div class="id-row">
+      <div class="id-photo" id="d-ph" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
+      <div>
+       <div style="font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ocean-dark);margin-bottom:.22rem" id="d-nm-big">—</div>
+       <div style="font-size:.82rem;color:var(--muted)" id="d-ba2">—</div>
+      </div>
+     </div>
+     <div class="id-grid">
+      <div class="id-field"><label>Full Name</label><span id="d-nm">—</span></div>
+      <div class="id-field"><label>Phone</label><span id="d-phone">—</span></div>
+      <div class="id-field"><label>Date of Birth</label><span id="d-dob">—</span></div>
+      <div class="id-field"><label>Gender</label><span id="d-gender">—</span></div>
+      <div class="id-field full"><label>Email</label><span id="d-em">—</span></div>
+      <div class="id-field"><label>Status</label><span style="color:var(--success);font-weight:600">✅ Active</span></div>
+      <div class="id-field"><label>Enrolled</label><span id="d-en">—</span></div>
+      <div class="id-field full"><label>Student ID</label><span style="font-weight:700;color:var(--ocean-dark);letter-spacing:.06em" id="d-sid3">—</span></div>
+     </div>
+    </div>
+    <button class="btn" style="width:auto;padding:.55rem 1.4rem;font-size:.76rem" onclick="openPhotoModal(null)">📷 Update Photo</button>
+   </div>
+
+   <!-- ATT -->
+   <div class="sub" id="ss-att">
+    <div class="title">📋 My Attendance</div>
+
+    <!-- Stats row -->
+    <div class="att-stat-row">
+     <div class="att-stat p"><div class="n" id="d-att-p">0</div><div class="l">Present</div></div>
+     <div class="att-stat a"><div class="n" id="d-att-a">0</div><div class="l">Absent</div></div>
+     <div class="att-stat lt"><div class="n" id="d-att-l">0</div><div class="l">Late</div></div>
+    </div>
+
+    <!-- Rate bar -->
+    <div class="card" style="margin-bottom:.85rem;padding:.9rem 1.1rem">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
+      <span style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Attendance Rate</span>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ocean-dark)" id="d-att-pct">0%</span>
+     </div>
+     <div class="pct-bar"><div class="pct-fill" id="d-att-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- Month tabs -->
+    <div class="att-month-tabs" id="d-att-months"></div>
+
+    <!-- Calendar view -->
+    <div class="card" id="d-att-cal">
+     <div class="att-day-row">
+      <div class="att-day-hdr">Sun</div><div class="att-day-hdr">Mon</div><div class="att-day-hdr">Tue</div>
+      <div class="att-day-hdr">Wed</div><div class="att-day-hdr">Thu</div><div class="att-day-hdr">Fri</div><div class="att-day-hdr">Sat</div>
+     </div>
+     <div id="d-att-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">
+      <div class="empty" style="grid-column:1/-1">No records yet</div>
+     </div>
+    </div>
+
+    <!-- Legend -->
+    <div style="display:flex;gap:.9rem;font-size:.7rem;color:var(--muted);justify-content:center;margin-top:.5rem">
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--success);border-radius:3px;display:inline-block"></span>Present</span>
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--danger);border-radius:3px;display:inline-block"></span>Absent</span>
+     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--warn);border-radius:3px;display:inline-block"></span>Late</span>
+    </div>
+   </div>
+
+   <!-- FEES -->
+   <div class="sub" id="ss-fees">
+    <div class="title">💳 My Fees</div>
+
+    <!-- Step indicator -->
+    <div class="portal-steps">
+     <div class="step-item">
+      <div class="step-circle active" id="ps1">1</div>
+      <div class="step-lbl active" id="ps1l">View<br>Fees</div>
+     </div>
+     <div class="step-line" id="sl1"></div>
+     <div class="step-item">
+      <div class="step-circle" id="ps2">2</div>
+      <div class="step-lbl" id="ps2l">Select<br>Fee</div>
+     </div>
+     <div class="step-line" id="sl2"></div>
+     <div class="step-item">
+      <div class="step-circle" id="ps3">3</div>
+      <div class="step-lbl" id="ps3l">Fee<br>Details</div>
+     </div>
+    </div>
+
+    <!-- STEP 1: Overview -->
+    <div class="portal-step-content active" id="pstep1">
+     <!-- Summary -->
+     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem">
+      <div class="att-stat"><div class="n" id="d-ft" style="color:var(--ocean-dark)">Rs 0</div><div class="l">Total</div></div>
+      <div class="att-stat p"><div class="n" id="d-fp">Rs 0</div><div class="l">Paid</div></div>
+      <div class="att-stat a"><div class="n" id="d-fd">Rs 0</div><div class="l">Due</div></div>
+     </div>
+
+     <!-- Upcoming fees -->
+     <div class="upcoming-card" id="d-upcoming" style="display:none">
+      <h4>⏰ Upcoming Payments</h4>
+      <div id="d-upcoming-list"></div>
+      <div class="fee-info-box">ℹ️ These payments will become due on the specified dates</div>
+     </div>
+
+     <!-- All fees list -->
+     <div id="d-fl"><div class="empty">💳 No fee records yet</div></div>
+
+     <!-- View details button -->
+     <button class="btn" id="d-select-btn" onclick="goFeeStep2()" style="display:none;margin-top:.7rem">Select a Fee to View Details →</button>
+    </div>
+
+    <!-- STEP 2: Select fee -->
+    <div class="portal-step-content" id="pstep2">
+     <div style="font-size:.82rem;color:var(--muted);margin-bottom:.85rem">Select a fee entry to view details:</div>
+     <div id="d-fee-select-list"></div>
+     <div class="portal-nav">
+      <button class="btn portal-nav btn-back" onclick="goFeeStep(1)">← Back</button>
+     </div>
+    </div>
+
+    <!-- STEP 3: Fee detail -->
+    <div class="portal-step-content" id="pstep3">
+     <div id="d-fee-detail-card"></div>
+     <div class="portal-nav">
+      <button class="btn portal-nav btn-back" onclick="goFeeStep(2)">← Back</button>
+      <button class="btn btn-main portal-nav" onclick="goFeeStep(1)">✅ Done</button>
+     </div>
+    </div>
+
+   </div>
+
+   <!-- SETTINGS -->
+   <div class="sub" id="ss-set">
+    <div class="title">⚙️ Settings</div>
+
+    <!-- Change Password -->
+    <div class="card acc-top">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark);margin-bottom:.85rem">🔐 Change Password</div>
+     <div id="pw-al" class="alert"></div>
+     <div class="fg"><label>Current Password</label><input type="password" id="pw-c"></div>
+     <div class="fg"><label>New Password</label><input type="password" id="pw-n" placeholder="Min. 6 chars"></div>
+     <div class="fg"><label>Confirm New Password</label><input type="password" id="pw-2"></div>
+     <button class="btn" id="bt-pw" onclick="changePW()">Update Password</button>
+    </div>
+
+    <!-- Privacy & Safety -->
+    <div class="card acc-top">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark);margin-bottom:.6rem">🛡️ Privacy &amp; Safety</div>
+     <div style="font-size:.82rem;color:var(--muted);line-height:1.65">
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">What we collect:</strong> name, phone, email, profile photo, batch, attendance records, fee records.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">How we use it:</strong> only to manage your enrollment, attendance and fees at ZEL. Your data is never shared, sold, or used for advertising.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">Who can see it:</strong> only you and authorised ZEL admins.</p>
+      <p style="margin-bottom:.6rem"><strong style="color:var(--ink)">Security:</strong> your password is encrypted, all data is transmitted over HTTPS, and stored on Google Firebase secure servers.</p>
+      <p><strong style="color:var(--ink)">Your rights:</strong> you can change your password anytime, and you can permanently delete your account using the button below.</p>
+     </div>
+    </div>
+
+    <!-- Sign Out -->
+    <button class="btn" onclick="doLogout()" style="background:var(--danger);box-shadow:0 4px 20px rgba(220,38,38,.3);margin-bottom:.7rem">Sign Out</button>
+
+    <!-- Delete Account -->
+    <div class="card" style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.08)">
+     <div style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:#b91c1c;margin-bottom:.5rem">⚠️ Delete My Account</div>
+     <div style="font-size:.78rem;color:var(--muted);margin-bottom:.85rem;line-height:1.6">
+      Permanently remove your account, photo, attendance and fee records from ZEL. This cannot be undone.
+     </div>
+     <button onclick="deleteMyAccount()" style="background:transparent;border:1.5px solid #ef4444;color:#ef4444;border-radius:50px;padding:.6rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;width:100%">🗑️ Permanently Delete My Account</button>
+    </div>
+
+   </div>
+
+  </div>
+ </div>
+ <div class="bnav">
+  <button class="active" onclick="stuTab('home',this)"><span class="ic">🏠</span>Home</button>
+  <button onclick="stuTab('id',this)"><span class="ic">🪪</span>ID</button>
+  <button onclick="stuTab('att',this)"><span class="ic">📋</span>Attend</button>
+  <button onclick="stuTab('fees',this)"><span class="ic">💳</span>Fees</button>
+  <button onclick="stuTab('set',this)"><span class="ic">⚙️</span>Settings</button>
+ </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div class="screen" id="scr-admin">
+ <div style="width:100%">
+  <div class="adm-tb">
+   <div class="adm-bn">ZEL <span class="adm-bg">Admin</span></div>
+   <div class="tb-right">
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
+    <span id="a-em" style="color:var(--adm-muted);font-size:.72rem"></span>
+    <button class="tb-btn acc" id="b-grant" style="display:none" onclick="openGrantModal()">👑 Grant Admin</button>
+    <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
+   </div>
+  </div>
+  <div class="adm-body">
+   <div class="stats">
+    <div class="stat"><div class="n" id="st-stu">0</div><div class="l">Students</div></div>
+    <div class="stat"><div class="n" id="st-ba">0</div><div class="l">Batches</div></div>
+    <div class="stat" style="cursor:pointer" id="st-fee-box" title="Click a batch to see its total"><div class="n" id="st-fe" style="font-size:1.1rem">—</div><div class="l" id="st-fe-lbl">Batch Paid</div></div>
+    <div class="stat"><div class="n" id="st-no">0</div><div class="l">Notices</div></div>
+   </div>
+   <div class="adm-tabs">
+    <button class="active" onclick="admTab('batches',this)">📚 Batches</button>
+    <button onclick="admTab('att',this)">📋 Attendance</button>
+    <button onclick="admTab('notices',this)">📢 Notices</button>
+    <button onclick="admTab('gallery',this)">📸 Gallery</button>
+    <button onclick="admTab('add',this)">➕ Add Student</button>
+    <button onclick="admTab('nfc',this)">📡 NFC</button>
+    <button id="t-admins" onclick="admTab('admins',this)" style="display:none">👑 Admins</button>
+   </div>
+
+   <!-- BATCHES -->
+   <div class="sec active" id="as-batches">
+
+    <!-- VIEW: Batch List -->
+    <div id="b-list">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+      <span style="color:var(--adm-ink);font-family:'Cormorant Garamond',serif;font-size:1.25rem">All Batches</span>
+      <div style="display:flex;gap:.4rem">
+       <button class="b-acc" onclick="toggleBatchMgr()">📚 Manage Batches</button>
+       <button class="b-acc" onclick="loadBatches()">🔄 Refresh</button>
+      </div>
+     </div>
+     <!-- Batch Manager -->
+     <div class="dc" id="b-mgr" style="display:none">
+      <h3>📚 Manage Batches</h3>
+      <p style="color:var(--adm-muted);font-size:.78rem;margin-bottom:.85rem;line-height:1.55">Add new batches here. They appear automatically in the Register dropdown and Add Student form. Removing a batch does not affect students already in it.</p>
+      <div id="bm-al" class="alert"></div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
+       <input type="text" class="di" id="bm-name" placeholder="e.g. Batch 25" style="flex:1;margin-bottom:0">
+       <button class="b-acc" onclick="addBatch()" style="flex-shrink:0;padding:.5rem 1.1rem">＋ Add</button>
+      </div>
+      <div id="bm-list"><div style="color:var(--adm-muted);font-size:.78rem">Loading...</div></div>
+     </div>
+     <div class="b-grid" id="b-grid"><div class="empty" style="color:var(--adm-muted);grid-column:1/-1">Loading...</div></div>
+    </div>
+
+    <!-- VIEW: Students in batch -->
+    <div id="b-stus" style="display:none">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+      <div>
+       <button class="back" onclick="showBatchList()" style="margin-bottom:.3rem">← Back to Batches</button>
+       <div style="color:var(--adm-ink);font-family:'Cormorant Garamond',serif;font-size:1.25rem" id="bs-title">Batch</div>
+      </div>
+      <div style="background:var(--adm-card);border:1px solid var(--adm-bd);border-radius:10px;padding:.55rem .9rem;text-align:center">
+       <div style="font-size:.65rem;color:var(--adm-muted);text-transform:uppercase;letter-spacing:.08em">Total Paid</div>
+       <div style="color:var(--accent);font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500" id="bs-total-paid">Rs —</div>
+      </div>
+     </div>
+     <input type="text" class="di" id="bs-search" placeholder="🔍 Search by name or ID..." oninput="filterStus()">
+     <div id="bs-list"></div>
+     <button class="b-sec" id="bs-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadMoreStus()">Load More</button>
+    </div>
+
+    <!-- VIEW: Student detail with fees -->
+    <div id="b-det" style="display:none">
+     <button class="back" onclick="backToStus()">← Back to Students</button>
+     <div id="b-det-c"></div>
+
+     <!-- Fee Panel (shown below student card) -->
+     <div id="b-fee-section" style="display:none;margin-top:.85rem">
+
+      <!-- Overall summary strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
+       <div style="background:var(--adm-card);border:1px solid var(--adm-bd);border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:var(--adm-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Course Fee</div>
+        <div style="color:var(--adm-ink);font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-total">Rs 0</div>
+       </div>
+       <div style="background:var(--adm-card);border:1px solid var(--adm-bd);border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:var(--adm-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Paid</div>
+        <div style="color:#16a34a;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-paid">Rs 0</div>
+       </div>
+       <div style="background:var(--adm-card);border:1px solid var(--adm-bd);border-radius:10px;padding:.6rem;text-align:center">
+        <div style="font-size:.6rem;color:var(--adm-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">Remaining</div>
+        <div style="color:#dc2626;font-family:'Cormorant Garamond',serif;font-size:1.15rem" id="b-fs-due">Rs 0</div>
+       </div>
+      </div>
+
+      <!-- Set Course Fee form (shown when no fee record exists) -->
+      <div class="new-fee-form" id="b-new-fee-form" style="display:none">
+       <div style="color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem">💳 Set Course Fee</div>
+       <div id="b-fe-al" class="alert"></div>
+       <input type="text" class="di" id="b-fe-mo" placeholder="Course Name / Description (e.g. English Course 2026) *">
+       <input type="number" class="di" id="b-fe-total" placeholder="Total Course Fee (Rs) *" min="1">
+       <div class="nf-row">
+        <input type="date" class="di" id="b-fe-du" title="Due date (optional)">
+        <input type="number" class="di" id="b-fe-first" placeholder="Initial payment (Rs, optional)" min="0">
+       </div>
+       <p style="color:var(--adm-muted);font-size:.72rem;margin-bottom:.5rem;line-height:1.55">Set the total course fee first. You can record an initial payment now, or add payments later after saving.</p>
+       <button class="b-acc" onclick="createFeeRecord()" style="width:100%;padding:.65rem">✅ Create Fee Record</button>
+      </div>
+
+      <!-- Fee tracker list (shown when fee records exist) -->
+      <div id="b-fee-list"><div style="color:var(--adm-muted);font-size:.8rem;padding:.5rem 0">No fee records yet.</div></div>
+     </div>
+    </div>
+
+   </div>
+
+   <!-- ATTENDANCE -->
+   <div class="sec" id="as-att">
+    <!-- Quick Mark Card -->
+    <div class="dc">
+     <h3>📋 Mark Attendance</h3>
+     <div id="at-al" class="alert"></div>
+     <!-- Student picker -->
+     <div class="pkr">
+      <input type="text" class="di" id="at-pi" placeholder="🔍 Search student by name or ID..." oninput="searchPicker('at',this.value)" onfocus="document.getElementById('at-pr').classList.add('open')">
+      <div class="pkr-res" id="at-pr"></div>
+     </div>
+     <div id="at-ch" style="display:none"></div>
+     <!-- Date -->
+     <input type="date" class="di" id="at-dt">
+     <!-- Quick tap status buttons -->
+     <div style="font-size:.72rem;color:var(--adm-muted);margin-bottom:.4rem">Tap to select status:</div>
+     <div class="qmark-grid">
+      <button class="qmark-btn present" id="qm-present" onclick="selectAttStatus('present')">
+       <span style="font-size:1.4rem">✅</span>Present
+      </button>
+      <button class="qmark-btn absent" id="qm-absent" onclick="selectAttStatus('absent')">
+       <span style="font-size:1.4rem">❌</span>Absent
+      </button>
+      <button class="qmark-btn late" id="qm-late" onclick="selectAttStatus('late')">
+       <span style="font-size:1.4rem">⏰</span>Late
+      </button>
+     </div>
+     <input type="hidden" id="at-st" value="">
+    </div>
+
+    <!-- View Records Card -->
+    <div class="dc">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem">
+      <h3 style="margin-bottom:0">View Records</h3>
+      <div style="display:flex;gap:.5rem">
+       <input type="month" class="di" id="at-mo" style="margin-bottom:0;width:auto">
+       <button class="b-acc" onclick="loadAttRecs(true)">Filter</button>
+      </div>
+     </div>
+     <div id="at-rec"><div class="empty" style="color:var(--adm-muted)">Pick a month to view records</div></div>
+     <button class="b-sec" id="at-more" style="display:none;width:100%;margin-top:.5rem" onclick="loadAttRecs(false)">Load More</button>
+    </div>
+   </div>
+
+
+
+   <!-- NOTICES -->
+   <div class="sec" id="as-notices">
+    <div class="dc">
+     <h3>📢 Post Announcement</h3>
+     <input type="text" class="di" id="no-ti" placeholder="Notice title...">
+     <textarea class="di" id="no-bo" placeholder="Write your announcement..."></textarea>
+     <!-- Batch target selector -->
+     <div style="margin-bottom:.65rem">
+      <div style="color:var(--adm-muted);font-size:.72rem;margin-bottom:.38rem">🎯 Target Batch</div>
+      <select class="ds" id="no-batch">
+       <option value="all">📢 All Batches</option>
+      </select>
+      <div style="color:var(--adm-muted);font-size:.68rem;margin-top:.28rem;line-height:1.45">Only students in the selected batch will see this notice.</div>
+     </div>
+     <!-- Photo attachment -->
+     <div style="margin-bottom:.65rem">
+      <div style="color:var(--adm-muted);font-size:.72rem;margin-bottom:.38rem">📷 Attach Photo (optional)</div>
+      <div style="display:flex;align-items:center;gap:.6rem">
+       <div id="no-img-prev" onclick="document.getElementById('no-img-file').click()"
+        style="width:56px;height:56px;border-radius:8px;background:var(--adm-bg);border:1.5px dashed var(--adm-bd);
+          display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.3rem;
+          overflow:hidden;flex-shrink:0;transition:border-color .2s">📷</div>
+       <input type="file" id="no-img-file" accept="image/*" style="display:none" onchange="onNoticeImg(event)">
+       <div>
+        <div style="color:var(--adm-ink);font-size:.78rem" id="no-img-lbl">No photo selected</div>
+        <button onclick="clearNoticeImg()" id="bt-no-img-clear" style="display:none;background:none;border:none;color:#ef4444;font-size:.72rem;cursor:pointer;padding:0;margin-top:.2rem;font-family:'DM Sans',sans-serif">✕ Remove photo</button>
+       </div>
+      </div>
+     </div>
+     <button class="b-acc" onclick="postNotice()" style="width:100%;padding:.68rem">📢 Post Announcement</button>
+    </div>
+    <div id="no-list"><div class="empty" style="color:var(--adm-muted)">No notices yet</div></div>
+   </div>
+
+   <!-- NFC ATTENDANCE -->
+   <div class="sec" id="as-nfc">
+    <h3 style="color:var(--adm-ink);font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.85rem">📡 NFC Attendance</h3>
+
+    <!-- Reader mode selector -->
+    <div class="nfc-controls">
+     <div class="nfc-mode-btn active" id="nfc-mode-keyboard" onclick="setNfcMode('keyboard')">
+      <div class="nm-title">⌨️ Keyboard Reader</div>
+      <div class="nm-sub">Plug-and-play USB reader</div>
+     </div>
+     <div class="nfc-mode-btn" id="nfc-mode-manual" onclick="setNfcMode('manual')">
+      <div class="nm-title">✏️ Manual Entry</div>
+      <div class="nm-sub">Type the card UID</div>
+     </div>
+    </div>
+
+    <!-- Hidden input for keyboard mode (auto-receives card UID) -->
+    <input type="text" id="nfc-input" class="nfc-uid-input" placeholder="Tap card on the reader..." autocomplete="off" style="margin-bottom:1rem">
+
+    <!-- Visual scanner screen -->
+    <div class="nfc-screen scanning" id="nfc-screen">
+     <div class="nfc-icon">📡</div>
+     <div class="nfc-status" id="nfc-status">Ready to Scan</div>
+     <div class="nfc-hint" id="nfc-hint">Tap a student's NFC card on the reader to mark attendance</div>
+    </div>
+
+    <!-- Card result + attendance buttons (shown after scan) -->
+    <div id="nfc-result" style="display:none">
+
+     <!-- FULL STUDENT ID CARD -->
+     <div class="nfc-id-card">
+      <!-- Top accent bar -->
+      <div class="nfc-id-bar"></div>
+      <!-- Header -->
+      <div class="nfc-id-head">
+       <div class="nfc-id-title">📇 Student ID</div>
+       <div class="nfc-id-badge" id="ncr-id">—</div>
+      </div>
+      <!-- Photo + name row -->
+      <div class="nfc-id-top">
+       <div class="nfc-id-photo" id="ncr-photo">?</div>
+       <div class="nfc-id-namebox">
+        <div class="nfc-id-name" id="ncr-name">—</div>
+        <div class="nfc-id-batch" id="ncr-batch">—</div>
+       </div>
+      </div>
+      <!-- Divider -->
+      <div class="nfc-id-divider"></div>
+      <!-- Detail grid -->
+      <div class="nfc-id-grid">
+       <div class="nfc-id-field"><label>Full Name</label><span id="ncr-fullname">—</span></div>
+       <div class="nfc-id-field"><label>Phone</label><span id="ncr-phone">—</span></div>
+       <div class="nfc-id-field"><label>Date of Birth</label><span id="ncr-dob">—</span></div>
+       <div class="nfc-id-field"><label>Gender</label><span id="ncr-gender">—</span></div>
+       <div class="nfc-id-field full"><label>Email</label><span id="ncr-email">—</span></div>
+       <div class="nfc-id-field"><label>Status</label><span id="ncr-status">✅ Active</span></div>
+       <div class="nfc-id-field"><label>Enrolled</label><span id="ncr-enrolled">—</span></div>
+      </div>
+     </div>
+
+     <!-- Already marked notice -->
+     <div class="nfc-already" id="nfc-already" style="display:none;margin-top:.75rem">
+      <div class="nfc-already-txt" id="nfc-already-txt">⚠️ Already marked today</div>
+      <div class="nfc-already-sub">You can update the status by tapping a button below.</div>
+     </div>
+
+     <!-- Attendance buttons -->
+     <div class="nfc-att-buttons" style="margin-top:.85rem">
+      <button class="nfc-att-btn present" onclick="markNfcAtt('present')"><span class="ic">✅</span>Present</button>
+      <button class="nfc-att-btn late" onclick="markNfcAtt('late')"><span class="ic">⏰</span>Late</button>
+      <button class="nfc-att-btn absent" onclick="markNfcAtt('absent')"><span class="ic">❌</span>Absent</button>
+     </div>
+
+     <button class="b-sec" style="width:100%;padding:.6rem;margin-top:.6rem" onclick="nfcReset()">↻ Cancel / Tap Next Card</button>
+    </div>
+
+    <!-- Recent taps -->
+    <div class="nfc-recent">
+     <div class="nfc-recent-h">
+      <span>📋 Recent Taps Today</span>
+      <span id="nfc-recent-count" style="color:var(--accent);font-weight:700">0</span>
+     </div>
+     <div id="nfc-recent-list"><div style="color:var(--adm-muted);font-size:.78rem;padding:.4rem 0;text-align:center">No taps yet today.</div></div>
+    </div>
+
+   </div>
+
+   <!-- GALLERY -->
+   <div class="sec" id="as-gallery">
+    <div class="dc">
+     <h3>📸 Upload Photo to Website Gallery</h3>
+     <div id="gl-al" class="alert"></div>
+     <p style="color:var(--adm-muted);font-size:.78rem;margin-bottom:1rem;line-height:1.6">
+      Photos uploaded here automatically appear on your public website gallery (Life at ZEL section).
+     </p>
+     <div style="text-align:center;margin-bottom:.85rem">
+      <div class="pc dark" id="gl-pc" onclick="document.getElementById('gl-pf').click()" style="width:120px;height:120px;border-radius:14px">📷</div>
+      <input type="file" id="gl-pf" accept="image/*" style="display:none" onchange="onGalleryPhoto(event)">
+      <div style="font-size:.7rem;color:var(--adm-muted);margin-top:.3rem">Click to choose photo</div>
+     </div>
+     <input type="text" class="di" id="gl-title" placeholder="Photo title (e.g. 13th Batch Farewell)">
+     <input type="text" class="di" id="gl-caption" placeholder="Short caption (e.g. Memorable graduation moment)">
+     <button class="b-acc" id="bt-gl" onclick="uploadGalleryPhoto()" style="width:100%;padding:.7rem">📤 Upload to Gallery</button>
+    </div>
+    <div class="dc">
+     <h3>Current Gallery Photos</h3>
+     <div id="gl-list"><div style="color:var(--adm-muted);font-size:.8rem">Loading...</div></div>
+    </div>
+   </div>
+
+   <!-- ADD STUDENT -->
+   <div class="sec" id="as-add">
+    <div class="dc">
+     <h3>➕ Add New Student</h3>
+     <div id="ad-al" class="alert"></div>
+     <div style="text-align:center;margin-bottom:.85rem">
+      <div class="pc dark" id="ad-pc" onclick="document.getElementById('ad-pf').click()">📷</div>
+      <input type="file" id="ad-pf" accept="image/*" style="display:none" onchange="onAddPhoto(event)">
+      <div style="font-size:.7rem;color:var(--adm-muted)">Click to add photo</div>
+     </div>
+     <input type="text" class="di" id="ad-nm" placeholder="Full Name *">
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <div>
+       <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Date of Birth</div>
+       <input type="date" class="di" id="ad-dob" style="margin-bottom:0">
+      </div>
+      <div>
+       <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Gender</div>
+       <select class="ds" id="ad-gd" style="margin-bottom:0">
+        <option value="">Select...</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+       </select>
+      </div>
+     </div>
+     <input type="tel" class="di" id="ad-ph" placeholder="Phone (e.g. +94761234567) *">
+     <input type="email" class="di" id="ad-em" placeholder="Email *">
+     <input type="password" class="di" id="ad-pw" placeholder="Password (min. 6) *">
+     <select class="ds" id="ad-ba">
+      <option value="">Loading batches...</option>
+     </select>
+     <button class="b-acc" id="bt-add" onclick="adminAdd()" style="width:100%;padding:.7rem">Create Student Account</button>
+    </div>
+   </div>
+
+   <!-- ADMINS -->
+   <div class="sec" id="as-admins">
+    <div class="dc">
+     <h3>👑 Manage Admins</h3>
+     <div id="am-al" class="alert"></div>
+     <p style="color:var(--adm-muted);font-size:.78rem;margin-bottom:.95rem;line-height:1.6">
+      Grant admin access by entering an email. The person must first have an account in ZEL. They will see the admin panel on next login.
+     </p>
+     <input type="email" class="di" id="am-em" placeholder="Enter email to grant admin access...">
+     <button class="b-acc" style="width:100%;padding:.7rem" onclick="grantAdmin()">✅ Grant Admin Access</button>
+    </div>
+    <div class="dc">
+     <h3>Current Admins</h3>
+     <div id="am-list"><div style="color:var(--adm-muted);font-size:.8rem">Loading...</div></div>
+    </div>
+   </div>
+
+  </div>
+ </div>
+</div>
+
+<!-- EDIT STUDENT MODAL -->
+<div class="ovl" id="m-edit-stu">
+ <div class="modal dark" style="max-width:420px">
+  <button class="x" onclick="closeModal('m-edit-stu')">✕</button>
+  <h3>✏️ Edit Student Details</h3>
+  <div id="es-al" class="alert"></div>
+  <input type="hidden" id="es-uid">
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Full Name *</div>
+   <input type="text" class="di" id="es-nm" placeholder="Full Name" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Phone</div>
+   <input type="tel" class="di" id="es-ph" placeholder="+94761234567" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Email</div>
+   <input type="email" class="di" id="es-em" placeholder="student@email.com" style="margin-bottom:0">
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.55rem">
+   <div>
+    <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Batch</div>
+    <select class="ds" id="es-ba" style="margin-bottom:0"></select>
+   </div>
+   <div>
+    <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Gender</div>
+    <select class="ds" id="es-gd" style="margin-bottom:0">
+     <option value="">Select...</option>
+     <option value="Male">Male</option>
+     <option value="Female">Female</option>
+     <option value="Other">Other</option>
+     <option value="Prefer not to say">Prefer not to say</option>
+    </select>
+   </div>
+  </div>
+
+  <div style="margin-bottom:.55rem">
+   <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Date of Birth</div>
+   <input type="date" class="di" id="es-dob" style="margin-bottom:0">
+  </div>
+
+  <div style="margin-bottom:1rem">
+   <div style="color:var(--adm-muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.28rem">Status</div>
+   <select class="ds" id="es-st" style="margin-bottom:0">
+    <option value="active">✅ Active</option>
+    <option value="inactive">⛔ Inactive</option>
+   </select>
+  </div>
+
+  <button class="b-acc" id="bt-es" onclick="saveStudentEdit()" style="width:100%;padding:.7rem;font-size:.86rem">💾 Save Changes</button>
+ </div>
+</div>
+
+<!-- PHOTO MODAL -->
+<div class="ovl" id="m-photo">
+ <div class="modal">
+  <button class="x" onclick="closeModal('m-photo')">✕</button>
+  <h3>📷 Update Photo</h3>
+  <div id="mp-al" class="alert"></div>
+  <div class="pc lg" id="mp-pc" onclick="document.getElementById('mp-pf').click()">📷</div>
+  <input type="file" id="mp-pf" accept="image/*" style="display:none" onchange="onModalPhoto(event)">
+  <div style="text-align:center;font-size:.74rem;color:var(--muted);margin-bottom:1rem">Tap the circle to choose a photo</div>
+  <button class="btn" id="bt-mp" onclick="savePhoto()">Save Photo</button>
+ </div>
+</div>
+
+<!-- GRANT ADMIN MODAL -->
+<div class="ovl" id="m-grant">
+ <div class="modal dark" style="max-width:380px">
+  <button class="x" onclick="closeModal('m-grant')">✕</button>
+  <h3>👑 Grant Admin Access</h3>
+  <p style="color:var(--adm-muted);font-size:.78rem;margin-bottom:1rem;line-height:1.6">Enter the email of someone who already has a ZEL account. They will see the admin panel on next login.</p>
+  <div id="g-al" class="alert"></div>
+  <input type="email" class="di" id="g-em" placeholder="Enter email address...">
+  <button class="b-acc" id="bt-g" style="width:100%;padding:.7rem" onclick="doGrant()">✅ Grant Access</button>
+  <div id="g-list" style="margin-top:1rem"></div>
+ </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+
+<script src="js/ui.js"></script>
+
+<!-- PHOTO ZOOM OVERLAY -->
+<div id="zoom-ovl" onclick="closeZoom()" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out;backdrop-filter:blur(8px)">
+  <span style="position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2.2rem;cursor:pointer;background:rgba(255,255,255,.1);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1" onclick="event.stopPropagation();closeZoom()">&times;</span>
+  <img id="zoom-img" src="" style="max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:zoomIn .3s ease both">
+</div>
+
+
+</body>
+</html>
