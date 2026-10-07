@@ -30,7 +30,7 @@
 
   <!-- SIGN IN -->
   <div id="pg-in">
-   <div class="fg"><label>Email or Student ID</label><input type="text" id="li-em" placeholder="your@email.com or ZEL-0001" autocomplete="username"></div>
+   <div class="fg"><label>Student ID</label><input type="text" id="li-em" placeholder="ZEL0001" autocomplete="username" autocapitalize="characters" spellcheck="false"><div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">You can also sign in with your email.</div></div>
    <div class="fg"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" autocomplete="current-password"></div>
    <button class="btn" id="bt-li" onclick="doLogin()">Sign In</button>
   </div>
@@ -89,8 +89,8 @@
   <div class="topbar">
    <div class="tb-brand"><span class="dot"></span> ZEL</div>
    <div class="tb-right">
-    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
     <div class="av" id="d-av" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
     <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
    </div>
   </div>
@@ -124,7 +124,7 @@
     <div class="card acc-top" style="margin-top:.25rem">
      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem">
       <span style="font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ocean-dark)">🪪 Student ID</span>
-      <span class="id-badge" id="d-sid2">ZEL-0000</span>
+      <span class="id-badge" id="d-sid2">ZEL0000</span>
      </div>
      <div class="id-row">
       <div class="id-photo" id="d-ph" onclick="zoomPhoto(this)" style="cursor:zoom-in" title="Click to enlarge">S</div>
@@ -311,9 +311,9 @@
   <div class="adm-tb">
    <div class="adm-bn">ZEL <span class="adm-bg">Admin</span></div>
    <div class="tb-right">
-    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
     <span id="a-em" style="color:var(--adm-muted);font-size:.72rem"></span>
     <button class="tb-btn acc" id="b-grant" style="display:none" onclick="openGrantModal()">👑 Grant Admin</button>
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between dark and light theme" title="Switch theme"><span class="i-moon">🌙</span><span class="i-sun">☀️</span></button>
     <button class="tb-btn ghost" onclick="doLogout()">Logout</button>
    </div>
   </div>
@@ -650,6 +650,18 @@
 
    <!-- ADMINS -->
    <div class="sec" id="as-admins">
+    <div class="dc">
+     <h3>🔑 Student ID Login</h3>
+     <div id="sy-al" class="alert"></div>
+     <p style="color:var(--adm-muted);font-size:.78rem;margin-bottom:.95rem;line-height:1.6">
+      New students are enabled automatically. Click once to enable Student ID login for all students who registered earlier.
+     </p>
+     <button class="b-acc" id="bt-sync" style="width:100%;padding:.7rem" onclick="syncLoginMap()">🔄 Sync Student ID Logins</button>
+     <p style="color:var(--adm-muted);font-size:.78rem;margin:1rem 0 .6rem;line-height:1.6">
+      Student IDs now look like <strong>ZEL0001</strong>. Run this once to convert students who already have the old format (ZEL-0001).
+     </p>
+     <button class="b-acc" id="bt-mig" style="width:100%;padding:.7rem" onclick="migrateStudentIds()">🔁 Convert Old IDs to ZEL0001</button>
+    </div>
     <div class="dc">
      <h3>👑 Manage Admins</h3>
      <div id="am-al" class="alert"></div>

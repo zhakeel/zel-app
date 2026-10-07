@@ -89,7 +89,7 @@ async function nextStudentId(){
     }
     return next;
   });
-  return `ZEL-${String(n).padStart(4,'0')}`;
+  return `ZEL${String(n).padStart(4,'0')}`;
 }
 
 async function isAdmin(email){
@@ -194,6 +194,12 @@ onAuthStateChanged(auth, async user => {
     showScreen('scr-dash');
     if(CUD){
       try { sessionStorage.setItem('zel_cud', JSON.stringify(CUD)); } catch(_){}
+      try {
+        if(CUD.studentId && CUD.email && !sessionStorage.getItem('zel_lm_'+user.uid)){
+          saveLoginMap(CUD.studentId, CUD.email);
+          sessionStorage.setItem('zel_lm_'+user.uid,'1');
+        }
+      } catch(_){}
       renderStudent();
       loadStudentNotices();
       loadStudentAtt();
@@ -219,41 +225,121 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ══ AUTH ══
+// ══ STUDENT-ID LOGIN ══
+// Accepts "ZEL0001", "ZEL-0001", "zel0001", "0001" or "1" and returns "ZEL0001" (or null)
+function normSid(raw){
+  const t = String(raw||'').trim().toUpperCase().replace(/\s+/g,'');
+  let m = t.match(/^ZEL-?(\d{1,6})$/) || t.match(/^(\d{1,6})$/);
+  return m ? `ZEL${m[1].padStart(4,'0')}` : null;
+}
+// Public, tiny lookup: loginMap/{studentId} -> { email }. Lets a student sign in
+// BEFORE being authenticated without exposing the whole students collection.
+async function saveLoginMap(sid, email){
+  if(!sid || !email) return;
+  try {
+    const ref = doc(db,'loginMap', sid);
+    const ex = await getDoc(ref);
+    if(!ex.exists()) await setDoc(ref, { email });
+  } catch(_){}
+}
+async function emailFromStudentId(sid){
+  // new format first (ZEL0001), then the old hyphen format (ZEL-0001)
+  const keys = [sid, sid.replace(/^ZEL/, 'ZEL-')];
+  for(const k of keys){
+    try {
+      const m = await getDoc(doc(db,'loginMap', k));
+      if(m.exists() && m.data().email) return m.data().email;
+    } catch(_){}
+  }
+  // legacy fallback (only works if your rules allow reading students while signed out)
+  for(const k of keys){
+    try {
+      const snap = await getDocs(query(collection(db,'students'), where('studentId','==', k), limit(1)));
+      if(!snap.empty) return snap.docs[0].data().email || null;
+    } catch(_){}
+  }
+  return null;
+}
+
 window.doLogin = async () => {
   const input = $('li-em').value.trim();
   const pass = $('li-pw').value;
   const btn = $('bt-li');
-  if(!input || !pass){ alertMsg('la', 'Please fill in all fields.'); return; }
+  const reset = () => { btn.innerHTML = 'Sign In'; btn.disabled = false; };
+  if(!input || !pass){ alertMsg('la', 'Please enter your Student ID and password.'); return; }
   btn.innerHTML = '<span class="spin"></span>Signing in...'; btn.disabled = true;
   try {
     let email = input;
-    // If user entered a Student ID (e.g. ZEL-2026-001) instead of email, look up the email
-    if(input.toUpperCase().startsWith('ZEL-')){
-      const sid = input.toUpperCase();
-      const q = query(collection(db,'students'), where('studentId','==', sid), limit(1));
-      const snap = await getDocs(q);
-      if(snap.empty){
-        alertMsg('la', 'No account found with that Student ID.');
-        btn.innerHTML = 'Sign In'; btn.disabled = false;
-        return;
-      }
-      email = snap.docs[0].data().email;
+    if(!input.includes('@')){
+      const sid = normSid(input);
+      if(!sid){ alertMsg('la', 'Enter your Student ID like ZEL0001 (or your email).'); reset(); return; }
+      email = await emailFromStudentId(sid);
       if(!email){
-        alertMsg('la', 'This Student ID has no email registered. Please contact admin.');
-        btn.innerHTML = 'Sign In'; btn.disabled = false;
-        return;
+        alertMsg('la', 'Student ID not found. Check the ID, or sign in once with your email, or ask the admin.');
+        reset(); return;
       }
     }
     await signInWithEmailAndPassword(auth, email, pass);
   } catch(e){
     let m = 'Login failed.';
     if(e.code === 'auth/user-not-found') m = 'No account found.';
-    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Incorrect login or password.';
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') m = 'Incorrect Student ID or password.';
     if(e.code === 'auth/too-many-requests') m = 'Too many attempts. Please wait.';
-    if(e.code === 'auth/invalid-email') m = 'Please enter a valid email or Student ID.';
+    if(e.code === 'auth/invalid-email') m = 'Please enter a valid Student ID or email.';
     alertMsg('la', m);
   }
-  btn.innerHTML = 'Sign In'; btn.disabled = false;
+  reset();
+};
+
+// Admin: create loginMap entries for every existing student in one click
+window.syncLoginMap = async () => {
+  const btn = $('bt-sync');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Syncing...';
+  try {
+    const snap = await getDocs(collection(db,'students'));
+    let added = 0, total = 0;
+    for(const d of snap.docs){
+      const st = d.data();
+      if(!st.studentId || !st.email) continue;
+      total++;
+      const ref = doc(db,'loginMap', st.studentId);
+      const ex = await getDoc(ref);
+      if(!ex.exists()){ await setDoc(ref, { email: st.email }); added++; }
+    }
+    alertMsg('sy-al', `✅ Done. ${added} added, ${total-added} already set (${total} students).`, 'ok');
+  } catch(e){
+    alertMsg('sy-al', 'Sync failed: ' + e.message);
+  }
+  btn.disabled = false; btn.innerHTML = '🔄 Sync Student ID Logins';
+};
+
+// Admin: convert old IDs (ZEL-0001) to the new format (ZEL0001) everywhere. Run once.
+window.migrateStudentIds = async () => {
+  if(!confirm('Convert all old IDs like ZEL-0001 to ZEL0001?\n\nThis updates students, attendance and fees. Run it once.')) return;
+  const btn = $('bt-mig');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Converting...';
+  try {
+    const snap = await getDocs(collection(db,'students'));
+    let students = 0, records = 0;
+    for(const d of snap.docs){
+      const st = d.data();
+      const old = st.studentId || '';
+      const m = old.match(/^ZEL-(\d+)$/i);
+      if(!m) continue;
+      const nid = 'ZEL' + m[1];
+      await updateDoc(doc(db,'students', d.id), { studentId: nid });
+      for(const col of ['attendance','fees']){
+        const rs = await getDocs(query(collection(db,col), where('studentId','==', old)));
+        for(const r of rs.docs){ await updateDoc(r.ref, { studentId: nid }); records++; }
+      }
+      if(st.email) await saveLoginMap(nid, st.email);
+      students++;
+    }
+    alertMsg('sy-al', `✅ Done. ${students} students and ${records} attendance/fee records converted.`, 'ok');
+  } catch(e){
+    alertMsg('sy-al', 'Conversion failed: ' + e.message);
+  }
+  btn.disabled = false; btn.innerHTML = '🔁 Convert Old IDs to ZEL0001';
 };
 
 let galleryPhoto = null;
@@ -436,6 +522,7 @@ window.doRegister = async () => {
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
+    await saveLoginMap(sid, email);
     alertMsg('la', `\u2705 Account created! Your Student ID: ${sid}`, 'ok', true);
     // User is now logged in automatically — onAuthStateChanged will route to dashboard
   } catch(e){
@@ -457,7 +544,7 @@ function renderStudent(){
   $('d-welcome').textContent = `Welcome, ${first}! 👋`;
   $('d-ba').textContent = d.course || '—';
   $('d-sid').textContent = d.studentId || '—';
-  $('d-sid2').textContent = d.studentId || 'ZEL-0000';
+  $('d-sid2').textContent = d.studentId || 'ZEL0000';
   $('d-sid3') && ($('d-sid3').textContent = d.studentId || '—');
   $('d-nm-big').textContent = d.name || '—';
   $('d-ba2').textContent = d.course || '—';
@@ -2039,6 +2126,7 @@ window.adminAdd = async () => {
       enrolledAt: serverTimestamp(),
       role: 'student'
     });
+    await saveLoginMap(sid, email);
     alertMsg('ad-al', `✅ Student created! ID: ${sid}`, 'ok');
     $('ad-nm').value=''; $('ad-dob').value=''; $('ad-gd').value='';
     $('ad-ph').value=''; $('ad-em').value='';
